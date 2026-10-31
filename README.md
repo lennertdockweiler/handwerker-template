@@ -218,6 +218,30 @@ Stockfotos immer in `variants/<slug>/CREDITS.md` dokumentieren (wird ins Impress
 
 ## 6. Deployment je Variante
 
+### Demos an Kunden schicken (GitHub Pages, eingerichtet)
+
+Der Template-Code liegt im **privaten** Repo `lennertdockweiler/handwerker-template`.
+Die fertigen Demo-Seiten (nur HTML/Bilder) liegen im **öffentlichen** Repo
+`lennertdockweiler/website-entwuerfe` und werden über GitHub Pages ausgeliefert:
+
+```bash
+npm run publish              # alle Varianten bauen und hochladen
+npm run publish -- demo-2    # nur eine Variante aktualisieren
+```
+
+Danach sind die Demos nach 1–2 Minuten erreichbar unter
+`https://lennertdockweiler.github.io/website-entwuerfe/<pfad>/`, z. B. `…/brandt-soehne/`.
+Die Adresse je Variante steht in `veroeffentlichen.config.json` (`pfade`). Für eine
+neue Kundenvariante dort einen sprechenden Pfad eintragen, z. B. `"mueller-elektro": "mueller-elektro"`.
+QR-Codes zu den Links legt `npm run publish` automatisch in `qr/` ab.
+
+Hinweise:
+- Die Startseite `…/website-entwuerfe/` zeigt bewusst **keine Liste** – jeder Kunde sieht nur seinen eigenen Link.
+- Alle Demos sind `noindex` und erscheinen nicht bei Google. Wer die Adresse kennt oder errät, kann sie aber öffnen – keine vertraulichen Daten in Demos.
+- Den Code-Stand sichern: `git add -A && git commit -m "…" && git push`.
+
+### Eigene (Sub-)Domain
+
 Jede Variante ist nach `npm run build:all` ein eigenständiger statischer Ordner `dist/<slug>/` – deploybar
 auf jede beliebige (Sub-)Domain.
 
