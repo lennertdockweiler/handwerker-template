@@ -1,0 +1,84 @@
+---
+import { site } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { euro, fill } from '@/lib/text';
+import Icon from '@/components/ui/Icon.astro';
+
+type Stelle = (typeof site.config.stellen)[number];
+interface Props {
+  s: Stelle;
+}
+const { s } = Astro.props;
+const gehalt = s.gehaltsspanne ? fill(ui.karriere.gehaltSpanne, { von: euro(s.gehaltsspanne.von), bis: euro(s.gehaltsspanne.bis), einheit: ui.karriere.einheit[s.gehaltsspanne.einheit] }) : undefined;
+---
+
+<article class="stc">
+  <a href={site.links.stelle(s.slug)} class="stc__link">
+    <p class="label stc__art">{s.art} · {site.config.betrieb.adresse.ort}</p>
+    <h3 class="h3 stc__t">{s.titel}</h3>
+    <ul class="stc__facts">
+      <li><Icon name="calendar" size={18} />{ui.karriere.start}: {s.startdatum}</li>
+      {s.arbeitszeit && <li><Icon name="clock" size={18} />{s.arbeitszeit}</li>}
+      {gehalt && <li class="tabular"><Icon name="euro" size={18} />{gehalt}</li>}
+    </ul>
+    <span class="stc__go"><Icon name="arrow-up-right" size={22} /></span>
+  </a>
+</article>
+
+<style>
+  .stc__link {
+    position: relative;
+    display: grid;
+    gap: var(--space-s);
+    padding: var(--space-xl);
+    padding-right: 4.5rem;
+    border-radius: var(--r-l);
+    border: 1px solid var(--s-line);
+    background: var(--s-card);
+    text-decoration: none;
+    transition:
+      border-color var(--dur),
+      transform 420ms var(--ease-out);
+  }
+  .stc__link:hover {
+    border-color: var(--s-ink);
+    transform: translateY(-3px);
+  }
+  .stc__art {
+    color: var(--s-accent);
+  }
+  .stc__t {
+    max-width: 26ch;
+  }
+  .stc__facts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    color: var(--s-ink-soft);
+    font-size: var(--step--1);
+  }
+  .stc__facts li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .stc__go {
+    position: absolute;
+    top: var(--space-xl);
+    right: var(--space-l);
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--r-btn);
+    background: var(--c-accent);
+    color: var(--c-on-accent);
+    transition: transform 420ms var(--ease-out);
+  }
+  .stc__link:hover .stc__go {
+    transform: rotate(45deg);
+  }
+</style>

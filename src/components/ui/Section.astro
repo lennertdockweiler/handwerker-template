@@ -1,0 +1,26 @@
+---
+/** Sektions-Wrapper: Flächenton, Anker, Papierkorn (Manufaktur) */
+import { site } from '@/lib/config';
+
+interface Props {
+  ton?: 'hell' | 'flaeche' | 'dunkel' | 'marke' | undefined;
+  id?: string | undefined;
+  class?: string;
+  as?: 'section' | 'div' | 'aside';
+  label?: string | undefined;
+  flush?: boolean;
+  [key: `data-${string}`]: unknown;
+}
+const { ton = 'hell', id, class: cls = '', as: Tag = 'section', label, flush = false, ...rest } = Astro.props;
+const paper = site.config.branding.stilPreset === 'manufaktur-warm';
+---
+
+<Tag id={id} class:list={['section', `tone-${ton}`, { paper, 'section--flush': flush }, cls]} aria-label={label} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+  .section--flush {
+    padding-block: 0;
+  }
+</style>

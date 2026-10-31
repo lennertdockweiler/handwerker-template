@@ -1,0 +1,147 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/ui/PageHero.astro';
+import Section from '@/components/ui/Section.astro';
+import Icon from '@/components/ui/Icon.astro';
+import LiveStatus from '@/components/ui/LiveStatus.astro';
+import PlzCheck from '@/components/interactive/PlzCheck.astro';
+import { site, sb, t } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { fill, telHref, telAnzeige, typo } from '@/lib/text';
+import { pageTitle, pageDescription, breadcrumbs } from '@/lib/seo';
+
+if (!site.seiten.notdienst) return Astro.redirect('/');
+const nd = site.notdienst;
+const crumbs = [{ name: ui.nav.start, path: '/' }, { name: ui.nav.notdienst, path: '/notdienst/' }];
+---
+
+<BaseLayout
+  title={pageTitle(fill(ui.seo.notdienst, { ...site.vars, zeiten: nd.zeiten }), 'notdienst')}
+  description={pageDescription(sb('notdienstText'), 'notdienst')}
+  path="/notdienst/"
+  ogKey="notdienst"
+  jsonLd={[breadcrumbs(crumbs)]}
+>
+  <PageHero titel={sb('notdienstTitel')} intro={sb('notdienstText')} crumbs={crumbs} kicker={nd.zeiten} ton="dunkel">
+    <div class="nd__call">
+      <LiveStatus notdienst />
+      <a href={telHref(nd.telefon!)} class="btn btn--lg nd__btn" data-magnetic>
+        <Icon name="phone-call" />
+        <span class="tabular">{telAnzeige(nd.telefon!)}</span>
+      </a>
+      {nd.hinweis && <p class="nd__note">{typo(t(nd.hinweis))}</p>}
+    </div>
+  </PageHero>
+
+  <Section>
+    <div class="container-x nd">
+      <div>
+        <h2 class="h2 nd__h">{t(ui.notfall.sofortTun)}</h2>
+        <ol class="nd__list" data-anim-stagger>
+          {ui.notfall.sofortListe.map((x, i) => (
+            <li><span class="nd__n tabular">{i + 1}</span><span>{x}</span></li>
+          ))}
+        </ol>
+      </div>
+      {
+        nd.leistungen.length > 0 && (
+          <div>
+            <h2 class="h3 nd__h">{ui.notfall.wobei}</h2>
+            <ul class="nd__help">
+              {nd.leistungen.map((x) => (
+                <li><Icon name="siren" size={20} />{x}</li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+    </div>
+  </Section>
+
+  <Section ton="flaeche">
+    <div class="container-x nd__plz">
+      <h2 class="h2 nd__h">{sb('einsatzTitel')}</h2>
+      <PlzCheck id="plz-nd" />
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .nd__call {
+    display: grid;
+    gap: var(--space-m);
+    justify-items: start;
+    margin-top: var(--space-s);
+  }
+  .nd__btn {
+    font-size: var(--step-3);
+    min-height: 4.5rem;
+    padding-inline: 1.6em;
+    font-family: var(--font-head);
+  }
+  .nd__note {
+    max-width: 52ch;
+    font-size: var(--step--1);
+    color: var(--s-ink-soft);
+  }
+  .nd {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+  @media (min-width: 64rem) {
+    .nd {
+      grid-template-columns: 1.3fr 1fr;
+      gap: var(--space-3xl);
+    }
+  }
+  .nd__h {
+    margin-bottom: var(--space-l);
+  }
+  .nd__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-s);
+  }
+  .nd__list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-m);
+    align-items: start;
+    padding: var(--space-l);
+    border-radius: var(--r-m);
+    background: var(--s-card);
+    border: 1px solid var(--s-line);
+    font-weight: 550;
+  }
+  .nd__n {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--c-accent);
+    color: var(--c-on-accent);
+    font-weight: 800;
+  }
+  .nd__help {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--s-line);
+  }
+  .nd__help li {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    padding: var(--space-m) 0;
+    border-bottom: 1px solid var(--s-line);
+  }
+  .nd__help :global(.icon) {
+    color: var(--s-accent);
+  }
+  .nd__plz {
+    max-width: 40rem;
+  }
+</style>

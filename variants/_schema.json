@@ -1,0 +1,2876 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "slug": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "sprache": {
+          "default": "de",
+          "type": "string",
+          "const": "de"
+        },
+        "anrede": {
+          "default": "sie",
+          "description": "Ansprache der Kunden (Karriere ist immer „du“)",
+          "type": "string",
+          "enum": [
+            "sie",
+            "du"
+          ]
+        },
+        "domain": {
+          "description": "Live-URL inkl. https://, z. B. \"https://brandt-elektro.de\"",
+          "type": "string",
+          "format": "uri"
+        },
+        "noindex": {
+          "default": true,
+          "description": "DEMO-SCHUTZ: true = nicht in Suchmaschinen. Erst zum Livegang auf false setzen!",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "slug"
+      ]
+    },
+    "betrieb": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "Vollständiger Firmenname inkl. Rechtsform"
+        },
+        "kurzname": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32,
+          "description": "Kurzname für Logo/Wortmarke, z. B. \"Brandt & Söhne\""
+        },
+        "rechtsform": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "inhaber": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "Inhaber / Geschäftsführer"
+        },
+        "slogan": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 90,
+          "description": "Kurzer Claim"
+        },
+        "gruendungsjahr": {
+          "type": "integer",
+          "minimum": 1800,
+          "maximum": 2100
+        },
+        "mitarbeiter": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "azubis": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "projekte": {
+          "description": "Abgeschlossene Projekte (für Zähler)",
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "reaktionszeit": {
+          "description": "z. B. \"24 h\" – für die USP-Zähler",
+          "type": "string",
+          "maxLength": 20
+        },
+        "adresse": {
+          "type": "object",
+          "properties": {
+            "strasse": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60,
+              "description": "Straße und Hausnummer"
+            },
+            "plz": {
+              "type": "string",
+              "pattern": "^\\d{5}$"
+            },
+            "ort": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40,
+              "description": "Ort"
+            },
+            "land": {
+              "default": "DE",
+              "type": "string"
+            },
+            "region": {
+              "description": "Region inkl. Präposition, z. B. \"im Breisgau\" (Standard: \"Umgebung\")",
+              "type": "string",
+              "maxLength": 40
+            }
+          },
+          "required": [
+            "strasse",
+            "plz",
+            "ort"
+          ]
+        },
+        "geo": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            "lng": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          },
+          "required": [
+            "lat",
+            "lng"
+          ]
+        },
+        "telefon": {
+          "type": "string",
+          "pattern": "^\\+?[0-9 ()/-]{6,}$",
+          "description": "Telefonnummer im Format +49 761 000000"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+        },
+        "whatsapp": {
+          "description": "WhatsApp-Nummer (leer = WhatsApp-Buttons ausgeblendet)",
+          "type": "string",
+          "pattern": "^\\+?[0-9 ()/-]{6,}$"
+        },
+        "fax": {
+          "type": "string"
+        },
+        "oeffnungszeiten": {
+          "type": "object",
+          "properties": {
+            "regulaer": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "tage": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "mo",
+                        "di",
+                        "mi",
+                        "do",
+                        "fr",
+                        "sa",
+                        "so"
+                      ]
+                    }
+                  },
+                  "von": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-4]):[0-5]\\d$"
+                  },
+                  "bis": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-4]):[0-5]\\d$"
+                  }
+                },
+                "required": [
+                  "tage",
+                  "von",
+                  "bis"
+                ]
+              }
+            },
+            "sonder": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "datum": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  "geschlossen": {
+                    "default": true,
+                    "type": "boolean"
+                  },
+                  "von": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-4]):[0-5]\\d$"
+                  },
+                  "bis": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-4]):[0-5]\\d$"
+                  },
+                  "hinweis": {
+                    "type": "string",
+                    "maxLength": 80
+                  }
+                },
+                "required": [
+                  "datum"
+                ]
+              }
+            },
+            "hinweis": {
+              "type": "string",
+              "maxLength": 120
+            }
+          },
+          "required": [
+            "regulaer"
+          ]
+        },
+        "socialLinks": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "netzwerk": {
+                "type": "string",
+                "enum": [
+                  "instagram",
+                  "facebook",
+                  "linkedin",
+                  "youtube",
+                  "xing",
+                  "tiktok"
+                ]
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "required": [
+              "netzwerk",
+              "url"
+            ]
+          }
+        },
+        "bewertungen": {
+          "type": "object",
+          "properties": {
+            "quelle": {
+              "default": "Google",
+              "type": "string"
+            },
+            "schnitt": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "anzahl": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "profilUrl": {
+              "type": "string",
+              "format": "uri"
+            },
+            "beispiel": {
+              "default": true,
+              "description": "true = Beispielbewertungen (Demo). Live nur echte Bewertungen!",
+              "type": "boolean"
+            },
+            "pruefHinweis": {
+              "description": "Pflichthinweis § 5b Abs. 3 UWG: ob und wie die Echtheit geprüft wird",
+              "type": "string",
+              "maxLength": 400
+            },
+            "eintraege": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "description": "Name (abgekürzt)"
+                  },
+                  "ort": {
+                    "type": "string",
+                    "maxLength": 40
+                  },
+                  "datum": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  },
+                  "sterne": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 420,
+                    "description": "Bewertungstext"
+                  },
+                  "leistung": {
+                    "type": "string",
+                    "maxLength": 40
+                  }
+                },
+                "required": [
+                  "name",
+                  "datum",
+                  "sterne",
+                  "text"
+                ]
+              }
+            }
+          },
+          "required": [
+            "schnitt",
+            "anzahl"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "kurzname",
+        "inhaber",
+        "slogan",
+        "gruendungsjahr",
+        "adresse",
+        "geo",
+        "telefon",
+        "email",
+        "oeffnungszeiten"
+      ]
+    },
+    "branding": {
+      "type": "object",
+      "properties": {
+        "logo": {
+          "description": "Ohne Logo wird automatisch eine typografische Wortmarke erzeugt.",
+          "type": "object",
+          "properties": {
+            "datei": {
+              "type": "string",
+              "description": "SVG oder PNG im Ordner assets/, z. B. \"assets/logo.svg\""
+            },
+            "dateiHell": {
+              "description": "Variante für dunkle Hintergründe",
+              "type": "string"
+            },
+            "alt": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80,
+              "description": "Alternativtext, meist der Firmenname"
+            }
+          },
+          "required": [
+            "datei",
+            "alt"
+          ]
+        },
+        "farben": {
+          "type": "object",
+          "properties": {
+            "primaer": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hauptfarbe der Marke"
+            },
+            "akzent": {
+              "description": "Akzent-/Signalfarbe für Buttons und Highlights",
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "neutralTon": {
+              "description": "Färbt Grau- und Hintergrundtöne (warm/kalt)",
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            }
+          },
+          "required": [
+            "primaer"
+          ]
+        },
+        "stilPreset": {
+          "default": "modern-praezise",
+          "type": "string",
+          "enum": [
+            "modern-praezise",
+            "manufaktur-warm",
+            "kraftvoll-bold"
+          ]
+        },
+        "schriftPaar": {
+          "description": "Überschreibt die Schriften des Presets",
+          "type": "object",
+          "properties": {
+            "headline": {
+              "type": "string",
+              "enum": [
+                "archivo",
+                "hanken",
+                "fraunces",
+                "manrope",
+                "bricolage"
+              ]
+            },
+            "text": {
+              "type": "string",
+              "enum": [
+                "archivo",
+                "hanken",
+                "fraunces",
+                "manrope",
+                "bricolage"
+              ]
+            }
+          },
+          "required": [
+            "headline",
+            "text"
+          ]
+        },
+        "radius": {
+          "description": "Überschreibt die Radien des Presets",
+          "type": "string",
+          "enum": [
+            "eckig",
+            "dezent",
+            "rund"
+          ]
+        },
+        "animationsIntensitaet": {
+          "default": "standard",
+          "type": "string",
+          "enum": [
+            "dezent",
+            "standard",
+            "ausdrucksstark"
+          ]
+        },
+        "bildstil": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "grain": {
+              "default": true,
+              "description": "Feines Korn über Fotos – vereinheitlicht gemischte Bildqualität",
+              "type": "boolean"
+            },
+            "toenung": {
+              "default": 0.12,
+              "description": "Leichte Einfärbung der Fotos in Markenfarbe (0–0,6)",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 0.6
+            }
+          }
+        }
+      },
+      "required": [
+        "farben"
+      ]
+    },
+    "gewerk": {
+      "type": "string",
+      "enum": [
+        "elektro",
+        "shk",
+        "dachdecker",
+        "zimmerei",
+        "maler",
+        "tischler",
+        "fliesen",
+        "metallbau",
+        "galabau",
+        "bau",
+        "allgemein"
+      ]
+    },
+    "gewerkBezeichnung": {
+      "description": "z. B. \"Schreinerei\" statt \"Tischlerei\"",
+      "type": "string",
+      "maxLength": 40
+    },
+    "meisterbetrieb": {
+      "default": true,
+      "type": "boolean"
+    },
+    "meisterName": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "handwerkskammer": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "Name der Handwerkskammer"
+        },
+        "adresse": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Anschrift"
+        }
+      },
+      "required": [
+        "name",
+        "adresse"
+      ]
+    },
+    "handwerksrolleNr": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "innung": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "zertifikate": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Zertifikat"
+          },
+          "bild": {
+            "type": "object",
+            "properties": {
+              "datei": {
+                "description": "Pfad relativ zum Variantenordner, z. B. \"assets/hero.jpg\". Leer = markenfarbiger Platzhalter.",
+                "type": "string"
+              },
+              "mobil": {
+                "description": "Optional: eigener Bildausschnitt für Smartphones (Art Direction)",
+                "type": "string"
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 180,
+                "description": "Alternativtext: Was ist auf dem Bild zu sehen? (Pflicht für Barrierefreiheit)"
+              },
+              "motiv": {
+                "description": "Motivbeschreibung für den Platzhalter, solange kein Foto vorliegt",
+                "type": "string",
+                "maxLength": 80
+              },
+              "fokus": {
+                "description": "Bildfokus als CSS object-position, z. B. \"50% 30%\"",
+                "type": "string",
+                "pattern": "^\\d{1,3}% \\d{1,3}%$"
+              }
+            },
+            "required": [
+              "alt"
+            ],
+            "description": "Bild mit Alternativtext"
+          },
+          "jahr": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "name"
+        ]
+      }
+    },
+    "mitgliedschaften": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 80
+      }
+    },
+    "notdienst": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "aktiv": {
+          "default": false,
+          "type": "boolean"
+        },
+        "telefon": {
+          "type": "string",
+          "pattern": "^\\+?[0-9 ()/-]{6,}$",
+          "description": "Telefonnummer im Format +49 761 000000"
+        },
+        "zeiten": {
+          "default": "24 Stunden, 7 Tage die Woche",
+          "type": "string",
+          "maxLength": 80
+        },
+        "rundUmDieUhr": {
+          "default": true,
+          "type": "boolean"
+        },
+        "hinweis": {
+          "type": "string",
+          "maxLength": 240
+        },
+        "leistungen": {
+          "maxItems": 8,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 60
+          }
+        }
+      }
+    },
+    "einsatzgebiet": {
+      "type": "object",
+      "properties": {
+        "zentrum": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40,
+              "description": "Ort"
+            },
+            "lat": {
+              "type": "number"
+            },
+            "lng": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "name",
+            "lat",
+            "lng"
+          ]
+        },
+        "radiusKm": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 300
+        },
+        "orte": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40,
+                "description": "Ortsname"
+              },
+              "lat": {
+                "type": "number"
+              },
+              "lng": {
+                "type": "number"
+              },
+              "plz": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^\\d{5}$"
+                }
+              },
+              "status": {
+                "default": "ja",
+                "type": "string",
+                "enum": [
+                  "ja",
+                  "anfrage"
+                ]
+              }
+            },
+            "required": [
+              "name",
+              "lat",
+              "lng"
+            ]
+          }
+        },
+        "plz": {
+          "default": [],
+          "description": "Weitere PLZ (oder Präfixe wie \"791\") im Kerngebiet",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^\\d{2,5}$"
+          }
+        },
+        "plzAufAnfrage": {
+          "default": [],
+          "description": "PLZ/Präfixe, die „auf Anfrage“ bedient werden",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^\\d{2,5}$"
+          }
+        }
+      },
+      "required": [
+        "zentrum",
+        "radiusKm",
+        "orte"
+      ]
+    },
+    "leistungen": {
+      "description": "Leer = alle Leistungen des Gewerk-Presets. Gleicher slug = Preset-Werte überschreiben.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "titel": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 42,
+            "description": "Titel der Leistung"
+          },
+          "kurztext": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 150,
+            "description": "Kurztext für Karten und Listen"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1400,
+            "description": "Ausführlicher Text für die Detailseite"
+          },
+          "icon": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$",
+            "description": "Name eines Lucide-Icons (https://lucide.dev/icons), z. B. \"plug-zap\""
+          },
+          "bilder": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "datei": {
+                  "description": "Pfad relativ zum Variantenordner, z. B. \"assets/hero.jpg\". Leer = markenfarbiger Platzhalter.",
+                  "type": "string"
+                },
+                "mobil": {
+                  "description": "Optional: eigener Bildausschnitt für Smartphones (Art Direction)",
+                  "type": "string"
+                },
+                "alt": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 180,
+                  "description": "Alternativtext: Was ist auf dem Bild zu sehen? (Pflicht für Barrierefreiheit)"
+                },
+                "motiv": {
+                  "description": "Motivbeschreibung für den Platzhalter, solange kein Foto vorliegt",
+                  "type": "string",
+                  "maxLength": 80
+                },
+                "fokus": {
+                  "description": "Bildfokus als CSS object-position, z. B. \"50% 30%\"",
+                  "type": "string",
+                  "pattern": "^\\d{1,3}% \\d{1,3}%$"
+                }
+              },
+              "required": [
+                "alt"
+              ],
+              "description": "Bild mit Alternativtext"
+            }
+          },
+          "nutzen": {
+            "maxItems": 5,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120,
+              "description": "Nutzenargument"
+            }
+          },
+          "ablauf": {
+            "maxItems": 5,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "titel": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40,
+                  "description": "Schritt"
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 220,
+                  "description": "Beschreibung"
+                }
+              },
+              "required": [
+                "titel",
+                "text"
+              ]
+            }
+          },
+          "faq": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "frage": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 140,
+                  "description": "Frage"
+                },
+                "antwort": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 900,
+                  "description": "Antwort"
+                }
+              },
+              "required": [
+                "frage",
+                "antwort"
+              ]
+            }
+          },
+          "anfrageFragen": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                },
+                "frage": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 110,
+                  "description": "Frage im Anfrage-Konfigurator"
+                },
+                "typ": {
+                  "type": "string",
+                  "enum": [
+                    "auswahl",
+                    "mehrfach",
+                    "ja-nein",
+                    "zahl",
+                    "text"
+                  ]
+                },
+                "optionen": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "maxLength": 60
+                  }
+                },
+                "einheit": {
+                  "type": "string",
+                  "maxLength": 12
+                },
+                "hilfe": {
+                  "type": "string",
+                  "maxLength": 160
+                },
+                "pflicht": {
+                  "default": false,
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "frage",
+                "typ"
+              ]
+            }
+          },
+          "kostenschaetzer": {
+            "type": "object",
+            "properties": {
+              "einheit": {
+                "type": "string",
+                "maxLength": 12,
+                "description": "z. B. \"m²\", \"lfm\", \"Stück\""
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60,
+                "description": "Beschriftung des Reglers, z. B. \"Wandfläche\""
+              },
+              "preisVon": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "description": "Preis pro Einheit von (Endpreis inkl. MwSt.)"
+              },
+              "preisBis": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "description": "Preis pro Einheit bis (Endpreis inkl. MwSt.)"
+              },
+              "grundpreis": {
+                "default": 0,
+                "description": "Fester Sockelbetrag, z. B. Anfahrt/Einrichtung",
+                "type": "number",
+                "minimum": 0
+              },
+              "min": {
+                "default": 1,
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "max": {
+                "default": 200,
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "schritt": {
+                "default": 1,
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "standard": {
+                "default": 40,
+                "type": "number",
+                "exclusiveMinimum": 0
+              }
+            },
+            "required": [
+              "einheit",
+              "label",
+              "preisVon",
+              "preisBis"
+            ],
+            "description": "Optionaler Kostenschätzer: Menge × Preisspanne = unverbindlicher Preisrahmen"
+          },
+          "kundengruppen": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "privat",
+                "gewerbe"
+              ]
+            }
+          },
+          "aktiv": {
+            "default": true,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "slug"
+        ]
+      }
+    },
+    "referenzen": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "titel": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 70,
+            "description": "Projekttitel"
+          },
+          "ort": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "Ort"
+          },
+          "jahr": {
+            "type": "integer",
+            "minimum": 1900,
+            "maximum": 2100
+          },
+          "kategorie": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32,
+            "description": "Filterkategorie in der Galerie"
+          },
+          "leistungSlug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "description": "Zugehörige Leistung (slug)"
+          },
+          "vorher": {
+            "type": "object",
+            "properties": {
+              "datei": {
+                "description": "Pfad relativ zum Variantenordner, z. B. \"assets/hero.jpg\". Leer = markenfarbiger Platzhalter.",
+                "type": "string"
+              },
+              "mobil": {
+                "description": "Optional: eigener Bildausschnitt für Smartphones (Art Direction)",
+                "type": "string"
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 180,
+                "description": "Alternativtext: Was ist auf dem Bild zu sehen? (Pflicht für Barrierefreiheit)"
+              },
+              "motiv": {
+                "description": "Motivbeschreibung für den Platzhalter, solange kein Foto vorliegt",
+                "type": "string",
+                "maxLength": 80
+              },
+              "fokus": {
+                "description": "Bildfokus als CSS object-position, z. B. \"50% 30%\"",
+                "type": "string",
+                "pattern": "^\\d{1,3}% \\d{1,3}%$"
+              }
+            },
+            "required": [
+              "alt"
+            ],
+            "description": "Bild mit Alternativtext"
+          },
+          "nachher": {
+            "type": "object",
+            "properties": {
+              "datei": {
+                "description": "Pfad relativ zum Variantenordner, z. B. \"assets/hero.jpg\". Leer = markenfarbiger Platzhalter.",
+                "type": "string"
+              },
+              "mobil": {
+                "description": "Optional: eigener Bildausschnitt für Smartphones (Art Direction)",
+                "type": "string"
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 180,
+                "description": "Alternativtext: Was ist auf dem Bild zu sehen? (Pflicht für Barrierefreiheit)"
+              },
+              "motiv": {
+                "description": "Motivbeschreibung für den Platzhalter, solange kein Foto vorliegt",
+                "type": "string",
+                "maxLength": 80
+              },
+              "fokus": {
+                "description": "Bildfokus als CSS object-position, z. B. \"50% 30%\"",
+                "type": "string",
+                "pattern": "^\\d{1,3}% \\d{1,3}%$"
+              }
+            },
+            "required": [
+              "alt"
+            ],
+            "description": "Bild mit Alternativtext"
+          },
+          "bilder": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "datei": {
+                  "description": "Pfad relativ zum Variantenordner, z. B. \"assets/hero.jpg\". Leer = markenfarbiger Platzhalter.",
+                  "type": "string"
+                },
+                "mobil": {
+                  "description": "Optional: eigener Bildausschnitt für Smartphones (Art Direction)",
+                  "type": "string"
+                },
+                "alt": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 180,
+                  "description": "Alternativtext: Was ist auf dem Bild zu sehen? (Pflicht für Barrierefreiheit)"
+                },
+                "motiv": {
+                  "description": "Motivbeschreibung für den Platzhalter, solange kein Foto vorliegt",
+                  "type": "string",
+                  "maxLength": 80
+                },
+                "fokus": {
+                  "description": "Bildfokus als CSS object-position, z. B. \"50% 30%\"",
+                  "type": "string",
+                  "pattern": "^\\d{1,3}% \\d{1,3}%$"
+                }
+              },
+              "required": [
+                "alt"
+              ],
+              "description": "Bild mit Alternativtext"
+            }
+          },
+          "beschreibung": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1200,
+            "description": "Projektbeschreibung"
+          },
+          "fakten": {
+            "maxItems": 6,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 30,
+                  "description": "Label"
+                },
+                "wert": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 60,
+                  "description": "Wert"
+                }
+              },
+              "required": [
+                "label",
+                "wert"
+              ]
+            }
+          },
+          "kundenstimme": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 400,
+                "description": "Zitat"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60,
+                "description": "Name"
+              }
+            },
+            "required": [
+              "text",
+              "name"
+            ]
+          }
+        },
+        "required": [
+          "slug",
+          "titel",
+          "ort",
+          "jahr",
+          "kategorie",
+          "leistungSlug",
+          "bilder",
+          "beschreibung"
+        ]
+      }
+    },
+    "team": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "Name"
+          },
+          "rolle": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60,
+            "description": "Rolle im Betrieb"
+          },
+          "foto": {
+            "type": "object",
+            "properties": {
+              "datei": {
+                "description": "Pfad relativ zum Variantenordner, z. B. \"assets/hero.jpg\". Leer = markenfarbiger Platzhalter.",
+                "type": "string"
+              },
+              "mobil": {
+                "description": "Optional: eigener Bildausschnitt für Smartphones (Art Direction)",
+                "type": "string"
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 180,
+                "description": "Alternativtext: Was ist auf dem Bild zu sehen? (Pflicht für Barrierefreiheit)"
+              },
+              "motiv": {
+                "description": "Motivbeschreibung für den Platzhalter, solange kein Foto vorliegt",
+                "type": "string",
+                "maxLength": 80
+              },
+              "fokus": {
+                "description": "Bildfokus als CSS object-position, z. B. \"50% 30%\"",
+                "type": "string",
+                "pattern": "^\\d{1,3}% \\d{1,3}%$"
+              }
+            },
+            "required": [
+              "alt"
+            ],
+            "description": "Bild mit Alternativtext"
+          },
+          "zitat": {
+            "type": "string",
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "name",
+          "rolle",
+          "foto"
+        ]
+      }
+    },
+    "stellen": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "titel": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 70,
+            "description": "Stellentitel, z. B. \"Elektroniker (m/w/d) für Energie- und Gebäudetechnik\""
+          },
+          "art": {
+            "type": "string",
+            "enum": [
+              "Ausbildung",
+              "Vollzeit",
+              "Teilzeit",
+              "Minijob"
+            ]
+          },
+          "intro": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 400,
+            "description": "Kurzer, emotionaler Einstieg in Du-Ansprache"
+          },
+          "aufgaben": {
+            "minItems": 2,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160,
+              "description": "Aufgabe"
+            }
+          },
+          "profil": {
+            "minItems": 2,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160,
+              "description": "Anforderung"
+            }
+          },
+          "benefits": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120,
+              "description": "Benefit"
+            }
+          },
+          "startdatum": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30,
+            "description": "z. B. \"ab sofort\" oder \"01.09.2027\""
+          },
+          "arbeitszeit": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "gehaltsspanne": {
+            "type": "object",
+            "properties": {
+              "von": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "bis": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "einheit": {
+                "type": "string",
+                "enum": [
+                  "HOUR",
+                  "MONTH",
+                  "YEAR"
+                ]
+              }
+            },
+            "required": [
+              "von",
+              "bis",
+              "einheit"
+            ]
+          },
+          "veroeffentlicht": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "description": "datePosted für Google for Jobs"
+          },
+          "gueltigBis": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
+        },
+        "required": [
+          "slug",
+          "titel",
+          "art",
+          "intro",
+          "aufgaben",
+          "profil",
+          "benefits",
+          "startdatum",
+          "veroeffentlicht"
+        ]
+      }
+    },
+    "benefits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "titel": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "Benefit"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "description": "Beschreibung"
+          },
+          "icon": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$",
+            "description": "Name eines Lucide-Icons (https://lucide.dev/icons), z. B. \"plug-zap\""
+          }
+        },
+        "required": [
+          "titel",
+          "text",
+          "icon"
+        ]
+      }
+    },
+    "partnerLogos": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "Name"
+          },
+          "datei": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      }
+    },
+    "historie": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "jahr": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "ereignis": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 70,
+            "description": "Ereignis"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 300
+          }
+        },
+        "required": [
+          "jahr",
+          "ereignis"
+        ]
+      }
+    },
+    "werte": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "titel": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "Wert"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240,
+            "description": "Beschreibung"
+          }
+        },
+        "required": [
+          "titel",
+          "text"
+        ]
+      }
+    },
+    "kennzahlen": {
+      "description": "Leer = automatisch aus Gründungsjahr, Projekten, Mitarbeitern und Reaktionszeit",
+      "maxItems": 4,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "wert": {
+            "type": "number"
+          },
+          "praefix": {
+            "type": "string",
+            "maxLength": 4
+          },
+          "suffix": {
+            "type": "string",
+            "maxLength": 8
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "Beschriftung"
+          }
+        },
+        "required": [
+          "wert",
+          "label"
+        ]
+      }
+    },
+    "ablauf": {
+      "minItems": 4,
+      "maxItems": 4,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "titel": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "Schritt"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240,
+            "description": "Beschreibung"
+          }
+        },
+        "required": [
+          "titel",
+          "text"
+        ]
+      }
+    },
+    "faq": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "frage": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 140,
+            "description": "Frage"
+          },
+          "antwort": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 900,
+            "description": "Antwort"
+          }
+        },
+        "required": [
+          "frage",
+          "antwort"
+        ]
+      }
+    },
+    "texte": {
+      "default": {},
+      "description": "Überschreibt einzelne Sprachbausteine des Presets (Schlüssel siehe src/data/gewerke)",
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "lokaleSeiten": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "leistungSlug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "ort": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "Ort"
+          },
+          "titel": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "H1 der lokalen Seite"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 400,
+            "maxLength": 2400
+          },
+          "besonderheiten": {
+            "maxItems": 5,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 140
+            }
+          }
+        },
+        "required": [
+          "leistungSlug",
+          "ort",
+          "text"
+        ]
+      }
+    },
+    "sektionen": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "hero"
+              },
+              "layout": {
+                "default": "vollbild",
+                "type": "string",
+                "enum": [
+                  "vollbild",
+                  "split",
+                  "typo"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID (für Links wie /#leistungen)",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "ton": {
+                "description": "Flächenton der Sektion – für Rhythmus und Abwechslung",
+                "type": "string",
+                "enum": [
+                  "hell",
+                  "flaeche",
+                  "dunkel",
+                  "marke"
+                ]
+              },
+              "ueberschrift": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90,
+                "description": "Überschrift (sonst Standard aus dem Gewerk-Preset)"
+              },
+              "intro": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 320,
+                "description": "Einleitender Satz"
+              },
+              "headline": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80,
+                "description": "Hero-Headline: kurz, konkret, selbstbewusst"
+              },
+              "subline": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 220,
+                "description": "Unterzeile"
+              },
+              "statement": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60,
+                "description": "Nur Layout \"typo\": riesiges Statement"
+              },
+              "bild": {
+                "type": "object",
+                "properties": {
+                  "datei": {
+                    "description": "Pfad relativ zum Variantenordner, z. B. \"assets/hero.jpg\". Leer = markenfarbiger Platzhalter.",
+                    "type": "string"
+                  },
+                  "mobil": {
+                    "description": "Optional: eigener Bildausschnitt für Smartphones (Art Direction)",
+                    "type": "string"
+                  },
+                  "alt": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 180,
+                    "description": "Alternativtext: Was ist auf dem Bild zu sehen? (Pflicht für Barrierefreiheit)"
+                  },
+                  "motiv": {
+                    "description": "Motivbeschreibung für den Platzhalter, solange kein Foto vorliegt",
+                    "type": "string",
+                    "maxLength": 80
+                  },
+                  "fokus": {
+                    "description": "Bildfokus als CSS object-position, z. B. \"50% 30%\"",
+                    "type": "string",
+                    "pattern": "^\\d{1,3}% \\d{1,3}%$"
+                  }
+                },
+                "required": [
+                  "alt"
+                ],
+                "description": "Bild mit Alternativtext"
+              },
+              "bilder": {
+                "description": "Layout \"split\": drei Bilder für die Collage",
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "datei": {
+                      "description": "Pfad relativ zum Variantenordner, z. B. \"assets/hero.jpg\". Leer = markenfarbiger Platzhalter.",
+                      "type": "string"
+                    },
+                    "mobil": {
+                      "description": "Optional: eigener Bildausschnitt für Smartphones (Art Direction)",
+                      "type": "string"
+                    },
+                    "alt": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 180,
+                      "description": "Alternativtext: Was ist auf dem Bild zu sehen? (Pflicht für Barrierefreiheit)"
+                    },
+                    "motiv": {
+                      "description": "Motivbeschreibung für den Platzhalter, solange kein Foto vorliegt",
+                      "type": "string",
+                      "maxLength": 80
+                    },
+                    "fokus": {
+                      "description": "Bildfokus als CSS object-position, z. B. \"50% 30%\"",
+                      "type": "string",
+                      "pattern": "^\\d{1,3}% \\d{1,3}%$"
+                    }
+                  },
+                  "required": [
+                    "alt"
+                  ],
+                  "description": "Bild mit Alternativtext"
+                }
+              },
+              "video": {
+                "description": "Layout \"vollbild\": stummes Hintergrundvideo (< 3 MB, Datei in public/ der Variante)",
+                "type": "object",
+                "properties": {
+                  "datei": {
+                    "type": "string"
+                  },
+                  "dateiMobil": {
+                    "type": "string"
+                  },
+                  "poster": {
+                    "type": "object",
+                    "properties": {
+                      "datei": {
+                        "description": "Pfad relativ zum Variantenordner, z. B. \"assets/hero.jpg\". Leer = markenfarbiger Platzhalter.",
+                        "type": "string"
+                      },
+                      "mobil": {
+                        "description": "Optional: eigener Bildausschnitt für Smartphones (Art Direction)",
+                        "type": "string"
+                      },
+                      "alt": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 180,
+                        "description": "Alternativtext: Was ist auf dem Bild zu sehen? (Pflicht für Barrierefreiheit)"
+                      },
+                      "motiv": {
+                        "description": "Motivbeschreibung für den Platzhalter, solange kein Foto vorliegt",
+                        "type": "string",
+                        "maxLength": 80
+                      },
+                      "fokus": {
+                        "description": "Bildfokus als CSS object-position, z. B. \"50% 30%\"",
+                        "type": "string",
+                        "pattern": "^\\d{1,3}% \\d{1,3}%$"
+                      }
+                    },
+                    "required": [
+                      "alt"
+                    ],
+                    "description": "Bild mit Alternativtext"
+                  }
+                },
+                "required": [
+                  "datei",
+                  "poster"
+                ]
+              },
+              "ctaPrimaer": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 28,
+                    "description": "Button-Text"
+                  },
+                  "ziel": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Link, z. B. \"/kontakt/\" oder \"tel:\""
+                  }
+                },
+                "required": [
+                  "text",
+                  "ziel"
+                ]
+              },
+              "ctaSekundaer": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 28,
+                    "description": "Button-Text"
+                  },
+                  "ziel": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Link, z. B. \"/kontakt/\" oder \"tel:\""
+                  }
+                },
+                "required": [
+                  "text",
+                  "ziel"
+                ]
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "leistungen"
+              },
+              "layout": {
+                "default": "bento",
+                "type": "string",
+                "enum": [
+                  "bento",
+                  "liste",
+                  "tabs"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID (für Links wie /#leistungen)",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "ton": {
+                "description": "Flächenton der Sektion – für Rhythmus und Abwechslung",
+                "type": "string",
+                "enum": [
+                  "hell",
+                  "flaeche",
+                  "dunkel",
+                  "marke"
+                ]
+              },
+              "ueberschrift": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90,
+                "description": "Überschrift (sonst Standard aus dem Gewerk-Preset)"
+              },
+              "intro": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 320,
+                "description": "Einleitender Satz"
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "usps"
+              },
+              "layout": {
+                "default": "zahlen",
+                "type": "string",
+                "enum": [
+                  "zahlen",
+                  "split"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID (für Links wie /#leistungen)",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "ton": {
+                "description": "Flächenton der Sektion – für Rhythmus und Abwechslung",
+                "type": "string",
+                "enum": [
+                  "hell",
+                  "flaeche",
+                  "dunkel",
+                  "marke"
+                ]
+              },
+              "ueberschrift": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90,
+                "description": "Überschrift (sonst Standard aus dem Gewerk-Preset)"
+              },
+              "intro": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 320,
+                "description": "Einleitender Satz"
+              },
+              "bild": {
+                "type": "object",
+                "properties": {
+                  "datei": {
+                    "description": "Pfad relativ zum Variantenordner, z. B. \"assets/hero.jpg\". Leer = markenfarbiger Platzhalter.",
+                    "type": "string"
+                  },
+                  "mobil": {
+                    "description": "Optional: eigener Bildausschnitt für Smartphones (Art Direction)",
+                    "type": "string"
+                  },
+                  "alt": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 180,
+                    "description": "Alternativtext: Was ist auf dem Bild zu sehen? (Pflicht für Barrierefreiheit)"
+                  },
+                  "motiv": {
+                    "description": "Motivbeschreibung für den Platzhalter, solange kein Foto vorliegt",
+                    "type": "string",
+                    "maxLength": 80
+                  },
+                  "fokus": {
+                    "description": "Bildfokus als CSS object-position, z. B. \"50% 30%\"",
+                    "type": "string",
+                    "pattern": "^\\d{1,3}% \\d{1,3}%$"
+                  }
+                },
+                "required": [
+                  "alt"
+                ],
+                "description": "Bild mit Alternativtext"
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "ablauf"
+              },
+              "layout": {
+                "default": "gepinnt",
+                "type": "string",
+                "enum": [
+                  "gepinnt",
+                  "liste"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID (für Links wie /#leistungen)",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "ton": {
+                "description": "Flächenton der Sektion – für Rhythmus und Abwechslung",
+                "type": "string",
+                "enum": [
+                  "hell",
+                  "flaeche",
+                  "dunkel",
+                  "marke"
+                ]
+              },
+              "ueberschrift": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90,
+                "description": "Überschrift (sonst Standard aus dem Gewerk-Preset)"
+              },
+              "intro": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 320,
+                "description": "Einleitender Satz"
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "referenzen"
+              },
+              "layout": {
+                "default": "slider-galerie",
+                "type": "string",
+                "enum": [
+                  "slider-galerie",
+                  "raster"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID (für Links wie /#leistungen)",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "ton": {
+                "description": "Flächenton der Sektion – für Rhythmus und Abwechslung",
+                "type": "string",
+                "enum": [
+                  "hell",
+                  "flaeche",
+                  "dunkel",
+                  "marke"
+                ]
+              },
+              "ueberschrift": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90,
+                "description": "Überschrift (sonst Standard aus dem Gewerk-Preset)"
+              },
+              "intro": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 320,
+                "description": "Einleitender Satz"
+              },
+              "highlight": {
+                "description": "Slug der Referenz für den Vorher/Nachher-Slider",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "bewertungen"
+              },
+              "layout": {
+                "default": "laufband",
+                "type": "string",
+                "enum": [
+                  "laufband",
+                  "karussell"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID (für Links wie /#leistungen)",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "ton": {
+                "description": "Flächenton der Sektion – für Rhythmus und Abwechslung",
+                "type": "string",
+                "enum": [
+                  "hell",
+                  "flaeche",
+                  "dunkel",
+                  "marke"
+                ]
+              },
+              "ueberschrift": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90,
+                "description": "Überschrift (sonst Standard aus dem Gewerk-Preset)"
+              },
+              "intro": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 320,
+                "description": "Einleitender Satz"
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "einsatzgebiet"
+              },
+              "layout": {
+                "default": "karte",
+                "type": "string",
+                "enum": [
+                  "karte",
+                  "kompakt"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID (für Links wie /#leistungen)",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "ton": {
+                "description": "Flächenton der Sektion – für Rhythmus und Abwechslung",
+                "type": "string",
+                "enum": [
+                  "hell",
+                  "flaeche",
+                  "dunkel",
+                  "marke"
+                ]
+              },
+              "ueberschrift": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90,
+                "description": "Überschrift (sonst Standard aus dem Gewerk-Preset)"
+              },
+              "intro": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 320,
+                "description": "Einleitender Satz"
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "karriere"
+              },
+              "layout": {
+                "default": "emotional",
+                "type": "string",
+                "enum": [
+                  "emotional",
+                  "kompakt"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID (für Links wie /#leistungen)",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "ton": {
+                "description": "Flächenton der Sektion – für Rhythmus und Abwechslung",
+                "type": "string",
+                "enum": [
+                  "hell",
+                  "flaeche",
+                  "dunkel",
+                  "marke"
+                ]
+              },
+              "ueberschrift": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90,
+                "description": "Überschrift (sonst Standard aus dem Gewerk-Preset)"
+              },
+              "intro": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 320,
+                "description": "Einleitender Satz"
+              },
+              "bild": {
+                "type": "object",
+                "properties": {
+                  "datei": {
+                    "description": "Pfad relativ zum Variantenordner, z. B. \"assets/hero.jpg\". Leer = markenfarbiger Platzhalter.",
+                    "type": "string"
+                  },
+                  "mobil": {
+                    "description": "Optional: eigener Bildausschnitt für Smartphones (Art Direction)",
+                    "type": "string"
+                  },
+                  "alt": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 180,
+                    "description": "Alternativtext: Was ist auf dem Bild zu sehen? (Pflicht für Barrierefreiheit)"
+                  },
+                  "motiv": {
+                    "description": "Motivbeschreibung für den Platzhalter, solange kein Foto vorliegt",
+                    "type": "string",
+                    "maxLength": 80
+                  },
+                  "fokus": {
+                    "description": "Bildfokus als CSS object-position, z. B. \"50% 30%\"",
+                    "type": "string",
+                    "pattern": "^\\d{1,3}% \\d{1,3}%$"
+                  }
+                },
+                "required": [
+                  "alt"
+                ],
+                "description": "Bild mit Alternativtext"
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "partner"
+              },
+              "layout": {
+                "default": "laufband",
+                "type": "string",
+                "enum": [
+                  "laufband",
+                  "raster"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID (für Links wie /#leistungen)",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "ton": {
+                "description": "Flächenton der Sektion – für Rhythmus und Abwechslung",
+                "type": "string",
+                "enum": [
+                  "hell",
+                  "flaeche",
+                  "dunkel",
+                  "marke"
+                ]
+              },
+              "ueberschrift": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90,
+                "description": "Überschrift (sonst Standard aus dem Gewerk-Preset)"
+              },
+              "intro": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 320,
+                "description": "Einleitender Satz"
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "faq"
+              },
+              "layout": {
+                "default": "akkordeon",
+                "type": "string",
+                "enum": [
+                  "akkordeon",
+                  "zweispaltig"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID (für Links wie /#leistungen)",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "ton": {
+                "description": "Flächenton der Sektion – für Rhythmus und Abwechslung",
+                "type": "string",
+                "enum": [
+                  "hell",
+                  "flaeche",
+                  "dunkel",
+                  "marke"
+                ]
+              },
+              "ueberschrift": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90,
+                "description": "Überschrift (sonst Standard aus dem Gewerk-Preset)"
+              },
+              "intro": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 320,
+                "description": "Einleitender Satz"
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "cta"
+              },
+              "layout": {
+                "default": "kontakt",
+                "type": "string",
+                "enum": [
+                  "kontakt",
+                  "banner"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID (für Links wie /#leistungen)",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "ton": {
+                "description": "Flächenton der Sektion – für Rhythmus und Abwechslung",
+                "type": "string",
+                "enum": [
+                  "hell",
+                  "flaeche",
+                  "dunkel",
+                  "marke"
+                ]
+              },
+              "ueberschrift": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90,
+                "description": "Überschrift (sonst Standard aus dem Gewerk-Preset)"
+              },
+              "intro": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 320,
+                "description": "Einleitender Satz"
+              }
+            },
+            "required": [
+              "typ"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "typ": {
+                "type": "string",
+                "const": "text-bild"
+              },
+              "layout": {
+                "default": "links",
+                "type": "string",
+                "enum": [
+                  "links",
+                  "rechts"
+                ]
+              },
+              "aktiv": {
+                "default": true,
+                "type": "boolean"
+              },
+              "id": {
+                "description": "Anker-ID (für Links wie /#leistungen)",
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "ton": {
+                "description": "Flächenton der Sektion – für Rhythmus und Abwechslung",
+                "type": "string",
+                "enum": [
+                  "hell",
+                  "flaeche",
+                  "dunkel",
+                  "marke"
+                ]
+              },
+              "ueberschrift": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90,
+                "description": "Überschrift (sonst Standard aus dem Gewerk-Preset)"
+              },
+              "intro": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 320,
+                "description": "Einleitender Satz"
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1200,
+                "description": "Fließtext"
+              },
+              "bild": {
+                "type": "object",
+                "properties": {
+                  "datei": {
+                    "description": "Pfad relativ zum Variantenordner, z. B. \"assets/hero.jpg\". Leer = markenfarbiger Platzhalter.",
+                    "type": "string"
+                  },
+                  "mobil": {
+                    "description": "Optional: eigener Bildausschnitt für Smartphones (Art Direction)",
+                    "type": "string"
+                  },
+                  "alt": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 180,
+                    "description": "Alternativtext: Was ist auf dem Bild zu sehen? (Pflicht für Barrierefreiheit)"
+                  },
+                  "motiv": {
+                    "description": "Motivbeschreibung für den Platzhalter, solange kein Foto vorliegt",
+                    "type": "string",
+                    "maxLength": 80
+                  },
+                  "fokus": {
+                    "description": "Bildfokus als CSS object-position, z. B. \"50% 30%\"",
+                    "type": "string",
+                    "pattern": "^\\d{1,3}% \\d{1,3}%$"
+                  }
+                },
+                "required": [
+                  "alt"
+                ],
+                "description": "Bild mit Alternativtext"
+              },
+              "cta": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 28,
+                    "description": "Button-Text"
+                  },
+                  "ziel": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Link, z. B. \"/kontakt/\" oder \"tel:\""
+                  }
+                },
+                "required": [
+                  "text",
+                  "ziel"
+                ]
+              }
+            },
+            "required": [
+              "typ",
+              "text",
+              "bild"
+            ]
+          }
+        ]
+      },
+      "description": "Reihenfolge = Reihenfolge auf der Startseite"
+    },
+    "seiten": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "leistungen": {
+          "default": true,
+          "type": "boolean"
+        },
+        "referenzen": {
+          "default": true,
+          "type": "boolean"
+        },
+        "ueberUns": {
+          "default": true,
+          "type": "boolean"
+        },
+        "karriere": {
+          "default": true,
+          "type": "boolean"
+        },
+        "notdienst": {
+          "default": true,
+          "description": "Wird nur gebaut, wenn zusätzlich notdienst.aktiv = true",
+          "type": "boolean"
+        },
+        "kontakt": {
+          "default": true,
+          "type": "boolean"
+        }
+      }
+    },
+    "seo": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "titel": {
+          "type": "string",
+          "maxLength": 65
+        },
+        "beschreibung": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "seiten": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "titel": {
+                "type": "string",
+                "maxLength": 65
+              },
+              "beschreibung": {
+                "type": "string",
+                "maxLength": 160
+              }
+            }
+          }
+        }
+      }
+    },
+    "rechtliches": {
+      "type": "object",
+      "properties": {
+        "berufsbezeichnung": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "z. B. \"Elektrotechnikermeister\""
+        },
+        "verleihungsstaat": {
+          "default": "Deutschland",
+          "type": "string"
+        },
+        "vertretungsberechtigt": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 80
+          }
+        },
+        "registergericht": {
+          "type": "string",
+          "maxLength": 60
+        },
+        "registernummer": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "ustId": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "wirtschaftsId": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "verantwortlichInhalt": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "maxLength": 80
+            },
+            "adresse": {
+              "type": "string",
+              "maxLength": 120
+            }
+          },
+          "required": [
+            "name",
+            "adresse"
+          ]
+        },
+        "berufshaftpflicht": {
+          "type": "object",
+          "properties": {
+            "versicherer": {
+              "type": "string",
+              "maxLength": 80
+            },
+            "adresse": {
+              "type": "string",
+              "maxLength": 120
+            },
+            "geltungsraum": {
+              "type": "string",
+              "maxLength": 60
+            }
+          },
+          "required": [
+            "versicherer",
+            "adresse",
+            "geltungsraum"
+          ]
+        },
+        "agbUrl": {
+          "type": "string"
+        },
+        "verbraucherschlichtung": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "berufsbezeichnung",
+        "vertretungsberechtigt"
+      ]
+    },
+    "integrationen": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "formularEndpoint": {
+          "default": "",
+          "description": "Leer = Demo-Modus. Sonst z. B. Formspree-/Web3Forms-URL",
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uri"
+            },
+            {
+              "type": "string",
+              "const": ""
+            }
+          ]
+        },
+        "formularZugangsschluessel": {
+          "description": "z. B. Web3Forms access_key (öffentlich, kein Geheimnis)",
+          "type": "string"
+        },
+        "buchungsLink": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "label": {
+              "type": "string",
+              "maxLength": 30
+            }
+          },
+          "required": [
+            "url",
+            "label"
+          ]
+        },
+        "karte": {
+          "description": "Zwei-Klick-Karte (Google/OSM). Lädt erst nach Einwilligung.",
+          "default": {},
+          "type": "object",
+          "properties": {
+            "aktiv": {
+              "default": false,
+              "type": "boolean"
+            },
+            "embedUrl": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        },
+        "analytics": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "aktiv": {
+              "default": false,
+              "type": "boolean"
+            },
+            "anbieter": {
+              "type": "string",
+              "enum": [
+                "plausible",
+                "matomo"
+              ]
+            },
+            "src": {
+              "type": "string",
+              "format": "uri"
+            },
+            "domain": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "demo": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "banner": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "aktiv": {
+              "default": true,
+              "type": "boolean"
+            },
+            "text": {
+              "type": "string",
+              "maxLength": 120
+            }
+          }
+        },
+        "agentur": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "telefon": {
+              "type": "string",
+              "pattern": "^\\+?[0-9 ()/-]{6,}$",
+              "description": "Telefonnummer im Format +49 761 000000"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+            },
+            "website": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": [
+            "name"
+          ]
+        },
+        "pitchSeite": {
+          "default": true,
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "required": [
+    "meta",
+    "betrieb",
+    "branding",
+    "gewerk",
+    "einsatzgebiet",
+    "sektionen",
+    "rechtliches"
+  ],
+  "title": "Handwerker-Template · Varianten-Konfiguration"
+}

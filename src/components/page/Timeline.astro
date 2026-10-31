@@ -1,0 +1,119 @@
+---
+/** Firmengeschichte als Timeline – die Linie „wächst“ beim Scrollen, Jahre werden aktiv */
+import { site, t } from '@/lib/config';
+import { typo } from '@/lib/text';
+
+interface Props {
+  titel: string;
+}
+const { titel } = Astro.props;
+const items = site.config.historie;
+const manufaktur = site.config.branding.stilPreset === 'manufaktur-warm';
+---
+
+<div class="tl" data-process="list" data-process-axis="y">
+  <h2 class="h2 tl__title" data-anim="reveal-up">{titel}</h2>
+  <div class="tl__track" data-process-track>
+    <div class="tl__rail" aria-hidden="true"><span class="tl__fill" data-process-fill></span></div>
+    <ol class="tl__list">
+      {
+        items.map((h) => (
+          <li class="tl__item is-active" data-process-step>
+            <span class:list={['tl__node', { 'tl__node--ring': manufaktur }]} aria-hidden="true" />
+            <p class="tl__year tabular">{h.jahr}</p>
+            <div class="tl__body">
+              <h3 class="h4">{t(h.ereignis)}</h3>
+              {h.text && <p class="muted">{typo(t(h.text))}</p>}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</div>
+
+<style>
+  .tl__title {
+    margin-bottom: var(--space-2xl);
+  }
+  .tl__track {
+    position: relative;
+  }
+  .tl__rail {
+    position: absolute;
+    left: 0.55rem;
+    top: 0.4rem;
+    bottom: 0.4rem;
+    width: 2px;
+    background: var(--s-line);
+  }
+  .tl__fill {
+    position: absolute;
+    inset: 0;
+    background: var(--c-accent-raw);
+    transform-origin: 50% 0;
+  }
+  .tl__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2xl);
+  }
+  .tl__item {
+    position: relative;
+    display: grid;
+    gap: 0.4rem;
+    padding-left: 2.75rem;
+    transition: opacity 500ms var(--ease-out);
+  }
+  :global(html.js) .tl__item:not(.is-active) .tl__year {
+    color: var(--s-ink-soft);
+  }
+  .tl__node {
+    position: absolute;
+    left: 0;
+    top: 0.2rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    background: var(--s-bg);
+    border: 2px solid var(--s-line);
+    transition:
+      background-color 400ms,
+      border-color 400ms;
+  }
+  html[data-preset='modern-praezise'] .tl__node {
+    border-radius: 0;
+  }
+  .tl__node--ring {
+    box-shadow: 0 0 0 4px var(--s-bg), 0 0 0 5px var(--s-line);
+  }
+  .tl__item.is-active .tl__node {
+    background: var(--c-accent-raw);
+    border-color: var(--c-accent-raw);
+  }
+  .tl__year {
+    font-family: var(--font-head);
+    font-weight: var(--head-weight);
+    letter-spacing: var(--head-tracking);
+    font-size: var(--step-4);
+    line-height: 1;
+    color: var(--s-ink);
+  }
+  html[data-preset='modern-praezise'] .tl__year {
+    font-stretch: 100%;
+  }
+  .tl__body {
+    display: grid;
+    gap: 0.35rem;
+    max-width: 48ch;
+  }
+  @media (min-width: 64rem) {
+    .tl__item {
+      grid-template-columns: 12rem 1fr;
+      gap: var(--space-xl);
+      align-items: baseline;
+    }
+  }
+</style>

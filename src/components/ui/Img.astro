@@ -1,0 +1,143 @@
+---
+/**
+ * Einheitliches Bild: AVIF + WebP mit srcset, feste Seitenverhältnisse (kein CLS),
+ * optionale Art Direction (eigener Ausschnitt mobil), Markentönung + Korn.
+ * Ohne Foto rendert es einen markenfarbigen Platzhalter mit Motivbeschriftung.
+ */
+import { Picture, getImage } from 'astro:assets';
+import { resolveBild } from '@/lib/images';
+import { site } from '@/lib/config';
+import type { Bild } from '@/lib/config';
+
+interface Props {
+  bild: Bild | undefined;
+  /** CSS aspect-ratio, z. B. "4/3". "auto" = natürliches Verhältnis */
+  ratio?: string;
+  /** Mobil abweichendes Verhältnis (Art Direction) */
+  ratioMobil?: string;
+  sizes?: string;
+  widths?: number[];
+  priority?: boolean;
+  class?: string;
+  imgClass?: string;
+  motiv?: string;
+  /** Dekorativ → alt="" */
+  decorative?: boolean;
+  tint?: boolean;
+  grain?: boolean;
+  transitionName?: string | undefined;
+  /** Zusätzliche Attribute für das Wrapper-Element (z. B. data-anim) */
+  [key: `data-${string}`]: unknown;
+}
+
+const {
+  bild,
+  ratio = '4/3',
+  ratioMobil,
+  sizes = '(min-width: 1024px) 50vw, 100vw',
+  widths = [480, 720, 960, 1280, 1680],
+  priority = false,
+  class: cls = '',
+  imgClass = '',
+  motiv,
+  decorative = false,
+  tint = true,
+  grain,
+  transitionName,
+  ...rest
+} = Astro.props;
+
+const r = resolveBild(bild, motiv);
+const stil = site.config.branding.bildstil;
+const useGrain = grain ?? stil.grain;
+const alt = decorative ? '' : r.alt;
+const style = [
+  `--tint:${stil.toenung}`,
+  ratio !== 'auto' ? `aspect-ratio:${ratio}` : '',
+  ratioMobil ? `--ratio-m:${ratioMobil};--ratio-d:${ratio}` : '',
+]
+  .filter(Boolean)
+  .join(';');
+
+// Art Direction: eigene Quelle für schmale Viewports
+let mobilSrcset: string | undefined;
+if (r.src && r.mobil) {
+  const formats = await Promise.all(
+    [480, 768].map((w) => getImage({ src: r.mobil!, width: w, format: 'webp' }).then((i) => `${i.src} ${w}w`)),
+  );
+  mobilSrcset = formats.join(', ');
+}
+const usableWidths = r.src ? widths.filter((w) => w <= r.src!.width) : widths;
+if (r.src && !usableWidths.includes(Math.min(r.src.width, widths[widths.length - 1]!))) usableWidths.push(Math.min(r.src.width, widths[widths.length - 1]!));
+---
+
+<div
+  class:list={['media', cls, { 'is-tinted': tint && r.src && stil.toenung > 0, 'has-grain': useGrain, 'is-placeholder': !r.src, 'has-ratio-m': ratioMobil }]}
+  style={style}
+  transition:name={transitionName}
+  {...rest}
+>
+  {
+    r.src ? (
+      <Picture
+        src={r.src}
+        alt={alt}
+        formats={['avif', 'webp']}
+        widths={usableWidths}
+        sizes={sizes}
+        loading={priority ? 'eager' : 'lazy'}
+        decoding={priority ? 'sync' : 'async'}
+        fetchpriority={priority ? 'high' : 'auto'}
+        quality={priority ? 58 : 50}
+        class={imgClass}
+        style={`object-position:${r.fokus}`}
+        pictureAttributes={{ class: 'contents' }}
+      >
+        {mobilSrcset && <source media="(max-width: 767px)" srcset={mobilSrcset} sizes="100vw" type="image/webp" />}
+      </Picture>
+    ) : (
+      <div class="ph" role={decorative ? undefined : 'img'} aria-label={decorative ? undefined : alt}>
+        <svg class="ph__mark" viewBox="0 0 100 100" aria-hidden="true">
+          <path d="M8 92V8h84" fill="none" stroke="currentColor" stroke-width="0.6" />
+          <path d="M8 8l84 84" fill="none" stroke="currentColor" stroke-width="0.4" stroke-dasharray="2 3" />
+        </svg>
+        <span class="ph__label label">{r.motiv || alt}</span>
+      </div>
+    )
+  }
+  <slot />
+</div>
+
+<style>
+  .media.has-ratio-m {
+    aspect-ratio: var(--ratio-m) !important;
+  }
+  @media (min-width: 768px) {
+    .media.has-ratio-m {
+      aspect-ratio: var(--ratio-d) !important;
+    }
+  }
+  .ph {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: end start;
+    padding: var(--space-m);
+    color: color-mix(in oklab, var(--c-on-brand) 75%, transparent);
+    background:
+      radial-gradient(120% 90% at 85% 10%, color-mix(in oklab, var(--c-accent-raw) 35%, transparent), transparent 60%),
+      linear-gradient(160deg, var(--p-700), var(--p-900));
+  }
+  .ph__mark {
+    position: absolute;
+    inset: 12%;
+    width: 76%;
+    height: 76%;
+    opacity: 0.35;
+  }
+  .ph__label {
+    position: relative;
+    max-width: 28ch;
+    color: var(--c-on-dark);
+  }
+</style>

@@ -1,0 +1,53 @@
+---
+/** Freier Text-Bild-Block (Layout links | rechts) – für individuelle Betriebsgeschichten */
+import { t, type Sektion } from '@/lib/config';
+import Section from '@/components/ui/Section.astro';
+import Img from '@/components/ui/Img.astro';
+import { withBase } from '@/lib/paths';
+
+interface Props {
+  s: Extract<Sektion, { typ: 'text-bild' }>;
+}
+const { s } = Astro.props;
+const absaetze = t(s.text).split(/\n{2,}/);
+---
+
+<Section ton={s.ton} id={s.id} class:list={['tbx', `tbx--${s.layout}`]}>
+  <div class="container-x tbx__grid">
+    <div class="tbx__media">
+      <Img bild={s.bild} ratio="5/4" ratioMobil="4/3" sizes="(min-width: 1024px) 50vw, 100vw" data-anim="image-reveal" />
+    </div>
+    <div class="tbx__body">
+      {s.ueberschrift && <h2 class="h2" data-anim="lines">{t(s.ueberschrift)}</h2>}
+      {s.intro && <p class="lead" data-anim="reveal-up">{t(s.intro)}</p>}
+      <div class="prose-text" data-anim="reveal-up">
+        {absaetze.map((p) => <p>{p}</p>)}
+      </div>
+      {s.cta && <a href={withBase(s.cta.ziel)} class="btn btn--ghost" data-anim="reveal-up">{s.cta.text}</a>}
+    </div>
+  </div>
+</Section>
+
+<style>
+  .tbx__grid {
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+  @media (min-width: 64rem) {
+    .tbx__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3xl);
+    }
+    .tbx--rechts .tbx__media {
+      order: 2;
+    }
+  }
+  .tbx__body {
+    display: grid;
+    gap: var(--space-l);
+  }
+  .tbx__body .btn {
+    justify-self: start;
+  }
+</style>

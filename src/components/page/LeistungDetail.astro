@@ -1,0 +1,240 @@
+---
+/** Inhalt einer Leistungs-Detailseite (auch Basis der lokalen Landingpages) */
+import { site, t, type Leistung, type Sektion } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { fill, telHref, telAnzeige } from '@/lib/text';
+import Section from '@/components/ui/Section.astro';
+import Img from '@/components/ui/Img.astro';
+import Icon from '@/components/ui/Icon.astro';
+import LiveStatus from '@/components/ui/LiveStatus.astro';
+import FaqList from '@/components/ui/FaqList.astro';
+import ReferenzCard from '@/components/ui/ReferenzCard.astro';
+import Ablauf from '@/components/sections/Ablauf.astro';
+import Cta from '@/components/sections/Cta.astro';
+import Kostenschaetzer from '@/components/interactive/Kostenschaetzer.astro';
+
+interface Props {
+  l: Leistung;
+  /** Zusatztext für lokale Seiten */
+  lokal?: { ort: string; text: string; besonderheiten?: string[] | undefined } | undefined;
+}
+const { l, lokal } = Astro.props;
+const refs = site.config.referenzen.filter((r) => r.leistungSlug === l.slug).slice(0, 3);
+const andere = site.leistungen.filter((x) => x.slug !== l.slug);
+const faqs = [...l.faq, ...site.faq.slice(0, Math.max(0, 4 - l.faq.length))];
+const ablaufS = { typ: 'ablauf', layout: 'liste', aktiv: true, ton: 'flaeche', ueberschrift: ui.leistung.ablauf, intro: undefined } as Extract<Sektion, { typ: 'ablauf' }>;
+const ctaS = { typ: 'cta', layout: 'kontakt', aktiv: true, ton: 'hell' } as Extract<Sektion, { typ: 'cta' }>;
+const absaetze = (lokal ? `${lokal.text}\n\n${l.text}` : l.text).split(/\n{2,}/).map((p) => t(p));
+const notfall = l.slug === 'notdienst' && site.notdienst.aktiv;
+---
+
+<Section class="ld">
+  <div class="container-x ld__grid">
+    <div class="ld__main">
+      <div class="prose-text ld__text" data-anim="reveal-up">
+        {absaetze.map((p) => <p>{p}</p>)}
+      </div>
+      {
+        lokal?.besonderheiten && (
+          <ul class="ld__checks ld__checks--lokal" aria-label={fill(ui.leistung.lokalVorOrt, { ort: lokal.ort })}>
+            {lokal.besonderheiten.map((b) => (
+              <li><Icon name="map-pin" size={20} />{t(b)}</li>
+            ))}
+          </ul>
+        )
+      }
+      {
+        l.nutzen.length > 0 && (
+          <div class="ld__nutzen">
+            <h2 class="h3">{t(ui.leistung.nutzen)}</h2>
+            <ul class="ld__checks" data-anim-stagger>
+              {l.nutzen.map((n) => (
+                <li><Icon name="check" size={20} />{n}</li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+      {
+        l.bilder.length > 1 && (
+          <div class="ld__gallery">
+            {l.bilder.slice(1, 3).map((b, _i, arr) => (
+              <Img bild={b} ratio={arr.length === 1 ? '16/9' : '4/3'} sizes={arr.length === 1 ? '(min-width: 1024px) 60vw, 100vw' : '(min-width: 1024px) 30vw, 100vw'} class={arr.length === 1 ? 'ld__single' : ''} data-anim="image-reveal" />
+            ))}
+          </div>
+        )
+      }
+    </div>
+
+    <aside class="ld__aside">
+      <div class="card ld__card">
+        <p class="h4">{l.titel}</p>
+        <LiveStatus notdienst={notfall} />
+        <a href={notfall ? telHref(site.notdienst.telefon!) : site.links.anfrage(l.slug)} class="btn btn--signal" data-magnetic>
+          {notfall ? ui.cta.notdienstAnrufen : ui.cta.leistungAnfragen}
+        </a>
+        <a href={telHref(site.config.betrieb.telefon)} class="btn btn--ghost tabular"><Icon name="phone" />{telAnzeige(site.config.betrieb.telefon)}</a>
+      </div>
+    </aside>
+  </div>
+</Section>
+
+{l.ablauf.length > 0 && <Ablauf s={ablaufS} schritte={l.ablauf} />}
+
+{
+  l.kostenschaetzer && (
+    <Section>
+      <div class="container-x ld__ks">
+        <Kostenschaetzer l={l} />
+      </div>
+    </Section>
+  )
+}
+
+{
+  refs.length > 0 && (
+    <Section ton="flaeche">
+      <div class="container-x">
+        <h2 class="h2 ld__h">{ui.referenz.passende}</h2>
+        <ul class="ld__refs" data-anim-stagger>
+          {refs.map((r) => (
+            <li><ReferenzCard r={r} /></li>
+          ))}
+        </ul>
+      </div>
+    </Section>
+  )
+}
+
+{
+  faqs.length > 0 && (
+    <Section>
+      <div class="container-x ld__faq">
+        <h2 class="h2 ld__h">{fill(ui.leistung.faq, { titel: l.titel })}</h2>
+        <FaqList faqs={faqs} name={`faq-${l.slug}`} />
+      </div>
+    </Section>
+  )
+}
+
+<Section ton="flaeche" class="ld__more">
+  <div class="container-x">
+    <h2 class="h4 ld__h">{ui.leistung.weitere}</h2>
+    <ul class="ld__chips">
+      {andere.map((a) => <li><a class="chip" href={site.links.leistung(a.slug)}><Icon name={a.icon} size={18} />{a.titel}</a></li>)}
+    </ul>
+  </div>
+</Section>
+
+<Cta s={ctaS} />
+
+<style>
+  .ld__grid {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+  @media (min-width: 64rem) {
+    .ld__grid {
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.9fr);
+      gap: var(--space-3xl);
+      align-items: start;
+    }
+    .ld__aside {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+  }
+  .ld__main {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+  .ld__text {
+    font-size: var(--step-1);
+    line-height: 1.6;
+    color: var(--s-ink);
+  }
+  .ld__nutzen {
+    display: grid;
+    gap: var(--space-l);
+  }
+  .ld__checks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-s);
+  }
+  .ld__checks li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.75rem;
+    align-items: start;
+    padding: var(--space-m);
+    border-radius: var(--r-m);
+    background: var(--s-card);
+    border: 1px solid var(--s-line);
+    font-weight: 550;
+  }
+  .ld__checks :global(.icon) {
+    color: var(--c-success);
+    margin-top: 0.15rem;
+  }
+  .ld__checks--lokal :global(.icon) {
+    color: var(--s-accent);
+  }
+  .ld__gallery {
+    display: grid;
+    gap: var(--space-s);
+  }
+  @media (min-width: 40rem) {
+    .ld__gallery {
+      grid-template-columns: 1fr 1fr;
+    }
+    .ld__gallery :global(.ld__single) {
+      grid-column: 1 / -1;
+    }
+  }
+  .ld__card {
+    display: grid;
+    gap: var(--space-m);
+    padding: var(--space-xl);
+  }
+  .ld__card .btn {
+    width: 100%;
+  }
+  .ld__ks {
+    max-width: 52rem;
+  }
+  .ld__h {
+    margin-bottom: var(--space-xl);
+  }
+  .ld__refs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-xl) var(--space-l);
+  }
+  @media (min-width: 40rem) {
+    .ld__refs {
+      grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    }
+  }
+  .ld__faq {
+    max-width: 60rem;
+  }
+  .ld__chips {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .ld__chips .chip {
+    text-decoration: none;
+  }
+  .ld__more {
+    padding-block: var(--space-3xl);
+  }
+</style>

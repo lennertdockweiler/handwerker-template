@@ -1,0 +1,54 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/ui/PageHero.astro';
+import LeistungDetail from '@/components/page/LeistungDetail.astro';
+import Icon from '@/components/ui/Icon.astro';
+import { site, type Leistung } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { telHref, fill } from '@/lib/text';
+import { getImage } from '@/lib/images';
+import { pageTitle, pageDescription, breadcrumbs, service, faqPage } from '@/lib/seo';
+
+export function getStaticPaths() {
+  if (!site.seiten.leistungen) return [];
+  return site.leistungen.map((l) => ({ params: { slug: l.slug }, props: { l } }));
+}
+interface Props {
+  l: Leistung;
+}
+const { l } = Astro.props;
+const ort = site.config.betrieb.adresse.ort;
+const crumbs = [
+  { name: ui.nav.start, path: '/' },
+  { name: ui.nav.leistungen, path: '/leistungen/' },
+  { name: l.titel, path: `/leistungen/${l.slug}/` },
+];
+const faqs = [...l.faq, ...site.faq.slice(0, Math.max(0, 4 - l.faq.length))];
+---
+
+<BaseLayout
+  title={pageTitle(fill(ui.seo.leistung, { titel: l.titel, ort }), `leistung-${l.slug}`)}
+  description={pageDescription(fill(ui.seo.leistungBeschreibung, { ...site.vars, kurztext: l.kurztext }), `leistung-${l.slug}`)}
+  path={`/leistungen/${l.slug}/`}
+  ogKey={`leistung-${l.slug}`}
+  preloadImage={getImage(l.bilder[0]?.datei)}
+  preloadSizes="(min-width: 1024px) 45vw, 100vw"
+  preloadWidths={[480, 720, 960, 1280, 1680]}
+  jsonLd={[breadcrumbs(crumbs), service(l), faqPage(faqs)]}
+>
+  <PageHero titel={l.titel} intro={l.kurztext} crumbs={crumbs} bild={l.bilder[0] ?? { alt: l.titel, motiv: l.motiv }} transitionName={`leistung-${l.slug}`} kicker={fill(ui.seo.gewerkOrt, site.vars)}>
+    <div class="lh__ctas">
+      <a href={site.links.anfrage(l.slug)} class="btn btn--lg btn--signal">{ui.cta.leistungAnfragen}</a>
+      <a href={telHref(site.config.betrieb.telefon)} class="btn btn--lg btn--ghost"><Icon name="phone" />{ui.cta.anrufen}</a>
+    </div>
+  </PageHero>
+  <LeistungDetail l={l} />
+</BaseLayout>
+
+<style>
+  .lh__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+  }
+</style>

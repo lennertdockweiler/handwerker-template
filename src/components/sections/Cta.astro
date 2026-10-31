@@ -1,0 +1,128 @@
+---
+/** Abschluss-CTA + Kontaktblock mit Öffnungszeiten und „Jetzt erreichbar“-Live-Status */
+import { site, sb, t, type Sektion } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { telHref, telAnzeige, waHref, fill } from '@/lib/text';
+import Section from '@/components/ui/Section.astro';
+import Icon from '@/components/ui/Icon.astro';
+import OpeningHours from '@/components/ui/OpeningHours.astro';
+import LiveStatus from '@/components/ui/LiveStatus.astro';
+
+interface Props {
+  s: Extract<Sektion, { typ: 'cta' }>;
+}
+const { s } = Astro.props;
+const b = site.config.betrieb;
+const titel = s.ueberschrift ? t(s.ueberschrift) : sb('ctaTitel');
+const text = s.intro ? t(s.intro) : sb('ctaText');
+const banner = s.layout === 'banner';
+---
+
+<Section ton={s.ton ?? (banner ? 'marke' : 'flaeche')} id={s.id} class:list={['cta', `cta--${s.layout}`]}>
+  <div class="container-x cta__grid">
+    <div class="cta__main">
+      <h2 class="h1 cta__title" data-anim="lines">{titel}</h2>
+      <p class="lead" data-anim="reveal-up">{text}</p>
+      <div class="cta__btns" data-anim="reveal-up">
+        <a href={site.links.anfrage()} class="btn btn--lg btn--signal" data-magnetic>{ui.cta.anfragen}</a>
+        <a href={telHref(b.telefon)} class="btn btn--lg btn--ghost"><Icon name="phone" />{telAnzeige(b.telefon)}</a>
+        {
+          b.whatsapp && !banner && (
+            <a href={waHref(b.whatsapp, fill(ui.kontakt.whatsappGruss, { kurzname: b.kurzname }))} class="btn btn--lg btn--ghost" target="_blank" rel="noopener">
+              <Icon name="whatsapp" />
+              {ui.cta.whatsapp}
+              <span class="sr-only">{ui.barrierefrei.neuesFenster}</span>
+            </a>
+          )
+        }
+      </div>
+    </div>
+    {
+      !banner && (
+        <aside class="cta__card card" data-anim="reveal-up" aria-label={ui.footer.kontakt}>
+          <LiveStatus />
+          <address class="cta__addr">
+            <strong>{b.name}</strong>
+            <span>{b.adresse.strasse}</span>
+            <span>
+              {b.adresse.plz} {b.adresse.ort}
+            </span>
+          </address>
+          <ul class="cta__contact">
+            <li><a href={telHref(b.telefon)} class="link-u tabular"><Icon name="phone" size={18} />{telAnzeige(b.telefon)}</a></li>
+            <li><a href={`mailto:${b.email}`} class="link-u"><Icon name="mail" size={18} />{b.email}</a></li>
+          </ul>
+          <h3 class="label cta__oh">{ui.oeffnungszeiten}</h3>
+          <OpeningHours />
+        </aside>
+      )
+    }
+  </div>
+</Section>
+
+<style>
+  .cta__grid {
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+  @media (min-width: 64rem) {
+    .cta--kontakt .cta__grid {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: var(--space-3xl);
+    }
+  }
+  .cta__main {
+    display: grid;
+    gap: var(--space-l);
+  }
+  .cta__title {
+    max-width: 16ch;
+  }
+  .cta__btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+  }
+  .cta--banner .cta__btns .btn--ghost {
+    --btn-ink: var(--s-ink);
+    --btn-bd: color-mix(in oklab, var(--s-ink) 50%, transparent);
+  }
+  .cta--banner .cta__btns .btn:not(.btn--ghost) {
+    --btn-bg: var(--c-dark);
+    --btn-ink: var(--c-on-dark);
+    --btn-bd: var(--c-dark);
+    --btn-hover: var(--c-dark-2);
+  }
+  @media (max-width: 30rem) {
+    .cta__btns .btn {
+      flex: 1 1 100%;
+    }
+  }
+  .cta__card {
+    display: grid;
+    gap: var(--space-s);
+    padding: var(--space-xl);
+  }
+  .cta__addr {
+    font-style: normal;
+    display: grid;
+  }
+  .cta__contact {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+  }
+  .cta__contact a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    word-break: break-word;
+  }
+  .cta__oh {
+    margin-top: var(--space-s);
+    color: var(--s-ink-soft);
+  }
+</style>

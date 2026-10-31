@@ -1,0 +1,214 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/ui/PageHero.astro';
+import Section from '@/components/ui/Section.astro';
+import Icon from '@/components/ui/Icon.astro';
+import LiveStatus from '@/components/ui/LiveStatus.astro';
+import OpeningHours from '@/components/ui/OpeningHours.astro';
+import ConsentMap from '@/components/interactive/ConsentMap.astro';
+import Konfigurator, { type KLabels, type KLeistung } from '@/components/islands/Konfigurator';
+import nodes from 'lucide-static/icon-nodes.json';
+import { site, sb, t } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { fill, telHref, telAnzeige, waHref } from '@/lib/text';
+import { pageTitle, pageDescription, breadcrumbs } from '@/lib/seo';
+
+if (!site.seiten.kontakt) return Astro.redirect('/');
+const c = site.config;
+const b = c.betrieb;
+const crumbs = [{ name: ui.nav.start, path: '/' }, { name: ui.nav.kontakt, path: '/kontakt/' }];
+const K = ui.konfigurator;
+const F = ui.formular;
+type N = [string, Record<string, string | number>][];
+const svg = (name: string) =>
+  ((nodes as unknown as Record<string, N>)[name] ?? (nodes as unknown as Record<string, N>)['circle-dot'] ?? [])
+    .map(([tag, a]) => `<${tag} ${Object.entries(a).map(([k, v]) => `${k}="${v}"`).join(' ')}/>`)
+    .join('');
+const leistungen: KLeistung[] = site.leistungen.map((l) => ({ slug: l.slug, titel: l.titel, kurztext: l.kurztext, icon: svg(l.icon), fragen: l.anfrageFragen }));
+const labels: KLabels = {
+  schritte: [...K.schritte],
+  schrittVon: K.schrittVon,
+  leistungFrage: t(K.leistungFrage),
+  leistungHilfe: t(K.leistungHilfe),
+  sonstiges: K.sonstiges,
+  sonstigesText: K.sonstigesText,
+  detailsTitel: K.detailsTitel,
+  detailsHilfe: t(K.detailsHilfe),
+  beschreibung: K.beschreibung,
+  beschreibungPlatzhalter: K.beschreibungPlatzhalter,
+  ja: K.ja,
+  nein: K.nein,
+  zeitraumTitel: K.zeitraumTitel,
+  dringlichkeit: [...K.dringlichkeit],
+  wunschtermin: K.wunschtermin,
+  ortTitel: K.ortTitel,
+  ortHilfe: t(K.ortHilfe),
+  plz: ui.plz.label,
+  strasse: K.strasse,
+  ort: K.ort,
+  plzStatus: { ...K.status, ungueltig: ui.plz.ungueltig },
+  fotosTitel: K.fotosTitel,
+  fotosHilfe: K.fotosHilfe,
+  fotosDrop: K.fotosDrop,
+  fotosAuswaehlen: K.fotosAuswaehlen,
+  fotosDemo: t(K.fotosDemo),
+  fotoEntfernen: K.fotoEntfernen,
+  fotoZuGross: K.fotoZuGross,
+  kontaktTitel: t(K.kontaktTitel),
+  name: t(K.name),
+  email: K.email,
+  telefon: K.telefon,
+  rueckruf: K.rueckruf,
+  rueckrufOptionen: c.betrieb.whatsapp ? [...K.rueckrufOptionen] : K.rueckrufOptionen.filter((o) => o !== 'WhatsApp'),
+  pruefenTitel: K.pruefenTitel,
+  pruefenHilfe: K.pruefenHilfe,
+  bearbeiten: K.bearbeiten,
+  fotos: K.fotos,
+  keineAngabe: K.keineAngabe,
+  weiter: F.weiter,
+  zurueck: F.zurueck,
+  senden: F.senden,
+  sendet: F.sendet,
+  optional: F.optional,
+  datenschutz: t(F.datenschutz),
+  datenschutzLink: F.datenschutzLink,
+  fehlerPflicht: t(F.fehlerPflicht),
+  fehlerEmail: F.fehlerEmail,
+  fehlerTelefon: F.fehlerTelefon,
+  fehlerAuswahl: F.fehlerAuswahl,
+  fehlerKontakt: t(K.fehlerKontakt),
+  fehlerSenden: F.fehlerSenden,
+  erfolgTitel: F.erfolgTitel,
+  erfolgText: t(F.erfolgText),
+  demoBadge: F.demoBadge,
+  demoHinweis: F.demoHinweis,
+  neueAnfrage: F.neueAnfrage,
+  entwurf: F.entwurf,
+  entwurfVerwerfen: F.entwurfVerwerfen,
+  honeypot: F.honeypot,
+  betreff: K.betreff,
+};
+const e = c.einsatzgebiet;
+---
+
+<BaseLayout
+  title={pageTitle(fill(ui.seo.kontakt, site.vars), 'kontakt')}
+  description={pageDescription(`${sb('kontaktIntro')} ${b.telefon} · ${b.adresse.strasse}, ${b.adresse.plz} ${b.adresse.ort}`, 'kontakt')}
+  path="/kontakt/"
+  ogKey="kontakt"
+  jsonLd={[breadcrumbs(crumbs)]}
+>
+  <PageHero titel={sb('kontaktTitel')} intro={sb('kontaktIntro')} crumbs={crumbs} />
+  <Section class="kt-page">
+    <div class="container-x kp">
+      <div class="kp__form card">
+        <noscript>
+          <p class="kp__nojs">{t(F.ohneJs)} <a href={telHref(b.telefon)}>{telAnzeige(b.telefon)}</a> · <a href={`mailto:${b.email}`}>{b.email}</a></p>
+        </noscript>
+        <Konfigurator
+          client:visible
+          leistungen={leistungen}
+          plzData={{ orte: e.orte.map((o) => ({ name: o.name, plz: o.plz, status: o.status })), plz: e.plz, anfrage: e.plzAufAnfrage }}
+          labels={labels}
+          endpoint={c.integrationen.formularEndpoint}
+          accessKey={c.integrationen.formularZugangsschluessel}
+          demo={site.demoFormular}
+          datenschutzUrl={site.links.datenschutz}
+          storageKey={`anfrage-${site.variant}`}
+          telefon={b.telefon}
+        />
+      </div>
+      <aside class="kp__aside">
+        <div class="kp__block">
+          <LiveStatus />
+          <ul class="kp__contact">
+            <li><a href={telHref(b.telefon)} class="kp__big tabular"><Icon name="phone" />{telAnzeige(b.telefon)}</a></li>
+            <li><a href={`mailto:${b.email}`} class="link-u"><Icon name="mail" size={18} />{b.email}</a></li>
+            {b.whatsapp && <li><a href={waHref(b.whatsapp, fill(ui.kontakt.whatsappGruss, { kurzname: b.kurzname }))} class="link-u" target="_blank" rel="noopener"><Icon name="whatsapp" size={18} />{ui.kontakt.whatsapp}<span class="sr-only">{ui.barrierefrei.neuesFenster}</span></a></li>}
+          </ul>
+          <address class="kp__addr"><strong>{b.name}</strong><br />{b.adresse.strasse}<br />{b.adresse.plz} {b.adresse.ort}</address>
+        </div>
+        <div class="kp__block">
+          <h2 class="label muted">{ui.oeffnungszeiten}</h2>
+          <OpeningHours />
+        </div>
+        {site.notdienst.aktiv && (
+          <a href={telHref(site.notdienst.telefon!)} class="kp__nd">
+            <span class="live-dot" aria-hidden="true" />
+            <span><strong>{ui.notfall.titelKurz}</strong> {ui.cta.notdienstAnrufen}: <span class="tabular">{telAnzeige(site.notdienst.telefon!)}</span></span>
+          </a>
+        )}
+        <ConsentMap />
+      </aside>
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .kp {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+  @media (min-width: 64rem) {
+    .kp {
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+      align-items: start;
+    }
+    .kp__aside {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+  }
+  .kp__form {
+    padding: clamp(1.25rem, 4vw, 2.75rem);
+    min-height: 32rem;
+  }
+  .kp__nojs {
+    margin-bottom: var(--space-l);
+    padding: var(--space-m);
+    border: 2px solid var(--c-warning);
+    border-radius: var(--r-s);
+    font-weight: 600;
+  }
+  .kp__aside {
+    display: grid;
+    gap: var(--space-xl);
+  }
+  .kp__block {
+    display: grid;
+    gap: var(--space-s);
+  }
+  .kp__contact {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.25rem;
+  }
+  .kp__contact a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+  }
+  .kp__big {
+    font-family: var(--font-head);
+    font-weight: var(--head-weight);
+    font-size: var(--step-2);
+    text-decoration: none;
+  }
+  .kp__addr {
+    font-style: normal;
+    color: var(--s-ink-soft);
+  }
+  .kp__nd {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: var(--space-m);
+    border-radius: var(--r-m);
+    background: var(--c-accent);
+    color: var(--c-on-accent);
+    text-decoration: none;
+  }
+</style>

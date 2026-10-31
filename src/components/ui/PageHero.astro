@@ -1,0 +1,141 @@
+---
+/**
+ * Kopf für Unterseiten. Präzise: dunkel mit Raster · Manufaktur: Papier mit
+ * Jahresringen · Bold: Markenfläche. Optional mit Bild (Shared-Element-Transition).
+ */
+import { site, type Bild } from '@/lib/config';
+import { ui } from '@/data/ui';
+import Img from './Img.astro';
+import { withBase } from '@/lib/paths';
+
+interface Props {
+  titel: string;
+  intro?: string | undefined;
+  crumbs: { name: string; path: string }[];
+  bild?: Bild | undefined;
+  transitionName?: string | undefined;
+  kicker?: string | undefined;
+  ton?: 'hell' | 'flaeche' | 'dunkel' | 'marke';
+}
+const { titel, intro, crumbs, bild, transitionName, kicker } = Astro.props;
+const preset = site.config.branding.stilPreset;
+const ton = Astro.props.ton ?? (preset === 'modern-praezise' ? 'dunkel' : preset === 'kraftvoll-bold' ? 'marke' : 'hell');
+---
+
+<section class:list={['ph', `tone-${ton}`, { 'ph--bild': bild, paper: preset === 'manufaktur-warm' }]} data-hero="page">
+  {preset === 'modern-praezise' && <div class="ph__grid tech-grid" aria-hidden="true" />}
+  {
+    preset === 'manufaktur-warm' && (
+      <svg class="ph__rings" viewBox="0 0 400 400" aria-hidden="true">
+        {[190, 158, 128, 100, 76, 54, 36, 20].map((r, i) => (
+          <circle cx={200 + i * 2} cy={200 - i} r={r} />
+        ))}
+      </svg>
+    )
+  }
+  <div class="container-x ph__in">
+    <nav aria-label={ui.nav.breadcrumb} class="ph__crumbs">
+      <ol>
+        {
+          crumbs.map((c, i) => (
+            <li>
+              {i < crumbs.length - 1 ? <a href={withBase(c.path)} class="link-u">{c.name}</a> : <span aria-current="page">{c.name}</span>}
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+    <div class="ph__grid2">
+      <div class="ph__text">
+        {kicker && <p class="label ph__kicker">{kicker}</p>}
+        <h1 class="h1 ph__title" data-anim="words">{titel}</h1>
+        {intro && <p class="lead ph__intro" data-anim="reveal-up">{intro}</p>}
+        <slot />
+      </div>
+      {
+        bild && (
+          <div class="ph__media">
+            <Img bild={bild} ratio="4/3" priority sizes="(min-width: 1024px) 45vw, 100vw" transitionName={transitionName} data-anim="hero-media" />
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .ph {
+    position: relative;
+    overflow: hidden;
+    padding-top: calc(var(--header-h) + var(--nd-h, 0px) + var(--space-2xl));
+    padding-bottom: var(--space-3xl);
+  }
+  .ph__grid {
+    position: absolute;
+    inset: 0;
+    mask-image: linear-gradient(90deg, transparent, #000 40%);
+  }
+  .ph__rings {
+    position: absolute;
+    right: -12rem;
+    top: -6rem;
+    width: 38rem;
+    height: 38rem;
+    fill: none;
+    stroke: var(--s-line);
+    stroke-width: 1;
+  }
+  .ph__in {
+    position: relative;
+  }
+  .ph__crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    list-style: none;
+    margin: 0 0 var(--space-xl);
+    padding: 0;
+    font-size: var(--step--1);
+    color: var(--s-ink-soft);
+  }
+  .ph__crumbs li + li::before {
+    content: '/';
+    margin-right: 0.5rem;
+    opacity: 0.5;
+  }
+  .ph__crumbs a {
+    display: inline-flex;
+    min-height: 32px;
+    align-items: center;
+  }
+  .ph__crumbs [aria-current] {
+    display: inline-flex;
+    min-height: 32px;
+    align-items: center;
+    color: var(--s-ink);
+  }
+  .ph__grid2 {
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: end;
+  }
+  @media (min-width: 64rem) {
+    .ph--bild .ph__grid2 {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: var(--space-3xl);
+    }
+  }
+  .ph__text {
+    display: grid;
+    gap: var(--space-l);
+  }
+  .ph__kicker {
+    color: var(--s-accent);
+  }
+  .ph__title {
+    max-width: 18ch;
+  }
+  .ph__intro {
+    max-width: 56ch;
+  }
+</style>

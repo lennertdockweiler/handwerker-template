@@ -1,0 +1,57 @@
+---
+import { site } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { zeilen } from '@/lib/hours';
+import { typo } from '@/lib/text';
+
+interface Props {
+  class?: string;
+}
+const { class: cls = '' } = Astro.props;
+const oz = site.config.betrieb.oeffnungszeiten;
+const rows = zeilen(oz);
+const tageText = (t: (keyof typeof ui.tageKurz)[]) =>
+  t.length > 2 ? `${ui.tageKurz[t[0]!]}–${ui.tageKurz[t[t.length - 1]!]}` : t.map((x) => ui.tageKurz[x]).join(', ');
+---
+
+<div class:list={['oh', cls]}>
+  <dl class="oh__list">
+    {
+      rows.map((r) => (
+        <div class="oh__row">
+          <dt>{tageText(r.tage)}</dt>
+          <dd class="tabular">{r.zeiten ? `${r.zeiten} ${ui.uhr}` : ui.geschlossen}</dd>
+        </div>
+      ))
+    }
+  </dl>
+  {oz.hinweis && <p class="oh__note">{typo(oz.hinweis)}</p>}
+</div>
+
+<style>
+  .oh__list {
+    display: grid;
+    gap: 0.35rem;
+    margin: 0;
+  }
+  .oh__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px dashed var(--s-line);
+  }
+  .oh__row dt {
+    font-weight: 600;
+  }
+  .oh__row dd {
+    margin: 0;
+    color: var(--s-ink-soft);
+    text-align: right;
+  }
+  .oh__note {
+    margin-top: 0.75rem;
+    font-size: var(--step--1);
+    color: var(--s-ink-soft);
+  }
+</style>

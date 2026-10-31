@@ -1,0 +1,59 @@
+---
+/**
+ * „Jetzt erreichbar“-Live-Status. Der Build rendert einen neutralen Zustand,
+ * das Skript (scripts/modules/live-status.ts) setzt ihn im Browser nach der
+ * Uhrzeit in Europe/Berlin – und aktualisiert ihn jede Minute.
+ */
+import { site } from '@/lib/config';
+import { ui } from '@/data/ui';
+
+interface Props {
+  class?: string;
+  /** Notdienst-Status statt Öffnungszeiten */
+  notdienst?: boolean;
+}
+const { class: cls = '', notdienst = false } = Astro.props;
+const oz = site.config.betrieb.oeffnungszeiten;
+const data = JSON.stringify({
+  zeiten: notdienst && site.notdienst.rundUmDieUhr ? null : { regulaer: oz.regulaer, sonder: oz.sonder },
+  labels: {
+    offen: notdienst ? ui.status.notdienstAktiv : ui.status.geoeffnet,
+    geschlossen: ui.status.geschlossen,
+    bis: ui.status.schliesstUm,
+    naechste: ui.status.oeffnetUm,
+    heute: ui.heute,
+    morgen: ui.morgen,
+    tage: ui.tage,
+  },
+});
+---
+
+<p class:list={['ls', cls]} data-live-status={data} aria-live="polite">
+  <span class="live-dot" aria-hidden="true"></span>
+  <span data-ls-text>{ui.oeffnungszeiten}</span>
+</p>
+
+<style>
+  .ls {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 600;
+    font-size: var(--step--1);
+    color: var(--s-ink-soft);
+  }
+  .ls .live-dot {
+    color: var(--s-ink-soft);
+    opacity: 0.6;
+  }
+  .ls[data-state='offen'] .live-dot {
+    color: var(--c-success);
+    opacity: 1;
+  }
+  :global(.tone-dunkel) .ls[data-state='offen'] .live-dot {
+    color: #4ade80;
+  }
+  .ls[data-state='geschlossen'] .live-dot::after {
+    animation: none;
+  }
+</style>

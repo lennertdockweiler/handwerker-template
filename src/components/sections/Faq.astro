@@ -1,0 +1,57 @@
+---
+import { site, sb, t, type Sektion } from '@/lib/config';
+import Section from '@/components/ui/Section.astro';
+import SectionHead from '@/components/ui/SectionHead.astro';
+import FaqList from '@/components/ui/FaqList.astro';
+
+interface Props {
+  s: Extract<Sektion, { typ: 'faq' }>;
+}
+const { s } = Astro.props;
+const faqs = site.faq;
+const zwei = s.layout === 'zweispaltig';
+const half = Math.ceil(faqs.length / 2);
+---
+
+<Section ton={s.ton} id={s.id} class:list={['fs', `fs--${s.layout}`]}>
+  <div class="container-x fs__grid">
+    <SectionHead titel={s.ueberschrift ? t(s.ueberschrift) : sb('faqTitel')} intro={s.intro ? t(s.intro) : undefined} />
+    {
+      zwei ? (
+        <div class="fs__cols">
+          <FaqList faqs={faqs.slice(0, half)} name="faq-a" />
+          <FaqList faqs={faqs.slice(half)} name="faq-b" />
+        </div>
+      ) : (
+        <FaqList faqs={faqs} />
+      )
+    }
+  </div>
+</Section>
+
+<style>
+  .fs__grid {
+    display: grid;
+    gap: var(--space-l);
+  }
+  @media (min-width: 64rem) {
+    .fs--akkordeon .fs__grid {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: var(--space-3xl);
+      align-items: start;
+    }
+    .fs--akkordeon .fs__grid > :global(.section-head) {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+    .fs__cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2xl);
+    }
+  }
+  .fs__cols {
+    display: grid;
+    gap: 0;
+  }
+</style>

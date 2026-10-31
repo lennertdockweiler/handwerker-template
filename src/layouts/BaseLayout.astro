@@ -1,0 +1,120 @@
+---
+import '@/styles/global.css';
+import { Font, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { ClientRouter } from 'astro:transitions';
+import { site } from '@/lib/config';
+import { absUrl, localBusiness, website, type PageMeta } from '@/lib/seo';
+import { fontVar } from '@/data/fonts.mjs';
+import { withBase } from '@/lib/paths';
+import { ui } from '@/data/ui';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import StickyBar from '@/components/layout/StickyBar.astro';
+import DemoBanner from '@/components/layout/DemoBanner.astro';
+
+interface Props extends PageMeta {
+  jsonLd?: (Record<string, unknown> | null)[];
+  /** Header liegt transparent über einem dunklen Hero */
+  headerOverlay?: boolean;
+  /** LCP-Bild für <link rel=preload> */
+  preloadImage?: ImageMetadata | undefined;
+  preloadSizes?: string;
+  /** Muss exakt den widths des LCP-<Img> entsprechen, sonst lädt das Bild doppelt */
+  preloadWidths?: number[];
+}
+
+const { title, description, path, ogKey, noindex = false, type = 'website', jsonLd = [], headerOverlay = false, preloadImage, preloadSizes = '100vw', preloadWidths = [640, 960, 1280, 1680, 2200] } = Astro.props;
+const c = site.config;
+const robotsNoindex = noindex || c.meta.noindex;
+const canonical = absUrl(path);
+const ogImage = absUrl(`/og/${ogKey}.png`);
+const fontKeys = [...new Set([site.fonts.headline, site.fonts.text])];
+const fontCss = `:root{--font-head:var(${fontVar(site.fonts.headline)});--font-text:var(${fontVar(site.fonts.text)})}`;
+
+let preload: { srcset: string; type: string } | undefined;
+if (preloadImage) {
+  // Gleiche Logik wie Img.astro: zu große Breiten durch die Originalbreite ersetzen
+  const widths = preloadWidths.filter((w) => w <= preloadImage.width);
+  const cap = Math.min(preloadImage.width, preloadWidths[preloadWidths.length - 1]!);
+  if (!widths.includes(cap)) widths.push(cap);
+  const imgs = await Promise.all(widths.map((w) => getImage({ src: preloadImage, width: w, format: 'avif', quality: 58 })));
+  preload = { srcset: imgs.map((i, n) => `${i.src} ${widths[n]}w`).join(', '), type: 'image/avif' };
+}
+const ld = [localBusiness(), website(), ...jsonLd].filter(Boolean);
+---
+
+<!doctype html>
+<html
+  lang="de"
+  data-preset={c.branding.stilPreset}
+  data-intensity={c.branding.animationsIntensitaet}
+  data-radius={c.branding.radius}
+  data-header-mode={headerOverlay ? 'overlay' : 'solid'}
+  data-notdienst={site.notdienst.aktiv ? '' : undefined}
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script is:inline>
+      // Progressive Enhancement: Animations-Ausgangszustände gelten nur mit JS.
+      // Lädt das Animationssystem nicht binnen 4 s, wird alles sofort sichtbar.
+      (function (d) {
+        d.classList.add('js');
+        // ?static → Endzustand aller Animationen (für Screenshots/Ausdrucke)
+        if (/[?&]static\b/.test(location.search)) d.classList.add('is-static', 'anim-failed');
+        setTimeout(function () {
+          if (!d.classList.contains('anim-ready')) d.classList.add('anim-failed');
+        }, 4000);
+      })(document.documentElement);
+    </script>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {robotsNoindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content={site.theme.themeColor} />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:site_name" content={c.betrieb.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {/* LCP-Bild zuerst anfordern – vor den Schriften */}
+    {preload && <link rel="preload" as="image" imagesrcset={preload.srcset} imagesizes={preloadSizes} type={preload.type} fetchpriority="high" />}
+    {fontKeys.map((k) => <Font cssVariable={fontVar(k) as never} preload={[{ subset: 'latin' }]} />)}
+    <style is:inline set:html={fontCss + site.theme.css}></style>
+
+    {ld.map((obj) => <script type="application/ld+json" is:inline set:html={JSON.stringify(obj)} />)}
+    <ClientRouter fallback="swap" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{ui.skipLink}</a>
+    <Header overlay={headerOverlay} path={path} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <StickyBar />
+    <DemoBanner />
+    <script>
+      import '@/scripts/main';
+    </script>
+  </body>
+</html>
+
+<style>
+  main:focus {
+    outline: none;
+  }
+</style>

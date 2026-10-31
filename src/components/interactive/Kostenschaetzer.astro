@@ -1,0 +1,175 @@
+---
+/**
+ * Kostenschätzer: Menge × Preisspanne (+ Grundpauschale) = animierter Preisrahmen.
+ * Deutlicher Hinweis „unverbindliche Orientierung, kein Angebot“, Endpreise inkl. MwSt. (PAngV).
+ */
+import type { Leistung } from '@/lib/config';
+import { site, t } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { euro, fill, zahl } from '@/lib/text';
+
+interface Props {
+  l: Leistung;
+}
+const { l } = Astro.props;
+const k = l.kostenschaetzer!;
+const calc = (m: number) => ({ von: k.grundpreis + m * k.preisVon, bis: k.grundpreis + m * k.preisBis });
+const start = calc(k.standard);
+const id = `ks-${l.slug}`;
+const data = JSON.stringify({ ...k, einheit: k.einheit });
+const dec = k.schritt < 1 ? 1 : 0;
+---
+
+<section class="ks card" data-kosten={data} aria-labelledby={`${id}-t`}>
+  <div class="ks__head">
+    <h2 class="h3" id={`${id}-t`}>{ui.kosten.titel}</h2>
+    <p class="muted">{t(ui.kosten.intro)}</p>
+  </div>
+  <div class="ks__ctrl">
+    <label class="field-label" for={`${id}-r`}>{k.label}</label>
+    <output class="ks__menge tabular" for={`${id}-r`} data-kosten-menge>{zahl(k.standard)}&nbsp;{k.einheit}</output>
+    <input
+      type="range"
+      id={`${id}-r`}
+      class="ks__range"
+      min={k.min}
+      max={k.max}
+      step={k.schritt}
+      value={k.standard}
+      data-kosten-input
+      data-decimals={dec}
+      aria-describedby={`${id}-h`}
+    />
+    <div class="ks__scale label tabular" aria-hidden="true">
+      <span>{zahl(k.min)}</span><span>{zahl(k.max)}&nbsp;{k.einheit}</span>
+    </div>
+  </div>
+  <div class="ks__result" aria-live="polite">
+    <p class="label muted">{ui.kosten.ergebnis}</p>
+    <p class="ks__price tabular">
+      <span data-kosten-von>{euro(start.von)}</span>
+      <span class="ks__dash">–</span>
+      <span data-kosten-bis>{euro(start.bis)}</span>
+    </p>
+    <p class="ks__per muted">
+      {fill(ui.kosten.jeEinheit, { von: euro(k.preisVon), bis: euro(k.preisBis), einheit: k.einheit })}
+      {k.grundpreis > 0 && <>, {fill(ui.kosten.grundpreis, { betrag: euro(k.grundpreis) })}</>}
+    </p>
+  </div>
+  <p class="ks__hint" id={`${id}-h`}>{ui.kosten.hinweis}</p>
+  <a href={site.links.anfrage(l.slug)} class="btn ks__cta">{ui.kosten.anfragen}</a>
+</section>
+
+<style>
+  .ks {
+    display: grid;
+    gap: var(--space-l);
+    padding: var(--space-xl);
+  }
+  .ks__head {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .ks__ctrl {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 0.5rem var(--space-m);
+  }
+  .ks__menge {
+    font-weight: 700;
+    font-size: var(--step-1);
+  }
+  .ks__range {
+    grid-column: 1 / -1;
+    width: 100%;
+    height: 44px;
+    accent-color: var(--c-accent-raw);
+    cursor: pointer;
+    background: transparent;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .ks__range::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--c-accent-raw) var(--fill, 30%), var(--s-line) var(--fill, 30%));
+  }
+  .ks__range::-moz-range-track {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--s-line);
+  }
+  .ks__range::-moz-range-progress {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--c-accent-raw);
+  }
+  .ks__range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 28px;
+    height: 28px;
+    margin-top: -11px;
+    border-radius: 50%;
+    background: var(--s-ink);
+    border: 4px solid var(--s-card);
+    box-shadow: 0 2px 10px rgb(0 0 0 / 0.25);
+    transition: transform 200ms var(--ease-out);
+  }
+  .ks__range::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--s-ink);
+    border: 4px solid var(--s-card);
+  }
+  .ks__range:active::-webkit-slider-thumb {
+    transform: scale(1.15);
+  }
+  .ks__range:focus-visible {
+    outline: 3px solid var(--s-focus);
+    outline-offset: 4px;
+  }
+  .ks__scale {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    color: var(--s-ink-soft);
+  }
+  .ks__result {
+    padding: var(--space-l);
+    border-radius: var(--r-m);
+    background: var(--s-bg);
+    border: 1px dashed var(--s-line);
+  }
+  .ks__price {
+    margin-top: 0.25rem;
+    font-family: var(--font-head);
+    font-weight: var(--head-weight);
+    letter-spacing: var(--head-tracking);
+    font-size: var(--step-4);
+    line-height: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.35em;
+  }
+  html[data-preset='modern-praezise'] .ks__price {
+    font-stretch: 100%;
+  }
+  .ks__dash {
+    color: var(--s-ink-soft);
+  }
+  .ks__per {
+    margin-top: 0.5rem;
+    font-size: var(--step--1);
+  }
+  .ks__hint {
+    font-size: var(--step--1);
+    font-weight: 600;
+    padding-left: 0.85rem;
+    border-left: 3px solid var(--c-accent-raw);
+  }
+  .ks__cta {
+    justify-self: start;
+  }
+</style>

@@ -1,0 +1,66 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/ui/PageHero.astro';
+import Section from '@/components/ui/Section.astro';
+import { ui } from '@/data/ui';
+import { pageTitle, breadcrumbs } from '@/lib/seo';
+
+interface Props {
+  titel: string;
+  path: string;
+  og: string;
+  description: string;
+}
+const { titel, path, og, description } = Astro.props;
+const crumbs = [{ name: ui.nav.start, path: '/' }, { name: titel, path }];
+---
+
+<BaseLayout title={pageTitle(titel)} description={description} path={path} ogKey={og} jsonLd={[breadcrumbs(crumbs)]}>
+  <PageHero titel={titel} crumbs={crumbs} ton="hell" />
+  <Section class="legal-sec">
+    <div class="container-x legal">
+      <slot />
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .legal-sec {
+    padding-top: var(--space-xl);
+  }
+  .legal {
+    max-width: 52rem;
+    display: grid;
+    gap: var(--space-xl);
+  }
+  .legal :global(h2) {
+    font-size: var(--step-2);
+    margin-bottom: var(--space-s);
+  }
+  .legal :global(p),
+  .legal :global(dd),
+  .legal :global(address) {
+    color: var(--s-ink-soft);
+    font-style: normal;
+  }
+  .legal :global(.legal__warn) {
+    padding: var(--space-l);
+    border-radius: var(--r-m);
+    border: 2px solid var(--c-warning);
+    background: color-mix(in oklab, var(--c-warning) 8%, var(--s-bg));
+    color: var(--s-ink);
+    font-weight: 600;
+  }
+  .legal :global(dl) {
+    margin: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .legal :global(dt) {
+    font-weight: 650;
+    color: var(--s-ink);
+  }
+  .legal :global(dd) {
+    margin: 0 0 0.5rem;
+  }
+</style>

@@ -1,0 +1,211 @@
+---
+/**
+ * Leistungen b) Große Liste: Desktop mit cursorfolgender Bildvorschau,
+ * mobil als Akkordeon (ohne JS: alles aufgeklappt).
+ */
+import { getImage } from 'astro:assets';
+import { site, sb, t, type Sektion } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { getImage as variantImage } from '@/lib/images';
+import Section from '@/components/ui/Section.astro';
+import SectionHead from '@/components/ui/SectionHead.astro';
+import Img from '@/components/ui/Img.astro';
+import Icon from '@/components/ui/Icon.astro';
+
+interface Props {
+  s: Extract<Sektion, { typ: 'leistungen' }>;
+}
+const { s } = Astro.props;
+const rows = await Promise.all(
+  site.leistungen.map(async (l) => {
+    const meta = variantImage(l.bilder[0]?.datei);
+    const preview = meta ? (await getImage({ src: meta, width: 560, format: 'webp', quality: 70 })).src : undefined;
+    return { ...l, preview };
+  }),
+);
+---
+
+<Section ton={s.ton} id={s.id}>
+  <div class="container-x">
+    <SectionHead titel={s.ueberschrift ? t(s.ueberschrift) : sb('leistungenTitel')} intro={s.intro ? t(s.intro) : sb('leistungenIntro')} split />
+    <ul class="ll" data-cursor-preview data-accordion>
+      {
+        rows.map((l, i) => (
+          <li class="ll__row" data-preview={l.preview} data-anim="reveal-up">
+            <h3 class="ll__h">
+              <button class="ll__toggle" type="button" aria-expanded="true" aria-controls={`ll-p-${i}`} id={`ll-b-${i}`} data-accordion-toggle>
+                <span class="ll__title">{l.titel}</span>
+                <span class="ll__plus" aria-hidden="true" />
+              </button>
+              <a class="ll__titlelink" href={site.links.leistung(l.slug)}>
+                <span class="ll__title">{l.titel}</span>
+              </a>
+            </h3>
+            <p class="ll__short">{l.kurztext}</p>
+            <div class="ll__panel" id={`ll-p-${i}`} role="region" aria-labelledby={`ll-b-${i}`} data-accordion-panel>
+              <div class="ll__panel-in">
+                <Img bild={l.bilder[0]} motiv={l.motiv} ratio="16/10" sizes="100vw" widths={[480, 720]} decorative />
+                <p>{l.kurztext}</p>
+                <a href={site.links.leistung(l.slug)} class="btn btn--sm btn--ghost">{ui.cta.zurLeistung}</a>
+              </div>
+            </div>
+            <Icon name="arrow-up-right" size={28} class="ll__arrow" />
+          </li>
+        ))
+      }
+    </ul>
+    <div class="ll__preview" aria-hidden="true" data-preview-el><img alt="" /></div>
+  </div>
+</Section>
+
+<style>
+  .ll {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--s-line);
+  }
+  .ll__row {
+    position: relative;
+    border-bottom: 1px solid var(--s-line);
+  }
+  .ll__h {
+    margin: 0;
+    font-size: inherit;
+  }
+  .ll__title {
+    font-family: var(--font-head);
+    font-weight: var(--head-weight);
+    font-stretch: var(--head-stretch);
+    letter-spacing: var(--head-tracking);
+    font-size: var(--step-3);
+    line-height: 1.05;
+    text-align: left;
+  }
+  .ll__toggle {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-m);
+    min-height: 4.5rem;
+    padding: var(--space-m) 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    color: inherit;
+  }
+  .ll__plus {
+    position: relative;
+    width: 1.25rem;
+    height: 1.25rem;
+    flex: none;
+  }
+  .ll__plus::before,
+  .ll__plus::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 2px;
+    background: currentColor;
+    transition: transform 360ms var(--ease-out);
+  }
+  .ll__plus::after {
+    transform: rotate(90deg);
+  }
+  .ll__toggle[aria-expanded='true'] .ll__plus::after {
+    transform: rotate(0);
+  }
+  .ll__titlelink,
+  .ll__short,
+  .ll__arrow {
+    display: none;
+  }
+  .ll__panel-in {
+    display: grid;
+    gap: var(--space-m);
+    padding-bottom: var(--space-l);
+    color: var(--s-ink-soft);
+  }
+  .ll__panel-in .btn {
+    justify-self: start;
+  }
+  .ll__panel[hidden] {
+    display: none;
+  }
+
+  /* Desktop: große Liste mit Vorschau */
+  @media (min-width: 64rem) {
+    .ll__toggle,
+    .ll__panel {
+      display: none !important;
+    }
+    .ll__row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--space-xl);
+      padding-block: var(--space-l);
+      transition: padding 420ms var(--ease-out);
+    }
+    .ll__titlelink {
+      display: block;
+      text-decoration: none;
+    }
+    .ll__titlelink::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+    .ll__title {
+      font-size: var(--step-4);
+      transition:
+        transform 520ms var(--ease-out),
+        color 260ms var(--ease-out);
+      display: inline-block;
+    }
+    .ll__short {
+      display: block;
+      color: var(--s-ink-soft);
+      max-width: 42ch;
+    }
+    .ll__arrow {
+      display: block;
+      color: var(--s-accent);
+      transition: transform 420ms var(--ease-out);
+    }
+    .ll__row:hover .ll__title {
+      transform: translateX(1.25rem);
+    }
+    .ll__row:hover .ll__arrow {
+      transform: rotate(45deg);
+    }
+  }
+  .ll__preview {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 30;
+    width: 18rem;
+    aspect-ratio: 4 / 3;
+    pointer-events: none;
+    border-radius: var(--r-img);
+    overflow: hidden;
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(0.6);
+    transition:
+      opacity 300ms var(--ease-out),
+      scale 400ms var(--ease-out);
+    box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.4);
+  }
+  .ll__preview.is-on {
+    opacity: 1;
+  }
+  .ll__preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>

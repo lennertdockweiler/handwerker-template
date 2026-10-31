@@ -1,0 +1,78 @@
+---
+/**
+ * Maßketten-Ornament (Preset „Modern Präzise“): Linie mit Endstrichen und
+ * Bemaßungstext – wie auf einer technischen Zeichnung. In anderen Presets
+ * wird nur der Text als dezente Zeile gezeigt (oder gar nichts).
+ */
+import { site } from '@/lib/config';
+
+interface Props {
+  links?: string | undefined;
+  mitte?: string | undefined;
+  rechts?: string | undefined;
+  class?: string;
+  /** In anderen Presets komplett ausblenden */
+  nurPraezise?: boolean;
+}
+const { links, mitte, rechts, class: cls = '', nurPraezise = true } = Astro.props;
+const praezise = site.config.branding.stilPreset === 'modern-praezise';
+---
+
+{
+  (praezise || !nurPraezise) && (
+    <div class:list={['mk', { 'mk--plain': !praezise }, cls]} aria-hidden="true">
+      {links && <span class="mk__end label tabular">{links}</span>}
+      <span class="mk__line" data-anim="draw">
+        {mitte && <span class="mk__mid label tabular">{mitte}</span>}
+      </span>
+      {rechts && <span class="mk__end label tabular">{rechts}</span>}
+    </div>
+  )
+}
+
+<style>
+  .mk {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--s-ink-soft);
+  }
+  .mk__line {
+    position: relative;
+    flex: 1;
+    height: 1px;
+    /* Farbe statt opacity – sonst erbt das Label die Transparenz (Kontrast!) */
+    background: color-mix(in oklab, currentColor 70%, transparent);
+  }
+  .mk__line::before,
+  .mk__line::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    width: 1px;
+    height: 13px;
+    background: currentColor;
+  }
+  .mk__line::before {
+    left: 0;
+  }
+  .mk__line::after {
+    right: 0;
+  }
+  .mk__mid {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding-inline: 0.6rem;
+    background: var(--s-bg);
+    white-space: nowrap;
+  }
+  .mk--plain .mk__line {
+    background: color-mix(in oklab, currentColor 30%, transparent);
+  }
+  .mk--plain .mk__line::before,
+  .mk--plain .mk__line::after {
+    display: none;
+  }
+</style>

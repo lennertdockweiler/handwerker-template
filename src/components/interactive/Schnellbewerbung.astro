@@ -1,0 +1,169 @@
+---
+/**
+ * Schnellbewerbung in 60 Sekunden: Stelle, Name, Telefon, Erfahrung (Chips),
+ * Wunsch-Startdatum. Mobile-first. Daneben WhatsApp-Bewerbung.
+ */
+import { site, tDu } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { fill, waHref } from '@/lib/text';
+import Icon from '@/components/ui/Icon.astro';
+import FormSuccess from './FormSuccess.astro';
+
+interface Props {
+  stelle?: string | undefined;
+}
+const { stelle } = Astro.props;
+const c = site.config;
+const msgs = JSON.stringify({
+  pflicht: tDu(ui.formular.fehlerPflicht),
+  telefon: ui.formular.fehlerTelefon,
+  email: ui.formular.fehlerEmail,
+  auswahl: ui.formular.fehlerAuswahl,
+  senden: fill(ui.formular.fehlerSenden, { telefon: c.betrieb.telefon }),
+  zusammenfassung: ui.formular.fehlerZusammenfassung,
+});
+const heute = new Date().toISOString().slice(0, 10);
+const stelleTitel = c.stellen.find((s) => s.slug === stelle)?.titel ?? ui.bewerbung.initiativ;
+const waMsg = fill(ui.karriere.whatsappNachricht, { kurzname: c.betrieb.kurzname, stelle: stelleTitel });
+---
+
+<div class="sbw" id="schnellbewerbung">
+  <div class="sbw__main card">
+    <h2 class="h3">{ui.karriere.schnellbewerbung}</h2>
+    <p class="muted">{ui.karriere.schnellIntro}</p>
+    <form
+      class="sbw__form"
+      data-form="bewerbung"
+      data-endpoint={c.integrationen.formularEndpoint}
+      data-key={c.integrationen.formularZugangsschluessel}
+      data-msgs={msgs}
+      novalidate
+    >
+      <input type="hidden" name="formular" value="Schnellbewerbung" />
+      <div class="field">
+        <label class="field-label" for="bw-stelle">{ui.bewerbung.stelle}</label>
+        <select id="bw-stelle" name="stelle" class="input" required aria-describedby="bw-stelle-err">
+          {c.stellen.map((s) => <option value={s.titel} selected={s.slug === stelle}>{s.titel}</option>)}
+          <option value={ui.bewerbung.initiativ} selected={!stelle && !c.stellen.length}>{ui.bewerbung.initiativ}</option>
+        </select>
+        <p class="field-error" id="bw-stelle-err" data-error-for="stelle" aria-live="polite"></p>
+      </div>
+      <div class="field">
+        <label class="field-label" for="bw-name">{ui.bewerbung.name}</label>
+        <input id="bw-name" name="name" class="input" autocomplete="name" required aria-describedby="bw-name-err" />
+        <p class="field-error" id="bw-name-err" data-error-for="name" aria-live="polite"></p>
+      </div>
+      <div class="field">
+        <label class="field-label" for="bw-tel">{ui.bewerbung.telefon}</label>
+        <input id="bw-tel" name="telefon" type="tel" class="input tabular" autocomplete="tel" inputmode="tel" required aria-describedby="bw-tel-err" />
+        <p class="field-error" id="bw-tel-err" data-error-for="telefon" aria-live="polite"></p>
+      </div>
+      <fieldset class="field sbw__fs" aria-describedby="bw-exp-err">
+        <legend class="field-label">{ui.bewerbung.erfahrung}</legend>
+        <div class="sbw__chips">
+          {
+            ui.bewerbung.erfahrungOptionen.map((o, i) => (
+              <span>
+                <input class="chip-input" type="radio" name="erfahrung" id={`bw-exp-${i}`} value={o} required />
+                <label class="chip" for={`bw-exp-${i}`}>{o}</label>
+              </span>
+            ))
+          }
+        </div>
+        <p class="field-error" id="bw-exp-err" data-error-for="erfahrung" aria-live="polite"></p>
+      </fieldset>
+      <div class="field">
+        <label class="field-label" for="bw-start">{ui.bewerbung.start} <span class="opt">({ui.formular.optional})</span></label>
+        <input id="bw-start" name="start" type="date" class="input" min={heute} aria-describedby="bw-start-hint" />
+        <p class="field-hint" id="bw-start-hint">{ui.bewerbung.startHilfe}</p>
+      </div>
+      <div class="hp-field" aria-hidden="true">
+        <label for="bw-website">{ui.formular.honeypot}</label>
+        <input id="bw-website" name="website" tabindex="-1" autocomplete="off" />
+      </div>
+      <p class="sbw__ds">
+        {tDu(ui.formular.datenschutz)}
+        <a href={site.links.datenschutz} class="link-u link-u--static">{ui.formular.datenschutzLink}</a>.
+      </p>
+      <p class="field-error" data-form-error aria-live="assertive"></p>
+      <button type="submit" class="btn btn--lg sbw__submit" data-label-busy={ui.formular.sendet}>
+        <span data-btn-label>{ui.bewerbung.senden}</span>
+      </button>
+    </form>
+    <FormSuccess titel={ui.bewerbung.erfolgTitel} text={ui.bewerbung.erfolgText} />
+  </div>
+  {
+    c.betrieb.whatsapp && (
+      <aside class="sbw__wa">
+        <Icon name="whatsapp" size={32} />
+        <h3 class="h4">{ui.karriere.whatsappTitel}</h3>
+        <p class="muted">{ui.karriere.whatsappText}</p>
+        <a href={waHref(c.betrieb.whatsapp, waMsg)} class="btn btn--ghost" target="_blank" rel="noopener">
+          {ui.cta.whatsapp}
+          <span class="sr-only">{ui.barrierefrei.neuesFenster}</span>
+        </a>
+      </aside>
+    )
+  }
+</div>
+
+<style>
+  .sbw {
+    display: grid;
+    gap: var(--space-l);
+    scroll-margin-top: calc(var(--header-h) + 1rem);
+  }
+  @media (min-width: 64rem) {
+    .sbw {
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.8fr);
+      align-items: start;
+    }
+  }
+  .sbw__main {
+    display: grid;
+    gap: var(--space-m);
+    padding: clamp(1.25rem, 4vw, 2.5rem);
+  }
+  .sbw__form {
+    display: grid;
+    gap: var(--space-l);
+    margin-top: var(--space-s);
+  }
+  .sbw__fs {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+  .sbw__fs legend {
+    margin-bottom: 0.5rem;
+  }
+  .sbw__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .sbw__ds {
+    font-size: var(--step--1);
+    color: var(--s-ink-soft);
+  }
+  .sbw__submit {
+    width: 100%;
+  }
+  @media (min-width: 40rem) {
+    .sbw__submit {
+      width: auto;
+      justify-self: start;
+    }
+  }
+  .sbw__wa {
+    display: grid;
+    gap: var(--space-s);
+    justify-items: start;
+    padding: var(--space-xl);
+    border-radius: var(--r-l);
+    border: 1px dashed var(--s-line);
+  }
+  .sbw__wa :global(.icon) {
+    color: var(--s-accent);
+  }
+</style>

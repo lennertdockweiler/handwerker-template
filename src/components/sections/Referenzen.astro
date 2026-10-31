@@ -1,0 +1,162 @@
+---
+/**
+ * Referenzen: Vorher/Nachher-Slider als Highlight +
+ *  slider-galerie: horizontale Galerie (Desktop gepinnt, mobil scroll-snap)
+ *  raster:         versetztes Raster
+ */
+import { site, sb, t, type Sektion } from '@/lib/config';
+import { ui } from '@/data/ui';
+import Section from '@/components/ui/Section.astro';
+import SectionHead from '@/components/ui/SectionHead.astro';
+import BeforeAfter from '@/components/interactive/BeforeAfter.astro';
+import ReferenzCard from '@/components/ui/ReferenzCard.astro';
+import { typo } from '@/lib/text';
+
+interface Props {
+  s: Extract<Sektion, { typ: 'referenzen' }>;
+}
+const { s } = Astro.props;
+const refs = site.config.referenzen;
+if (!refs.length) return;
+const highlight = refs.find((r) => r.slug === s.highlight && r.vorher && r.nachher) ?? refs.find((r) => r.vorher && r.nachher);
+/** Die ersten zwei Sätze, Satzzeichen bleiben erhalten */
+const kurz = (x: string) => (x.match(/[^.!?]+[.!?]+/g) ?? [x]).slice(0, 2).join('').trim();
+const rest = s.layout === 'raster' ? refs.slice(0, 6) : refs;
+---
+
+<Section ton={s.ton} id={s.id} class:list={['refs', `refs--${s.layout}`]}>
+  <div class="container-x">
+    <SectionHead titel={s.ueberschrift ? t(s.ueberschrift) : sb('referenzenTitel')} intro={s.intro ? t(s.intro) : sb('referenzenIntro')} split>
+      {site.seiten.referenzen && <a href={site.links.referenzen} class="link-u link-u--static refs__all">{ui.cta.alleReferenzen}</a>}
+    </SectionHead>
+    {
+      highlight && (
+        <div class="refs__hl" data-anim="reveal-up">
+          <BeforeAfter vorher={highlight.vorher!} nachher={highlight.nachher!} ratio="16/9" class="refs__ba" />
+          <div class="refs__hl-txt">
+            <p class="label tabular muted">
+              {highlight.ort} · {highlight.jahr}
+            </p>
+            <h3 class="h3">{highlight.titel}</h3>
+            <p class="muted">{typo(kurz(highlight.beschreibung))}</p>
+            <a href={site.links.referenz(highlight.slug)} class="btn btn--ghost btn--sm">
+              {ui.cta.zumProjekt}
+            </a>
+          </div>
+        </div>
+      )
+    }
+  </div>
+
+  {
+    s.layout === 'slider-galerie' ? (
+      <div class="hg" data-hscroll>
+        <div class="hg__viewport" tabindex="0" aria-label={ui.galerie.scrollen} role="region">
+          <ul class="hg__track" data-hscroll-track>
+            {rest.map((r, i) => (
+              <li class="hg__item">
+                <ReferenzCard r={r} ratio={i % 2 ? '4/5' : '4/3'} sizes="(min-width: 1024px) 34vw, 82vw" />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    ) : (
+      <div class="container-x">
+        <ul class="rg" data-anim-stagger>
+          {rest.map((r, i) => (
+            <li class:list={['rg__item', { 'rg__item--tall': i % 3 === 1 }]}>
+              <ReferenzCard r={r} ratio={i % 3 === 1 ? '4/5' : '4/3'} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+</Section>
+
+<style>
+  .refs__all {
+    font-weight: 650;
+    justify-self: start;
+  }
+  .refs__hl {
+    display: grid;
+    gap: var(--space-l);
+    margin-bottom: var(--space-3xl);
+  }
+  @media (min-width: 64rem) {
+    .refs__hl {
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
+      align-items: end;
+      gap: var(--space-2xl);
+    }
+  }
+  .refs__hl-txt {
+    display: grid;
+    gap: var(--space-s);
+    align-content: end;
+  }
+  .refs__hl-txt .btn {
+    justify-self: start;
+    margin-top: var(--space-xs);
+  }
+
+  /* Horizontale Galerie */
+  .hg__viewport {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
+  }
+  .hg__viewport::-webkit-scrollbar {
+    display: none;
+  }
+  .hg__track {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: var(--space-l);
+    width: max-content;
+  }
+  .hg__item {
+    width: min(82vw, 26rem);
+    scroll-snap-align: start;
+    align-self: end;
+  }
+  @media (min-width: 64rem) {
+    .hg__item {
+      width: clamp(22rem, 30vw, 30rem);
+    }
+    :global(.hg.is-pinned) .hg__viewport {
+      overflow: hidden;
+      scroll-snap-type: none;
+    }
+  }
+
+  /* Raster */
+  .rg {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2xl) var(--space-l);
+  }
+  @media (min-width: 40rem) {
+    .rg {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64rem) {
+    .rg {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: start;
+    }
+    .rg__item--tall {
+      margin-top: var(--space-3xl);
+    }
+  }
+</style>

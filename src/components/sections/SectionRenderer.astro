@@ -1,0 +1,42 @@
+---
+/** Rendert eine Sektion aus config.sektionen – Typ + Layout bestimmen die Komponente. */
+import type { Sektion } from '@/lib/config';
+import HeroVollbild from './hero/HeroVollbild.astro';
+import HeroSplit from './hero/HeroSplit.astro';
+import HeroTypo from './hero/HeroTypo.astro';
+import LeistungenBento from './leistungen/LeistungenBento.astro';
+import LeistungenListe from './leistungen/LeistungenListe.astro';
+import LeistungenTabs from './leistungen/LeistungenTabs.astro';
+import Usps from './Usps.astro';
+import Ablauf from './Ablauf.astro';
+import Referenzen from './Referenzen.astro';
+import Bewertungen from './Bewertungen.astro';
+import Einsatzgebiet from './Einsatzgebiet.astro';
+import KarriereTeaser from './KarriereTeaser.astro';
+import Partner from './Partner.astro';
+import Faq from './Faq.astro';
+import Cta from './Cta.astro';
+import TextBild from './TextBild.astro';
+
+interface Props {
+  s: Sektion;
+}
+const { s } = Astro.props;
+---
+
+{s.typ === 'hero' && s.layout === 'vollbild' && <HeroVollbild s={s} />}
+{s.typ === 'hero' && s.layout === 'split' && <HeroSplit s={s} />}
+{s.typ === 'hero' && s.layout === 'typo' && <HeroTypo s={s} />}
+{s.typ === 'leistungen' && s.layout === 'bento' && <LeistungenBento s={s} />}
+{s.typ === 'leistungen' && s.layout === 'liste' && <LeistungenListe s={s} />}
+{s.typ === 'leistungen' && s.layout === 'tabs' && <LeistungenTabs s={s} />}
+{s.typ === 'usps' && <Usps s={s} />}
+{s.typ === 'ablauf' && <Ablauf s={s} />}
+{s.typ === 'referenzen' && <Referenzen s={s} />}
+{s.typ === 'bewertungen' && <Bewertungen s={s} />}
+{s.typ === 'einsatzgebiet' && <Einsatzgebiet s={s} />}
+{s.typ === 'karriere' && <KarriereTeaser s={s} />}
+{s.typ === 'partner' && <Partner s={s} />}
+{s.typ === 'faq' && <Faq s={s} />}
+{s.typ === 'cta' && <Cta s={s} />}
+{s.typ === 'text-bild' && <TextBild s={s} />}

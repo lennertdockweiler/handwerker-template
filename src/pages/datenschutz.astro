@@ -1,0 +1,37 @@
+---
+import LegalPage from '@/components/page/LegalPage.astro';
+import { site } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { datenschutz } from '@/data/rechtstexte';
+import { typo, telAnzeige } from '@/lib/text';
+
+const c = site.config;
+const b = c.betrieb;
+const ep = c.integrationen.formularEndpoint;
+const abschnitte = datenschutz({
+  name: b.name,
+  adresse: `${b.adresse.strasse}, ${b.adresse.plz} ${b.adresse.ort}`,
+  email: b.email,
+  telefon: telAnzeige(b.telefon),
+  formular: site.seiten.kontakt,
+  formularDienst: ep ? new URL(ep).hostname : undefined,
+  bewerbung: site.seiten.karriere,
+  whatsapp: !!b.whatsapp,
+  karte: c.integrationen.karte.aktiv && !!c.integrationen.karte.embedUrl,
+  buchung: c.integrationen.buchungsLink ? new URL(c.integrationen.buchungsLink.url).hostname : undefined,
+  analytics: c.integrationen.analytics.aktiv ? c.integrationen.analytics.anbieter : undefined,
+  serviceWorker: true,
+});
+---
+
+<LegalPage titel={ui.rechtliches.datenschutzTitel} path="/datenschutz/" og="datenschutz" description={`${ui.rechtliches.datenschutzTitel} – ${b.name}`}>
+  <p class="legal__warn">{ui.rechtliches.pruefHinweis}</p>
+  {
+    abschnitte.map((a) => (
+      <section>
+        <h2>{a.titel}</h2>
+        {a.absaetze.map((p) => <p>{typo(p)}</p>)}
+      </section>
+    ))
+  }
+</LegalPage>

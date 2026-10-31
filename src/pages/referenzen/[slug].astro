@@ -1,0 +1,199 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/ui/PageHero.astro';
+import Section from '@/components/ui/Section.astro';
+import Img from '@/components/ui/Img.astro';
+import ReferenzCard from '@/components/ui/ReferenzCard.astro';
+import BeforeAfter from '@/components/interactive/BeforeAfter.astro';
+import Lightbox from '@/components/interactive/Lightbox.astro';
+import Icon from '@/components/ui/Icon.astro';
+import Cta from '@/components/sections/Cta.astro';
+import { site, t, type Sektion } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { fill, typo } from '@/lib/text';
+import { getImage } from '@/lib/images';
+import { lightboxItems } from '@/lib/lightbox';
+import { pageTitle, pageDescription, breadcrumbs } from '@/lib/seo';
+
+export function getStaticPaths() {
+  if (!site.seiten.referenzen) return [];
+  return site.config.referenzen.map((r) => ({ params: { slug: r.slug }, props: { r } }));
+}
+type Ref = (typeof site.config.referenzen)[number];
+interface Props {
+  r: Ref;
+}
+const { r } = Astro.props;
+const leistung = site.leistungen.find((l) => l.slug === r.leistungSlug);
+const crumbs = [
+  { name: ui.nav.start, path: '/' },
+  { name: ui.nav.referenzen, path: '/referenzen/' },
+  { name: r.titel, path: `/referenzen/${r.slug}/` },
+];
+const lb = await lightboxItems(r.bilder);
+const weitere = site.config.referenzen.filter((x) => x.slug !== r.slug).slice(0, 3);
+const cta = { typ: 'cta', layout: 'kontakt', aktiv: true, ton: 'flaeche' } as Extract<Sektion, { typ: 'cta' }>;
+const titelbild = r.nachher ?? r.bilder[0];
+---
+
+<BaseLayout
+  title={pageTitle(fill(ui.seo.referenz, { titel: r.titel, ort: r.ort }))}
+  description={pageDescription(typo(r.beschreibung))}
+  path={`/referenzen/${r.slug}/`}
+  ogKey={`referenz-${r.slug}`}
+  type="article"
+  preloadImage={getImage(titelbild?.datei)}
+  preloadSizes="(min-width: 1024px) 45vw, 100vw"
+  preloadWidths={[480, 720, 960, 1280, 1680]}
+  jsonLd={[breadcrumbs(crumbs)]}
+>
+  <PageHero titel={r.titel} crumbs={crumbs} bild={titelbild} transitionName={`referenz-${r.slug}`} kicker={`${r.kategorie} · ${r.ort} · ${r.jahr}`}>
+    <dl class="rf">
+      <div><dt class="label">{ui.referenz.ort}</dt><dd>{r.ort}</dd></div>
+      <div><dt class="label">{ui.referenz.jahr}</dt><dd class="tabular">{r.jahr}</dd></div>
+      {leistung && <div><dt class="label">{ui.referenz.leistung}</dt><dd><a href={site.links.leistung(leistung.slug)} class="link-u link-u--static">{leistung.titel}</a></dd></div>}
+      {r.fakten?.map((f) => <div><dt class="label">{f.label}</dt><dd class="tabular">{typo(f.wert)}</dd></div>)}
+    </dl>
+  </PageHero>
+
+  <Section>
+    <div class="container-x rd">
+      <div class="prose-text rd__text" data-anim="reveal-up"><p>{t(r.beschreibung)}</p></div>
+      {r.vorher && r.nachher && <BeforeAfter vorher={r.vorher} nachher={r.nachher} ratio="16/9" />}
+      {
+        r.bilder.length > 0 && (
+          <ul class="rd__imgs" data-lightbox={JSON.stringify(lb)}>
+            {r.bilder.map((b, i) => (
+              <li class:list={{ 'rd__img--wide': i === 0 && r.bilder.length % 2 === 1 }}>
+                <button type="button" class="rd__zoom" data-lightbox-index={i} aria-label={fill(ui.galerie.vergroessern, { alt: b.alt })}>
+                  <Img bild={b} ratio={i === 0 && r.bilder.length % 2 === 1 ? '16/9' : '4/3'} sizes="(min-width: 1024px) 50vw, 100vw" decorative data-anim="image-reveal" />
+                  <span class="rd__zi" aria-hidden="true"><Icon name="maximize-2" size={18} /></span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+      {
+        r.kundenstimme && (
+          <figure class="rd__quote" data-anim="reveal-up">
+            <blockquote>{typo(`„${r.kundenstimme.text}“`)}</blockquote>
+            <figcaption class="label">{ui.referenz.kundenstimme}: {r.kundenstimme.name}</figcaption>
+          </figure>
+        )
+      }
+    </div>
+  </Section>
+
+  {
+    weitere.length > 0 && (
+      <Section ton="flaeche">
+        <div class="container-x">
+          <h2 class="h2 rd__h">{ui.referenz.weitere}</h2>
+          <ul class="rd__more" data-anim-stagger>
+            {weitere.map((x) => <li><ReferenzCard r={x} /></li>)}
+          </ul>
+        </div>
+      </Section>
+    )
+  }
+  <Cta s={cta} />
+  <Lightbox />
+</BaseLayout>
+
+<style>
+  .rf {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: var(--space-m);
+    margin: var(--space-s) 0 0;
+    padding-top: var(--space-l);
+    border-top: 1px solid var(--s-line);
+  }
+  .rf dt {
+    color: var(--s-ink-soft);
+  }
+  .rf dd {
+    margin: 0.2rem 0 0;
+    font-weight: 650;
+  }
+  .rd {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+  .rd__text {
+    font-size: var(--step-1);
+    color: var(--s-ink);
+  }
+  .rd__imgs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-s);
+  }
+  @media (min-width: 40rem) {
+    .rd__imgs {
+      grid-template-columns: 1fr 1fr;
+    }
+    .rd__img--wide {
+      grid-column: 1 / -1;
+    }
+  }
+  .rd__zoom {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+    border-radius: var(--r-img);
+  }
+  .rd__zi {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: rgb(0 0 0 / 0.6);
+    color: #fff;
+  }
+  .rd__quote {
+    margin: 0;
+    padding: var(--space-2xl) 0;
+    border-top: 1px solid var(--s-line);
+    border-bottom: 1px solid var(--s-line);
+    max-width: 52rem;
+  }
+  .rd__quote blockquote {
+    margin: 0 0 var(--space-m);
+    font-family: var(--font-head);
+    font-weight: var(--head-weight);
+    letter-spacing: var(--head-tracking);
+    font-size: var(--step-3);
+    line-height: 1.15;
+  }
+  .rd__quote figcaption {
+    color: var(--s-ink-soft);
+  }
+  .rd__h {
+    margin-bottom: var(--space-xl);
+  }
+  .rd__more {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-xl) var(--space-l);
+  }
+  @media (min-width: 40rem) {
+    .rd__more {
+      grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    }
+  }
+</style>

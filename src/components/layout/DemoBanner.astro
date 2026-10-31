@@ -1,0 +1,124 @@
+---
+/** Dezentes Demo-Badge („Entwurf für … · erstellt von …“), per demo.banner an/aus */
+import { site } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { fill, telHref } from '@/lib/text';
+import Icon from '@/components/ui/Icon.astro';
+
+const d = site.config.demo;
+const show = d.banner.aktiv;
+const text = d.banner.text ?? fill(ui.demo.standard, { name: site.config.betrieb.kurzname, agentur: d.agentur?.name ?? '' }).replace(/ · erstellt von $/, '');
+---
+
+{
+  show && (
+    <details class="demo" data-demo-banner>
+      <summary class="demo__pill">
+        <span class="demo__dot" aria-hidden="true" />
+        <span class="demo__lbl">{ui.demo.badge}</span>
+      </summary>
+      <div class="demo__panel">
+        <p>{text}</p>
+        {d.agentur && (
+          <ul class="demo__links">
+            {d.agentur.telefon && (
+              <li>
+                <a href={telHref(d.agentur.telefon)}>
+                  <Icon name="phone" size={16} />
+                  {d.agentur.telefon}
+                </a>
+              </li>
+            )}
+            {d.agentur.email && (
+              <li>
+                <a href={`mailto:${d.agentur.email}`}>
+                  <Icon name="mail" size={16} />
+                  {d.agentur.email}
+                </a>
+              </li>
+            )}
+          </ul>
+        )}
+      </div>
+    </details>
+  )
+}
+
+<style>
+  .demo {
+    position: fixed;
+    left: max(0.75rem, env(safe-area-inset-left));
+    bottom: calc(var(--sticky-bar-h) + 0.75rem);
+    z-index: 39;
+    max-width: min(22rem, calc(100vw - 1.5rem));
+    font-size: 0.82rem;
+    color: #fff;
+  }
+  .demo__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 36px;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    background: rgb(20 20 20 / 0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    cursor: pointer;
+    list-style: none;
+    font-weight: 650;
+    letter-spacing: 0.01em;
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.18);
+  }
+  .demo__pill::-webkit-details-marker {
+    display: none;
+  }
+  /* Mobil: oben rechts unter dem Header – dort liegt kein Bedienelement */
+  @media (max-width: 47.99rem) {
+    .demo {
+      bottom: auto;
+      left: auto;
+      top: calc(var(--header-h) + var(--nd-h, 0px) + 0.5rem);
+      right: max(0.75rem, env(safe-area-inset-right));
+    }
+    .demo[open] {
+      left: 0.75rem;
+      text-align: right;
+    }
+    .demo:not([open]) .demo__pill {
+      width: 36px;
+      padding: 0;
+      justify-content: center;
+      font-size: 0;
+    }
+  }
+  .demo__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--c-accent-raw);
+  }
+  .demo__panel {
+    margin-top: 0.5rem;
+    padding: 0.9rem 1rem;
+    border-radius: 14px;
+    background: rgb(20 20 20 / 0.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    line-height: 1.45;
+  }
+  .demo__links {
+    list-style: none;
+    padding: 0;
+    margin: 0.6rem 0 0;
+    display: grid;
+    gap: 0.2rem;
+  }
+  .demo__links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 36px;
+    color: #fff;
+  }
+</style>

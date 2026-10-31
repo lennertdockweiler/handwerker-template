@@ -1,0 +1,84 @@
+---
+/**
+ * Zwei-Klick-Karte: stilisierte Vorschau + Hinweis. Erst nach Klick wird der
+ * externe Kartendienst geladen (keine Datenübertragung ohne Einwilligung).
+ */
+import { site, t } from '@/lib/config';
+import { ui } from '@/data/ui';
+import Icon from '@/components/ui/Icon.astro';
+
+const k = site.config.integrationen.karte;
+const b = site.config.betrieb;
+if (!k.aktiv || !k.embedUrl) return;
+---
+
+<div class="cm" data-consent-embed={k.embedUrl} data-title={`${ui.karte.titel}: ${b.name}`}>
+  <div class="cm__preview" aria-hidden="true">
+    <svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice">
+      <path d="M-10 170 C 80 120, 140 210, 230 150 S 360 90, 420 130" />
+      <path d="M-10 60 C 90 90, 160 20, 260 70 S 380 40, 420 20" />
+      <path d="M120 -10 C 130 80, 90 160, 140 260" />
+      <path d="M290 -10 C 270 90, 330 150, 300 260" />
+    </svg>
+    <span class="cm__pin"><Icon name="map-pin" size={30} /></span>
+  </div>
+  <div class="cm__body">
+    <p class="cm__addr"><strong>{b.name}</strong><br />{b.adresse.strasse}, {b.adresse.plz} {b.adresse.ort}</p>
+    <p class="cm__hint">{t(ui.karte.hinweis)}</p>
+    <button type="button" class="btn btn--sm" data-consent-load>{ui.karte.laden}</button>
+  </div>
+</div>
+
+<style>
+  .cm {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--r-l);
+    border: 1px solid var(--s-line);
+    background: var(--s-card);
+    min-height: 22rem;
+    display: grid;
+  }
+  .cm__preview {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in oklab, var(--c-accent-raw) 8%, var(--s-card));
+  }
+  .cm__preview svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: var(--s-line);
+    stroke-width: 10;
+  }
+  .cm__pin {
+    position: absolute;
+    left: 50%;
+    top: 38%;
+    transform: translate(-50%, -100%);
+    color: var(--s-ink);
+  }
+  .cm__body {
+    position: relative;
+    align-self: end;
+    display: grid;
+    gap: var(--space-s);
+    justify-items: start;
+    margin: var(--space-m);
+    padding: var(--space-l);
+    border-radius: var(--r-m);
+    background: var(--s-bg);
+    box-shadow: 0 10px 30px -15px rgb(0 0 0 / 0.3);
+  }
+  .cm__hint {
+    font-size: var(--step--1);
+    color: var(--s-ink-soft);
+  }
+  .cm :global(iframe) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+</style>

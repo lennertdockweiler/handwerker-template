@@ -1,0 +1,83 @@
+---
+/** Mobile Aktionsleiste: Anrufen · WhatsApp · Anfrage (safe-area-insets berücksichtigt) */
+import { site } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { telHref, waHref, fill } from '@/lib/text';
+import Icon from '@/components/ui/Icon.astro';
+
+const b = site.config.betrieb;
+const notfall = site.notdienst.aktiv;
+const waText = fill(ui.kontakt.whatsappGruss, { kurzname: b.kurzname });
+---
+
+<nav class="sb" aria-label={ui.cta.anfrage} data-sticky-bar>
+  <a href={telHref(notfall ? site.notdienst.telefon! : b.telefon)} class="sb__item">
+    <Icon name="phone" size={22} />
+    <span>{ui.cta.anrufen}</span>
+  </a>
+  {
+    b.whatsapp && (
+      <a href={waHref(b.whatsapp, waText)} class="sb__item" rel="noopener" target="_blank">
+        <Icon name="whatsapp" size={22} />
+        <span>{ui.cta.whatsapp}</span>
+        <span class="sr-only">{ui.barrierefrei.neuesFenster}</span>
+      </a>
+    )
+  }
+  <a href={site.links.anfrage()} class="sb__item sb__item--primary">
+    <Icon name="send" size={22} />
+    <span>{ui.cta.anfrage}</span>
+  </a>
+</nav>
+
+<style>
+  .sb {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 40;
+    display: flex;
+    gap: 1px;
+    padding-bottom: env(safe-area-inset-bottom);
+    background: var(--c-dark);
+    border-top: 1px solid var(--c-line-dark);
+    transform: translateY(0);
+    transition: transform 380ms var(--ease-out);
+  }
+  .sb.is-hidden {
+    transform: translateY(110%);
+  }
+  .sb__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    min-height: 3.75rem;
+    color: var(--c-on-dark);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 650;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .sb__item:active {
+    background: var(--c-dark-2);
+  }
+  .sb__item--primary {
+    background: var(--c-accent);
+    color: var(--c-on-accent);
+  }
+  @media (min-width: 48rem) {
+    .sb {
+      display: none;
+    }
+  }
+  :global(:root) {
+    --sticky-bar-h: calc(3.75rem + env(safe-area-inset-bottom));
+  }
+  @media (min-width: 48rem) {
+    :global(:root) {
+      --sticky-bar-h: 0px;
+    }
+  }
+</style>

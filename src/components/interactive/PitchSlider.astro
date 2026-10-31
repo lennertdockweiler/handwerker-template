@@ -1,0 +1,33 @@
+---
+import { zahl } from '@/lib/text';
+interface Props {
+  id: string;
+  cfg: { label: string; min: number; max: number; schritt: number; standard: number; einheit: string };
+}
+const { id, cfg } = Astro.props;
+---
+
+<div class="psl">
+  <label class="field-label" for={id}>{cfg.label}</label>
+  <output for={id} class="psl__v tabular" data-out={id}>{zahl(cfg.standard)}{cfg.einheit && ` ${cfg.einheit}`}</output>
+  <input type="range" id={id} name={id} min={cfg.min} max={cfg.max} step={cfg.schritt} value={cfg.standard} data-einheit={cfg.einheit} class="psl__r" />
+</div>
+
+<style>
+  .psl {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.25rem var(--space-m);
+    align-items: center;
+  }
+  .psl__v {
+    font-weight: 700;
+  }
+  .psl__r {
+    grid-column: 1 / -1;
+    width: 100%;
+    height: 44px;
+    accent-color: var(--c-accent-raw);
+    cursor: pointer;
+  }
+</style>

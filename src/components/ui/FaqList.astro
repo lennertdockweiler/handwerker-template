@@ -1,0 +1,110 @@
+---
+/** FAQ als native <details> (funktioniert ohne JS, exklusiv über name="…") */
+interface Props {
+  faqs: { frage: string; antwort: string }[];
+  name?: string;
+  class?: string;
+}
+const { faqs, name = 'faq', class: cls = '' } = Astro.props;
+---
+
+<div class:list={['fq', cls]} data-anim-stagger>
+  {
+    faqs.map((f, i) => (
+      <details class="fq__item" name={name} open={i === 0 ? true : undefined}>
+        <summary class="fq__q">
+          <span>{f.frage}</span>
+          <span class="fq__icon" aria-hidden="true" />
+        </summary>
+        <div class="fq__a">
+          <p>{f.antwort}</p>
+        </div>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  .fq {
+    border-top: 1px solid var(--s-line);
+  }
+  .fq__item {
+    border-bottom: 1px solid var(--s-line);
+    interpolate-size: allow-keywords;
+  }
+  .fq__q {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-m);
+    min-height: 4rem;
+    padding-block: var(--space-m);
+    cursor: pointer;
+    list-style: none;
+    font-weight: 650;
+    font-size: var(--step-1);
+    line-height: 1.3;
+  }
+  .fq__q::-webkit-details-marker {
+    display: none;
+  }
+  .fq__q:hover span:first-child {
+    color: var(--s-accent);
+  }
+  .fq__icon {
+    position: relative;
+    width: 2.25rem;
+    height: 2.25rem;
+    flex: none;
+    border-radius: var(--r-btn);
+    border: 1.5px solid var(--s-line);
+    transition:
+      transform 420ms var(--ease-out),
+      background-color var(--dur);
+  }
+  .fq__icon::before,
+  .fq__icon::after {
+    content: '';
+    position: absolute;
+    left: 30%;
+    right: 30%;
+    top: 50%;
+    height: 2px;
+    margin-top: -1px;
+    background: currentColor;
+  }
+  .fq__icon::after {
+    transform: rotate(90deg);
+    transition: transform 420ms var(--ease-out);
+  }
+  .fq__item[open] .fq__icon {
+    background: var(--s-ink);
+    color: var(--s-bg);
+    border-color: var(--s-ink);
+  }
+  .fq__item[open] .fq__icon::after {
+    transform: rotate(0);
+  }
+  .fq__a {
+    padding-bottom: var(--space-l);
+    padding-right: 3rem;
+    color: var(--s-ink-soft);
+    max-width: 72ch;
+  }
+  /* Sanftes Aufklappen in modernen Browsern */
+  .fq__item::details-content {
+    height: 0;
+    overflow: clip;
+    transition:
+      height 420ms var(--ease-out),
+      content-visibility 420ms allow-discrete;
+  }
+  .fq__item[open]::details-content {
+    height: auto;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fq__item::details-content {
+      transition: none;
+    }
+  }
+</style>

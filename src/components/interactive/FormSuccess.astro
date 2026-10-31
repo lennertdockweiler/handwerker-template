@@ -1,0 +1,76 @@
+---
+/** Erfolgszustand eines Formulars mit animiertem Haken */
+import { site } from '@/lib/config';
+import { ui } from '@/data/ui';
+
+interface Props {
+  titel: string;
+  text: string;
+}
+const { titel, text } = Astro.props;
+---
+
+<div class="fsu" data-form-success hidden tabindex="-1">
+  <svg class="fsu__check" viewBox="0 0 64 64" aria-hidden="true">
+    <circle cx="32" cy="32" r="29" />
+    <path d="M19 33l9 9 17-19" />
+  </svg>
+  <h3 class="h3" data-success-title data-template={titel}>{titel}</h3>
+  <p class="muted">{text}</p>
+  {site.demoFormular && <p class="fsu__demo"><span class="label">{ui.formular.demoBadge}</span> {ui.formular.demoHinweis}</p>}
+</div>
+
+<style>
+  .fsu {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-m);
+    padding: var(--space-xl) 0;
+    outline: none;
+  }
+  .fsu__check {
+    width: 4.5rem;
+    height: 4.5rem;
+    fill: none;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .fsu__check circle {
+    stroke: var(--c-success);
+    stroke-dasharray: 190;
+    stroke-dashoffset: 190;
+    animation: fsu-draw 700ms var(--ease-out) forwards;
+  }
+  .fsu__check path {
+    stroke: var(--c-success);
+    stroke-dasharray: 50;
+    stroke-dashoffset: 50;
+    animation: fsu-draw 500ms 500ms var(--ease-out) forwards;
+  }
+  :global(.tone-dunkel) .fsu__check circle,
+  :global(.tone-dunkel) .fsu__check path {
+    stroke: #4ade80;
+  }
+  @keyframes fsu-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fsu__check circle,
+    .fsu__check path {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
+  }
+  .fsu__demo {
+    font-size: var(--step--1);
+    padding: 0.75rem 1rem;
+    border-radius: var(--r-s);
+    border: 1px dashed var(--s-line);
+  }
+  .fsu__demo .label {
+    color: var(--s-accent);
+  }
+</style>

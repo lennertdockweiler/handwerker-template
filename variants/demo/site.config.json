@@ -1,0 +1,990 @@
+{
+  "$schema": "../_schema.json",
+  "meta": {
+    "slug": "demo",
+    "anrede": "sie",
+    "noindex": true
+  },
+  "betrieb": {
+    "name": "Brandt & Söhne Elektrotechnik GmbH",
+    "kurzname": "Brandt & Söhne",
+    "rechtsform": "GmbH",
+    "inhaber": "Thomas Brandt",
+    "slogan": "Elektrotechnik aus Meisterhand. Seit 1987 in Freiburg.",
+    "gruendungsjahr": 1987,
+    "mitarbeiter": 14,
+    "azubis": 2,
+    "projekte": 4800,
+    "reaktionszeit": "60 Min.",
+    "adresse": {
+      "strasse": "Am Funkenweg 12",
+      "plz": "79110",
+      "ort": "Freiburg",
+      "region": "im Breisgau"
+    },
+    "geo": {
+      "lat": 48.0153,
+      "lng": 7.8102
+    },
+    "telefon": "+49 761 000000",
+    "email": "info.brandt@example.com",
+    "whatsapp": "+49 761 000001",
+    "oeffnungszeiten": {
+      "regulaer": [
+        {
+          "tage": [
+            "mo",
+            "di",
+            "mi",
+            "do"
+          ],
+          "von": "07:00",
+          "bis": "17:00"
+        },
+        {
+          "tage": [
+            "fr"
+          ],
+          "von": "07:00",
+          "bis": "14:00"
+        }
+      ],
+      "sonder": [
+        {
+          "datum": "2026-12-24",
+          "geschlossen": true,
+          "hinweis": "Heiligabend – Notdienst erreichbar"
+        },
+        {
+          "datum": "2026-12-25",
+          "geschlossen": true,
+          "hinweis": "1. Weihnachtstag – Notdienst erreichbar"
+        },
+        {
+          "datum": "2026-12-26",
+          "geschlossen": true,
+          "hinweis": "2. Weihnachtstag – Notdienst erreichbar"
+        },
+        {
+          "datum": "2026-12-31",
+          "geschlossen": true,
+          "hinweis": "Silvester – Notdienst erreichbar"
+        }
+      ],
+      "hinweis": "Termine vor Ort auch außerhalb der Bürozeiten nach Absprache."
+    },
+    "socialLinks": [
+      {
+        "netzwerk": "instagram",
+        "url": "https://www.instagram.com/"
+      },
+      {
+        "netzwerk": "linkedin",
+        "url": "https://www.linkedin.com/"
+      }
+    ],
+    "bewertungen": {
+      "quelle": "Google",
+      "schnitt": 4.9,
+      "anzahl": 127,
+      "beispiel": true,
+      "eintraege": [
+        {
+          "name": "Martina K.",
+          "ort": "Freiburg-Wiehre",
+          "datum": "2026-09-14",
+          "sterne": 5,
+          "leistung": "Elektrosanierung",
+          "text": "Komplette Elektrik in unserem Altbau von 1928 erneuert – während wir drin gewohnt haben. Jeden Abend war alles abgedeckt und die Küche hatte wieder Strom. Termin auf den Tag genau eingehalten."
+        },
+        {
+          "name": "Jörg und Sabine W.",
+          "ort": "Merzhausen",
+          "datum": "2026-08-02",
+          "sterne": 5,
+          "leistung": "Photovoltaik",
+          "text": "PV-Anlage mit Speicher, ehrlich dimensioniert statt aufgeblasen. Herr Brandt junior hat uns sogar von einem größeren Speicher abgeraten. Anmeldung beim Netzbetreiber lief komplett über den Betrieb."
+        },
+        {
+          "name": "Praxis Dr. Lehmann",
+          "ort": "Freiburg-Herdern",
+          "datum": "2026-06-21",
+          "sterne": 5,
+          "leistung": "DGUV V3",
+          "text": "Prüfung aller Geräte an einem Samstag, damit der Praxisbetrieb nicht gestört wird. Saubere Protokolle, freundliches Team, Erinnerung an den nächsten Termin kam automatisch."
+        },
+        {
+          "name": "Ahmet Y.",
+          "ort": "Gundelfingen",
+          "datum": "2026-05-10",
+          "sterne": 4,
+          "leistung": "Wallbox",
+          "text": "Wallbox mit PV-Überschussladen installiert. Hat einen Tag länger gedauert als geplant, weil der Zählerschrank mitgemacht werden musste – wurde aber vorher offen kommuniziert. Lädt seitdem einwandfrei."
+        },
+        {
+          "name": "Claudia R.",
+          "ort": "Kirchzarten",
+          "datum": "2026-03-28",
+          "sterne": 5,
+          "leistung": "Notdienst",
+          "text": "Sonntagabend Stromausfall im halben Haus. Nach 45 Minuten stand jemand vor der Tür, die Ursache war schnell gefunden. Preis wurde vorher am Telefon genannt. Genau so muss das sein."
+        },
+        {
+          "name": "Hausverwaltung Rheinblick",
+          "ort": "Freiburg",
+          "datum": "2026-01-15",
+          "sterne": 5,
+          "leistung": "Ladeinfrastruktur",
+          "text": "Acht Ladepunkte in der Tiefgarage mit Lastmanagement, ohne den Hausanschluss zu erweitern. Kompetente Beratung für die Eigentümerversammlung inklusive."
+        }
+      ]
+    }
+  },
+  "branding": {
+    "farben": {
+      "primaer": "#262B30",
+      "akzent": "#FFC41F",
+      "neutralTon": "#5B6670"
+    },
+    "stilPreset": "modern-praezise",
+    "animationsIntensitaet": "standard",
+    "bildstil": {
+      "grain": true,
+      "toenung": 0.1
+    }
+  },
+  "gewerk": "elektro",
+  "meisterbetrieb": true,
+  "meisterName": "Thomas Brandt",
+  "handwerkskammer": {
+    "name": "Handwerkskammer Freiburg",
+    "adresse": "Bismarckallee 6, 79098 Freiburg"
+  },
+  "handwerksrolleNr": "000000 (fiktiv)",
+  "innung": "Innung für Elektro- und Informationstechnik Freiburg (fiktiv)",
+  "zertifikate": [
+    {
+      "name": "Fachbetrieb für KNX-Systemintegration",
+      "jahr": 2018
+    },
+    {
+      "name": "Elektrofachkraft für PV-Anlagen",
+      "jahr": 2021
+    },
+    {
+      "name": "Zertifizierter E-Check-Betrieb",
+      "jahr": 2015
+    },
+    {
+      "name": "Ausbildungsbetrieb der Handwerkskammer",
+      "jahr": 1990
+    }
+  ],
+  "mitgliedschaften": [
+    "Elektro-Innung Freiburg (fiktiv)",
+    "Netzwerk Energieberatung Südbaden (fiktiv)",
+    "Ausbildungsverbund Breisgau (fiktiv)"
+  ],
+  "notdienst": {
+    "aktiv": true,
+    "telefon": "+49 761 000002",
+    "zeiten": "24 Stunden, 7 Tage die Woche",
+    "rundUmDieUhr": true,
+    "hinweis": "Notdienstpauschale im Stadtgebiet Freiburg: 89 € inkl. MwSt. zzgl. Arbeitszeit – wir nennen alle Kosten vorab am Telefon."
+  },
+  "einsatzgebiet": {
+    "zentrum": {
+      "name": "Freiburg",
+      "lat": 48.0153,
+      "lng": 7.8102
+    },
+    "radiusKm": 30,
+    "orte": [
+      {
+        "name": "Freiburg",
+        "lat": 47.999,
+        "lng": 7.842,
+        "plz": [
+          "79098",
+          "79100",
+          "79102",
+          "79104",
+          "79106",
+          "79108",
+          "79110",
+          "79111",
+          "79112",
+          "79114",
+          "79115",
+          "79117"
+        ]
+      },
+      {
+        "name": "Merzhausen",
+        "lat": 47.966,
+        "lng": 7.828,
+        "plz": [
+          "79249"
+        ]
+      },
+      {
+        "name": "Gundelfingen",
+        "lat": 48.042,
+        "lng": 7.865,
+        "plz": [
+          "79194"
+        ]
+      },
+      {
+        "name": "Kirchzarten",
+        "lat": 47.966,
+        "lng": 7.954,
+        "plz": [
+          "79199"
+        ]
+      },
+      {
+        "name": "Umkirch",
+        "lat": 48.033,
+        "lng": 7.765,
+        "plz": [
+          "79224"
+        ]
+      },
+      {
+        "name": "March",
+        "lat": 48.058,
+        "lng": 7.778,
+        "plz": [
+          "79232"
+        ]
+      },
+      {
+        "name": "Denzlingen",
+        "lat": 48.068,
+        "lng": 7.882,
+        "plz": [
+          "79211"
+        ]
+      },
+      {
+        "name": "Bad Krozingen",
+        "lat": 47.917,
+        "lng": 7.702,
+        "plz": [
+          "79189"
+        ]
+      },
+      {
+        "name": "Waldkirch",
+        "lat": 48.094,
+        "lng": 7.963,
+        "plz": [
+          "79183"
+        ]
+      },
+      {
+        "name": "Emmendingen",
+        "lat": 48.121,
+        "lng": 7.849,
+        "plz": [
+          "79312"
+        ],
+        "status": "anfrage"
+      },
+      {
+        "name": "Breisach",
+        "lat": 48.031,
+        "lng": 7.581,
+        "plz": [
+          "79206"
+        ],
+        "status": "anfrage"
+      },
+      {
+        "name": "Titisee-Neustadt",
+        "lat": 47.912,
+        "lng": 8.211,
+        "plz": [
+          "79822"
+        ],
+        "status": "anfrage"
+      }
+    ],
+    "plz": [
+      "79285",
+      "79291",
+      "79254",
+      "79252",
+      "79271",
+      "79227"
+    ],
+    "plzAufAnfrage": [
+      "793",
+      "794",
+      "772"
+    ]
+  },
+  "leistungen": [
+    {
+      "slug": "elektroinstallation",
+      "bilder": [
+        {
+          "datei": "assets/leistungen/elektroinstallation.jpg",
+          "alt": "Elektriker mit Schutzhandschuh hält abisolierte Leitung vor geöffneter Wand",
+          "fokus": "60% 45%"
+        },
+        {
+          "datei": "assets/leistungen/elektroinstallation-2.jpg",
+          "alt": "Hand mit Arbeitshandschuh hält neue Kupferleitung"
+        }
+      ]
+    },
+    {
+      "slug": "smart-home",
+      "bilder": [
+        {
+          "datei": "assets/leistungen/smart-home.jpg",
+          "alt": "Schlanker Smart-Home-Taster neben einer Holztür"
+        },
+        {
+          "datei": "assets/leistungen/smart-home-2.jpg",
+          "alt": "Finger bedient ein digitales Raumthermostat an weißer Wand"
+        }
+      ]
+    },
+    {
+      "slug": "photovoltaik",
+      "bilder": [
+        {
+          "datei": "assets/leistungen/photovoltaik.jpg",
+          "alt": "Monteur trägt ein schwarzes Solarmodul über ein Schrägdach",
+          "fokus": "50% 40%"
+        },
+        {
+          "datei": "assets/leistungen/photovoltaik-2.jpg",
+          "alt": "Reihen von PV-Modulen im Abendlicht"
+        }
+      ]
+    },
+    {
+      "slug": "wallbox",
+      "bilder": [
+        {
+          "datei": "assets/leistungen/wallbox.jpg",
+          "alt": "Person steckt Ladekabel in ein Elektroauto"
+        },
+        {
+          "datei": "assets/leistungen/wallbox-2.jpg",
+          "alt": "Wallbox an einer Holzfassade mit aufgerolltem Ladekabel"
+        }
+      ]
+    },
+    {
+      "slug": "e-check",
+      "bilder": [
+        {
+          "datei": "assets/leistungen/e-check.jpg",
+          "alt": "Stromzange und Prüfgerät mit Messleitungen auf einem Arbeitstisch"
+        }
+      ]
+    },
+    {
+      "slug": "beleuchtung",
+      "bilder": [
+        {
+          "datei": "assets/leistungen/beleuchtung.jpg",
+          "alt": "Lineare LED-Beleuchtung streift über eine dunkle Holzwand"
+        },
+        {
+          "datei": "assets/leistungen/beleuchtung-2.jpg",
+          "alt": "Gläserne Pendelleuchten mit warmem Licht"
+        }
+      ]
+    },
+    {
+      "slug": "zaehlerschrank",
+      "bilder": [
+        {
+          "datei": "assets/leistungen/zaehlerschrank.jpg",
+          "alt": "Sauber verdrahtete Unterverteilung mit Schützen und Klemmen"
+        }
+      ]
+    },
+    {
+      "slug": "notdienst",
+      "bilder": [
+        {
+          "datei": "assets/leistungen/notdienst.jpg",
+          "alt": "Geöffnete Verteilung mit alten, verfärbten Leitungen"
+        }
+      ]
+    }
+  ],
+  "referenzen": [
+    {
+      "slug": "pv-speicher-merzhausen",
+      "titel": "PV-Anlage mit Speicher für eine Familie mit E-Auto",
+      "ort": "Merzhausen",
+      "jahr": 2026,
+      "kategorie": "Photovoltaik",
+      "leistungSlug": "photovoltaik",
+      "bilder": [
+        {
+          "datei": "assets/referenzen/pv-haus.jpg",
+          "alt": "Einfamilienhaus mit dunklen Solarmodulen auf dem Satteldach"
+        },
+        {
+          "datei": "assets/referenzen/pv-detail.jpg",
+          "alt": "Detail eines Solarmoduls mit Spiegelung des Himmels"
+        }
+      ],
+      "beschreibung": "9,8 kWp auf dem Süddach, ein 7,7-kWh-Speicher und ein Energiemanager, der Wallbox und Wärmepumpe steuert. Die Familie deckt heute rund 68 % ihres Strombedarfs selbst. Die Anmeldung beim Netzbetreiber und im Marktstammdatenregister haben wir übernommen.",
+      "fakten": [
+        {
+          "label": "Leistung",
+          "wert": "9,8 kWp"
+        },
+        {
+          "label": "Speicher",
+          "wert": "7,7 kWh"
+        },
+        {
+          "label": "Eigenversorgung",
+          "wert": "ca. 68 %"
+        }
+      ],
+      "kundenstimme": {
+        "text": "Ehrliche Beratung: Uns wurde ein kleinerer Speicher empfohlen, weil er sich schneller rechnet.",
+        "name": "Jörg W."
+      }
+    },
+    {
+      "slug": "zaehlerschrank-altbau-wiehre",
+      "titel": "Von der Porzellan­sicherung zum TAB-Zählerschrank",
+      "ort": "Freiburg-Wiehre",
+      "jahr": 2026,
+      "kategorie": "Sanierung",
+      "leistungSlug": "zaehlerschrank",
+      "vorher": {
+        "datei": "assets/referenzen/zaehler-vorher.jpg",
+        "alt": "Alte Schraubsicherungen aus Porzellan auf verwitterter Wand"
+      },
+      "nachher": {
+        "datei": "assets/referenzen/zaehler-nachher.jpg",
+        "alt": "Neuer Zählerschrank mit Leitungsschutzschaltern, FI und Überspannungsschutz"
+      },
+      "bilder": [
+        {
+          "datei": "assets/referenzen/zaehler-nachher.jpg",
+          "alt": "Neuer Zählerschrank mit Leitungsschutzschaltern, FI und Überspannungsschutz"
+        }
+      ],
+      "beschreibung": "Ein Gründerzeithaus mit sechs Parteien, Schraubsicherungen aus den 50er-Jahren und einem Netzbetreiber, der für die geplante Wärmepumpe einen neuen Zählerplatz verlangte. Wir haben den Zählerschrank nach aktueller TAB erneuert, jede Wohnung mit FI-Schutz ausgestattet und Platz für Smart Meter und Wallbox geschaffen. Der Strom war insgesamt nur sieben Stunden unterbrochen – an einem abgestimmten Samstag.",
+      "fakten": [
+        {
+          "label": "Dauer",
+          "wert": "3 Tage"
+        },
+        {
+          "label": "Zählerplätze",
+          "wert": "6 + Allgemein"
+        },
+        {
+          "label": "Stromunterbrechung",
+          "wert": "7 Stunden"
+        }
+      ],
+      "kundenstimme": {
+        "text": "Wir hatten mit Chaos gerechnet. Stattdessen gab es einen Zettel im Treppenhaus, einen festen Termin und abends wieder Licht.",
+        "name": "Eigentümergemeinschaft Talstraße (fiktiv)"
+      }
+    },
+    {
+      "slug": "wallbox-pv-kirchzarten",
+      "titel": "Wallbox mit PV-Überschussladen",
+      "ort": "Kirchzarten",
+      "jahr": 2025,
+      "kategorie": "E-Mobilität",
+      "leistungSlug": "wallbox",
+      "bilder": [
+        {
+          "datei": "assets/referenzen/wallbox-pv.jpg",
+          "alt": "Elektroauto vor Doppelgarage, Solarmodule auf dem Dach"
+        }
+      ],
+      "beschreibung": "Eine 11-kW-Wallbox, die bevorzugt mit Solarstrom vom eigenen Dach lädt. 18 Meter Zuleitung durch Keller und Garage, neuer Zählerplatz, Anmeldung beim Netzbetreiber – in zwei Tagen erledigt.",
+      "fakten": [
+        {
+          "label": "Ladeleistung",
+          "wert": "11 kW"
+        },
+        {
+          "label": "Zuleitung",
+          "wert": "18 m"
+        }
+      ]
+    },
+    {
+      "slug": "ladepark-tiefgarage",
+      "titel": "Acht Ladepunkte für eine Wohnanlage",
+      "ort": "Freiburg-Rieselfeld",
+      "jahr": 2026,
+      "kategorie": "E-Mobilität",
+      "leistungSlug": "wallbox",
+      "bilder": [
+        {
+          "datei": "assets/referenzen/mfh-laden.jpg",
+          "alt": "Zwei Ladestationen an einer Backsteinwand"
+        },
+        {
+          "datei": "assets/referenzen/mfh-laden-2.jpg",
+          "alt": "Ladestation an Holzverkleidung mit eingehängtem Kabel"
+        }
+      ],
+      "beschreibung": "Ladeinfrastruktur für die Tiefgarage einer Wohnungseigentümergemeinschaft: acht Ladepunkte mit dynamischem Lastmanagement, Abrechnung pro Stellplatz und Vorbereitung für zwölf weitere. Der Hausanschluss musste nicht erweitert werden.",
+      "fakten": [
+        {
+          "label": "Ladepunkte",
+          "wert": "8 (+12 vorbereitet)"
+        },
+        {
+          "label": "Lastmanagement",
+          "wert": "dynamisch"
+        }
+      ],
+      "kundenstimme": {
+        "text": "Kompetente Beratung bis in die Eigentümerversammlung hinein.",
+        "name": "Hausverwaltung Rheinblick (fiktiv)"
+      }
+    },
+    {
+      "slug": "knx-neubau-guentherstal",
+      "titel": "KNX-Smart-Home im Neubau",
+      "ort": "Freiburg-Günterstal",
+      "jahr": 2025,
+      "kategorie": "Smart Home",
+      "leistungSlug": "smart-home",
+      "bilder": [
+        {
+          "datei": "assets/referenzen/knx-taster.jpg",
+          "alt": "Messingfarbener Drehtaster an hellem Putz mit Schattenwurf"
+        },
+        {
+          "datei": "assets/referenzen/knx-hub.jpg",
+          "alt": "Dunkelbrauner Kippschalter mit Messinghebel an weißer Wand"
+        }
+      ],
+      "beschreibung": "Licht, Jalousien, Einzelraumregelung und Türkommunikation in einem System. Statt Displays an jeder Wand gibt es wenige, hochwertige Taster – und eine App für alles andere. Bei Sturm fahren die Raffstores automatisch hoch, beim Verlassen schaltet ein Taster alles ab.",
+      "fakten": [
+        {
+          "label": "Wohnfläche",
+          "wert": "210 m²"
+        },
+        {
+          "label": "Funktionen",
+          "wert": "Licht, Beschattung, Heizung, Tür"
+        }
+      ]
+    },
+    {
+      "slug": "dguv-pruefung-produktion",
+      "titel": "DGUV-V3-Prüfung in einer Produktion",
+      "ort": "Umkirch",
+      "jahr": 2026,
+      "kategorie": "Gewerbe",
+      "leistungSlug": "e-check",
+      "bilder": [
+        {
+          "datei": "assets/referenzen/schaltschrank.jpg",
+          "alt": "Geöffneter Industrie-Schaltschrank mit Steuerungsmodulen"
+        },
+        {
+          "datei": "assets/referenzen/verteilung-gewerbe.jpg",
+          "alt": "Graue Verteilerkästen an einer Betonwand"
+        }
+      ],
+      "beschreibung": "Prüfung von 420 ortsveränderlichen Geräten und der ortsfesten Anlage eines mittelständischen Fertigungsbetriebs – in zwei Wochenendschichten, ohne Produktionsausfall. Die Messprotokolle stehen digital zur Verfügung, die Wiederholungsprüfung ist bereits terminiert.",
+      "fakten": [
+        {
+          "label": "Geprüfte Geräte",
+          "wert": "420"
+        },
+        {
+          "label": "Ausfallzeit",
+          "wert": "keine"
+        }
+      ]
+    },
+    {
+      "slug": "lichtplanung-weinstube",
+      "titel": "Lichtkonzept für eine Weinstube",
+      "ort": "Freiburg-Altstadt",
+      "jahr": 2025,
+      "kategorie": "Licht",
+      "leistungSlug": "beleuchtung",
+      "bilder": [
+        {
+          "datei": "assets/referenzen/licht-gastro.jpg",
+          "alt": "Warm leuchtende Glaspendel über einem Gastraum"
+        }
+      ],
+      "beschreibung": "Drei Lichtszenen für Mittag, Abend und Reinigung, dimmbar per Taster am Tresen. Die neue LED-Anlage verbraucht 58 % weniger Strom als die alte Halogenbeleuchtung – und der Raum wirkt endlich so warm, wie die Weinkarte ist.",
+      "fakten": [
+        {
+          "label": "Einsparung",
+          "wert": "58 %"
+        },
+        {
+          "label": "Lichtszenen",
+          "wert": "3"
+        }
+      ]
+    },
+    {
+      "slug": "altbausanierung-herdern",
+      "titel": "Elektrosanierung einer Altbauwohnung",
+      "ort": "Freiburg-Herdern",
+      "jahr": 2026,
+      "kategorie": "Sanierung",
+      "leistungSlug": "elektroinstallation",
+      "vorher": {
+        "datei": "assets/referenzen/altbau-alt.jpg",
+        "alt": "Offene, veraltete Elektroverteilung in einer rissigen Wand"
+      },
+      "nachher": {
+        "datei": "assets/referenzen/licht-wohnen.jpg",
+        "alt": "Fertig sanierter Wohnraum mit indirekter Deckenbeleuchtung und Blick ins Grüne"
+      },
+      "bilder": [
+        {
+          "datei": "assets/referenzen/altbau-rohbau.jpg",
+          "alt": "Entkernter Altbauraum während der Sanierung"
+        },
+        {
+          "datei": "assets/referenzen/licht-wohnen.jpg",
+          "alt": "Fertig sanierter Wohnraum mit indirekter Deckenbeleuchtung"
+        }
+      ],
+      "beschreibung": "Vier Zimmer, Küche, Bad: komplette Neuinstallation mit 64 Steckdosen statt 19, Netzwerk in jedem Raum und indirektem Licht im Wohnbereich. Weil die Wohnung zwischen zwei Mietverhältnissen leer stand, waren wir in drei Wochen fertig.",
+      "fakten": [
+        {
+          "label": "Wohnfläche",
+          "wert": "112 m²"
+        },
+        {
+          "label": "Steckdosen",
+          "wert": "19 → 64"
+        },
+        {
+          "label": "Bauzeit",
+          "wert": "3 Wochen"
+        }
+      ]
+    }
+  ],
+  "team": [
+    {
+      "name": "Thomas Brandt",
+      "rolle": "Geschäftsführer, Elektrotechnikermeister",
+      "foto": {
+        "datei": "assets/team/thomas-brandt.jpg",
+        "alt": "Thomas Brandt mit weißem Schutzhelm, lächelnd",
+        "fokus": "50% 30%"
+      },
+      "zitat": "Mein Vater hat mir beigebracht: Eine Anlage ist erst fertig, wenn sie gemessen ist."
+    },
+    {
+      "name": "Lukas Brandt",
+      "rolle": "Meister, Leitung Smart Home & PV",
+      "foto": {
+        "datei": "assets/team/lukas-brandt.jpg",
+        "alt": "Lukas Brandt mit Brille im dunklen Henley-Shirt",
+        "fokus": "50% 25%"
+      },
+      "zitat": "Technik soll den Alltag leichter machen – nicht komplizierter."
+    },
+    {
+      "name": "Samuel Okafor",
+      "rolle": "Azubi, 3. Lehrjahr",
+      "foto": {
+        "datei": "assets/team/samuel-okafor.jpg",
+        "alt": "Samuel Okafor mit gelbem Schutzhelm an eine Wand gelehnt",
+        "fokus": "45% 30%"
+      },
+      "zitat": "Hier darf ich vom ersten Tag an mit auf die Baustelle."
+    }
+  ],
+  "stellen": [
+    {
+      "slug": "elektroniker-energie-gebaeudetechnik",
+      "titel": "Elektroniker (m/w/d) für Energie- und Gebäudetechnik",
+      "art": "Vollzeit",
+      "intro": "Du willst mehr als Steckdosen setzen? Bei uns arbeitest du an Smart-Home-, PV- und Wallbox-Projekten – in einem festen Team, mit eigenem Servicewagen und einem Chef, der selbst noch Leitungen zieht.",
+      "aufgaben": [
+        "Elektroinstallationen in Neubau und Sanierung – vom Schlitz bis zur Prüfung",
+        "Montage und Inbetriebnahme von PV-Anlagen, Speichern und Wallboxen",
+        "Fehlersuche und Service bei Privat- und Gewerbekunden",
+        "Messungen und Dokumentation nach DIN VDE"
+      ],
+      "profil": [
+        "Abgeschlossene Ausbildung als Elektroniker:in oder vergleichbar",
+        "Führerschein Klasse B",
+        "Lust, Neues zu lernen – KNX und PV bringen wir dir bei",
+        "Zuverlässigkeit und ein freundlicher Umgang mit Kunden"
+      ],
+      "benefits": [
+        "Übertarifliche Bezahlung plus Zuschläge",
+        "Eigener Servicewagen, auch privat nutzbar",
+        "30 Tage Urlaub",
+        "Bezahlte Weiterbildung bis zum Meister"
+      ],
+      "startdatum": "ab sofort",
+      "arbeitszeit": "39 Std./Woche, Fr. ab 14 Uhr frei",
+      "gehaltsspanne": {
+        "von": 3300,
+        "bis": 4200,
+        "einheit": "MONTH"
+      },
+      "veroeffentlicht": "2026-10-01"
+    },
+    {
+      "slug": "ausbildung-elektroniker-2027",
+      "titel": "Ausbildung Elektroniker (m/w/d) – Start 2027",
+      "art": "Ausbildung",
+      "intro": "Du schraubst gern, verstehst gern, wie Dinge funktionieren, und willst nach der Schule etwas Handfestes lernen? Dann starte bei uns – mit Ausbilder, der sich Zeit nimmt, und echter Verantwortung ab dem ersten Jahr.",
+      "aufgaben": [
+        "Du lernst Elektroinstallation von Grund auf – auf echten Baustellen",
+        "Du arbeitest an Zukunftsthemen wie Photovoltaik und E-Mobilität mit",
+        "Du lernst messen, prüfen und dokumentieren wie ein Profi"
+      ],
+      "profil": [
+        "Guter Haupt- oder Realschulabschluss oder Abitur",
+        "Interesse an Technik und Mathe",
+        "Teamgeist und Zuverlässigkeit"
+      ],
+      "benefits": [
+        "Ausbildungsvergütung über Tarif",
+        "Eigenes Werkzeug ab Tag 1",
+        "Prüfungsvorbereitung im Betrieb",
+        "Übernahmegarantie bei gutem Abschluss"
+      ],
+      "startdatum": "01.09.2027",
+      "gehaltsspanne": {
+        "von": 1050,
+        "bis": 1350,
+        "einheit": "MONTH"
+      },
+      "veroeffentlicht": "2026-09-15"
+    },
+    {
+      "slug": "pv-monteur",
+      "titel": "PV-Monteur:in / Solarteur (m/w/d)",
+      "art": "Vollzeit",
+      "intro": "Frische Luft, Aussicht und ein Job, der die Energiewende wirklich voranbringt: Montiere mit uns PV-Anlagen auf Dächern im Breisgau.",
+      "aufgaben": [
+        "Montage von Unterkonstruktionen und Modulen auf Schräg- und Flachdächern",
+        "DC-Verkabelung und Vorbereitung der Inbetriebnahme",
+        "Zusammenarbeit mit Dachdecker und Elektrikerteam"
+      ],
+      "profil": [
+        "Handwerkliche Ausbildung (z. B. Dachdecker, Elektriker, Zimmerer) oder Erfahrung im Montagebereich",
+        "Schwindelfreiheit und Freude an der Arbeit draußen",
+        "Führerschein Klasse B"
+      ],
+      "benefits": [
+        "Feste Montageteams",
+        "Moderne Sicherheitsausrüstung",
+        "Leistungsprämie pro Anlage"
+      ],
+      "startdatum": "ab sofort",
+      "arbeitszeit": "Vollzeit, saisonal flexible Arbeitszeitkonten",
+      "gehaltsspanne": {
+        "von": 2900,
+        "bis": 3600,
+        "einheit": "MONTH"
+      },
+      "veroeffentlicht": "2026-10-10"
+    }
+  ],
+  "partnerLogos": [
+    {
+      "name": "Voltaris"
+    },
+    {
+      "name": "Helioform"
+    },
+    {
+      "name": "Lumenwerk"
+    },
+    {
+      "name": "Busnetz Systems"
+    },
+    {
+      "name": "Ohmstein"
+    },
+    {
+      "name": "Ladepunkt Nord"
+    }
+  ],
+  "historie": [
+    {
+      "jahr": 1987,
+      "ereignis": "Heinz Brandt gründet den Betrieb",
+      "text": "Mit einem Transporter, einer Werkstatt im Hinterhof und dem Versprechen, dass jede Anlage gemessen wird, bevor sie übergeben wird."
+    },
+    {
+      "jahr": 1990,
+      "ereignis": "Erster Ausbildungsbetrieb",
+      "text": "Seitdem haben über 40 junge Menschen bei uns ihre Ausbildung abgeschlossen."
+    },
+    {
+      "jahr": 2009,
+      "ereignis": "Thomas Brandt übernimmt",
+      "text": "Die zweite Generation bringt Gebäudesystemtechnik und KNX ins Portfolio."
+    },
+    {
+      "jahr": 2018,
+      "ereignis": "Neuer Standort am Funkenweg",
+      "text": "Mehr Platz für Lager, Werkstatt und Schulungsraum."
+    },
+    {
+      "jahr": 2021,
+      "ereignis": "Photovoltaik & E-Mobilität",
+      "text": "Eigene Montageteams für PV-Anlagen und Ladeinfrastruktur."
+    },
+    {
+      "jahr": 2024,
+      "ereignis": "Lukas Brandt steigt ein",
+      "text": "Die dritte Generation – frisch mit Meisterbrief."
+    }
+  ],
+  "lokaleSeiten": [
+    {
+      "leistungSlug": "photovoltaik",
+      "ort": "Kirchzarten",
+      "titel": "Photovoltaik in Kirchzarten und im Dreisamtal",
+      "text": "Im Dreisamtal sind viele Häuser nach Süden ausgerichtet, aber die Hanglagen werfen im Winter lange Schatten. Deshalb planen wir in Kirchzarten jede Anlage mit einer Verschattungsanalyse für alle Jahreszeiten und setzen dort, wo es sinnvoll ist, Moduloptimierer ein. Viele Dächer im Ort sind mit Biberschwanzziegeln gedeckt – wir arbeiten hier eng mit einem Dachdecker aus dem Tal zusammen, damit die Dachhaut dicht bleibt. Den Netzanschluss stimmen wir direkt mit dem örtlichen Netzbetreiber ab. Von Freiburg aus sind wir in rund 20 Minuten vor Ort.",
+      "besonderheiten": [
+        "Verschattungsanalyse für Hanglagen",
+        "Erfahrung mit Biberschwanz-Dächern",
+        "Rund 20 Minuten Anfahrt"
+      ]
+    }
+  ],
+  "sektionen": [
+    {
+      "typ": "hero",
+      "layout": "vollbild",
+      "bild": {
+        "datei": "assets/hero.jpg",
+        "alt": "Elektriker mit Schutzhandschuhen prüft eine Verteilung mit dem Spannungsprüfer",
+        "fokus": "55% 50%"
+      },
+      "ctaPrimaer": {
+        "text": "Projekt anfragen",
+        "ziel": "/kontakt/"
+      }
+    },
+    {
+      "typ": "leistungen",
+      "layout": "bento",
+      "id": "leistungen"
+    },
+    {
+      "typ": "usps",
+      "layout": "zahlen",
+      "ton": "dunkel",
+      "bild": {
+        "datei": "assets/usps.jpg",
+        "alt": "Elektriker bohrt an einer Holzfassade"
+      }
+    },
+    {
+      "typ": "ablauf",
+      "layout": "gepinnt"
+    },
+    {
+      "typ": "referenzen",
+      "layout": "slider-galerie",
+      "highlight": "zaehlerschrank-altbau-wiehre",
+      "id": "referenzen"
+    },
+    {
+      "typ": "bewertungen",
+      "layout": "laufband",
+      "ton": "flaeche"
+    },
+    {
+      "typ": "einsatzgebiet",
+      "layout": "karte",
+      "id": "einsatzgebiet"
+    },
+    {
+      "typ": "karriere",
+      "layout": "emotional",
+      "ton": "dunkel",
+      "bild": {
+        "datei": "assets/karriere.jpg",
+        "alt": "Junger Elektriker mit gelbem Helm arbeitet an einer Verteilung"
+      }
+    },
+    {
+      "typ": "partner",
+      "layout": "laufband"
+    },
+    {
+      "typ": "faq",
+      "layout": "akkordeon",
+      "id": "faq"
+    },
+    {
+      "typ": "cta",
+      "layout": "kontakt",
+      "ton": "flaeche"
+    }
+  ],
+  "rechtliches": {
+    "berufsbezeichnung": "Elektrotechnikermeister",
+    "verleihungsstaat": "Deutschland",
+    "vertretungsberechtigt": [
+      "Thomas Brandt (Geschäftsführer)",
+      "Lukas Brandt (Geschäftsführer)"
+    ],
+    "registergericht": "Amtsgericht Freiburg i. Br.",
+    "registernummer": "HRB 000000 (fiktiv)",
+    "ustId": "DE000000000",
+    "verantwortlichInhalt": {
+      "name": "Thomas Brandt",
+      "adresse": "Am Funkenweg 12, 79110 Freiburg"
+    },
+    "berufshaftpflicht": {
+      "versicherer": "Beispiel-Versicherung AG (fiktiv)",
+      "adresse": "Beispielallee 1, 10115 Berlin (fiktiv)",
+      "geltungsraum": "Deutschland"
+    },
+    "verbraucherschlichtung": false
+  },
+  "integrationen": {
+    "formularEndpoint": "",
+    "karte": {
+      "aktiv": true,
+      "embedUrl": "https://www.google.com/maps?q=Freiburg+im+Breisgau&output=embed"
+    },
+    "analytics": {
+      "aktiv": false
+    }
+  },
+  "demo": {
+    "banner": {
+      "aktiv": true
+    },
+    "agentur": {
+      "name": "Studio Werkform",
+      "telefon": "+49 761 000099",
+      "email": "hallo@example.com",
+      "website": "https://example.com"
+    },
+    "pitchSeite": true
+  }
+}

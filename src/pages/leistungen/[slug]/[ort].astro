@@ -1,0 +1,42 @@
+---
+/**
+ * Lokale Landingpage „[Leistung] in [Ort]“. Wird NUR gebaut, wenn config.lokaleSeiten
+ * einen eigenständigen Text (≥ 400 Zeichen) liefert – keine Duplicate-Content-Seiten.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/ui/PageHero.astro';
+import LeistungDetail from '@/components/page/LeistungDetail.astro';
+import { site, t, sb, type Leistung } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { fill } from '@/lib/text';
+import { lokaleSeiten } from '@/lib/routes';
+import { pageTitle, pageDescription, breadcrumbs, service } from '@/lib/seo';
+
+export function getStaticPaths() {
+  if (!site.seiten.leistungen) return [];
+  return lokaleSeiten().map((x) => ({ params: { slug: x.leistungSlug, ort: x.ortSlug }, props: { l: x.leistung!, x } }));
+}
+interface Props {
+  l: Leistung;
+  x: ReturnType<typeof lokaleSeiten>[number];
+}
+const { l, x } = Astro.props;
+const titel = x.titel ? t(x.titel) : fill(ui.leistung.lokalTitel, { titel: l.titel, ort: x.ort });
+const crumbs = [
+  { name: ui.nav.start, path: '/' },
+  { name: ui.nav.leistungen, path: '/leistungen/' },
+  { name: l.titel, path: `/leistungen/${l.slug}/` },
+  { name: x.ort, path: `/leistungen/${l.slug}/${x.ortSlug}/` },
+];
+---
+
+<BaseLayout
+  title={pageTitle(titel)}
+  description={pageDescription(`${t(x.text).slice(0, 140)}`)}
+  path={`/leistungen/${l.slug}/${x.ortSlug}/`}
+  ogKey={`lokal-${l.slug}-${x.ortSlug}`}
+  jsonLd={[breadcrumbs(crumbs), service(l, x.ort)]}
+>
+  <PageHero titel={titel} intro={sb('lokalIntro', { ort: x.ort })} crumbs={crumbs} bild={l.bilder[0]} kicker={site.config.betrieb.name} />
+  <LeistungDetail l={l} lokal={{ ort: x.ort, text: x.text, besonderheiten: x.besonderheiten }} />
+</BaseLayout>

@@ -1,0 +1,119 @@
+---
+/** Partner/Hersteller: Laufband oder Raster. Ohne Logodatei → neutrale Wortmarke (keine echten Markenlogos). */
+import { Image } from 'astro:assets';
+import { site, sb, t, type Sektion } from '@/lib/config';
+import { getImage } from '@/lib/images';
+import Section from '@/components/ui/Section.astro';
+
+interface Props {
+  s: Extract<Sektion, { typ: 'partner' }>;
+}
+const { s } = Astro.props;
+const logos = site.config.partnerLogos;
+if (!logos.length) return;
+const stile = ['pw--a', 'pw--b', 'pw--c', 'pw--d'];
+---
+
+<Section ton={s.ton} id={s.id} class="pt">
+  <div class="container-x">
+    <h2 class="h4 pt__title">{s.ueberschrift ? t(s.ueberschrift) : sb('partnerTitel')}</h2>
+  </div>
+  {
+    s.layout === 'laufband' ? (
+      <div class="marquee pt__mq" style={`--marquee-dur:${logos.length * 6}s`}>
+        {[0, 1].map((n) => (
+          <ul class="marquee__track" aria-hidden={n === 1 ? 'true' : undefined}>
+            {logos.map((l, i) => (
+              <li class="pt__item">
+                {l.datei ? <Image src={getImage(l.datei)!} alt={l.name} height={48} class="pt__img" /> : <span class:list={['pw', stile[i % stile.length]]}>{l.name}</span>}
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    ) : (
+      <div class="container-x">
+        <ul class="pt__grid">
+          {logos.map((l, i) => (
+            <li class="pt__item">
+              {l.datei ? <Image src={getImage(l.datei)!} alt={l.name} height={48} class="pt__img" /> : <span class:list={['pw', stile[i % stile.length]]}>{l.name}</span>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+</Section>
+
+<style>
+  .pt {
+    padding-block: var(--space-3xl);
+  }
+  .pt__title {
+    color: var(--s-ink-soft);
+    margin-bottom: var(--space-xl);
+    font-weight: 500;
+  }
+  .pt__mq {
+    --marquee-gap: clamp(2.5rem, 6vw, 5rem);
+  }
+  .pt__mq .marquee__track,
+  .pt__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .pt__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    border-top: 1px solid var(--s-line);
+    border-left: 1px solid var(--s-line);
+  }
+  .pt__grid .pt__item {
+    display: grid;
+    place-items: center;
+    min-height: 7rem;
+    border-right: 1px solid var(--s-line);
+    border-bottom: 1px solid var(--s-line);
+  }
+  .pt__item {
+    display: flex;
+    align-items: center;
+    color: var(--s-ink-soft);
+    opacity: 0.85;
+  }
+  .pt__img {
+    height: 2.5rem;
+    width: auto;
+    filter: grayscale(1);
+  }
+  /* Neutrale Platzhalter-Wortmarken in vier Anmutungen */
+  .pw {
+    white-space: nowrap;
+    font-size: clamp(1.1rem, 1rem + 0.6vw, 1.5rem);
+    line-height: 1;
+  }
+  .pw--a {
+    font-family: var(--font-head);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+  .pw--b {
+    font-family: var(--font-text);
+    font-weight: 300;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-size: 0.85em;
+  }
+  .pw--c {
+    font-family: var(--font-text);
+    font-weight: 700;
+    font-style: italic;
+  }
+  .pw--d {
+    font-family: var(--font-head);
+    font-weight: 500;
+    padding: 0.3em 0.55em;
+    border: 1.5px solid currentColor;
+  }
+</style>

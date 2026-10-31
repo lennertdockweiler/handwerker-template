@@ -1,0 +1,137 @@
+{
+  "$schema": "../_schema.json",
+  "//": "KOPIERVORLAGE. Nicht direkt bauen – mit `npm run variant:new -- <slug>` kopieren. Alle Felder mit TODO ausfüllen. Felder, die mit // beginnen, sind Kommentare und werden ignoriert. Autovervollständigung + Erklärungen: in VS Code einfach tippen (Strg+Leertaste).",
+
+  "meta": {
+    "//": "slug wird von variant:new gesetzt. noindex IMMER true lassen, bis die Seite live geht.",
+    "slug": "TODO-slug",
+    "anrede": "sie",
+    "noindex": true
+  },
+
+  "betrieb": {
+    "name": "TODO Firmenname inkl. Rechtsform",
+    "kurzname": "TODO Kurzname",
+    "//kurzname": "Erscheint in Wortmarke, Titeln, OG-Bildern. Max. 32 Zeichen.",
+    "rechtsform": "GmbH",
+    "inhaber": "TODO Vorname Nachname",
+    "slogan": "TODO Kurzer Claim, z. B. Elektrotechnik aus Meisterhand.",
+    "gruendungsjahr": 2000,
+    "mitarbeiter": 8,
+    "azubis": 1,
+    "projekte": 1000,
+    "reaktionszeit": "24 h",
+    "adresse": {
+      "strasse": "TODO Musterstraße 1",
+      "plz": "00000",
+      "ort": "TODO Ort",
+      "region": "im TODO-Land",
+      "//region": "Mit Präposition: \"im Breisgau\", \"im Chiemgau\", \"am Bodensee\". Leer lassen = \"Umgebung\"."
+    },
+    "geo": { "lat": 48.0, "lng": 8.0 },
+    "//geo": "Koordinaten des Betriebs (Google Maps → Rechtsklick → Koordinaten kopieren).",
+    "telefon": "+49 000 000000",
+    "email": "todo@example.com",
+    "whatsapp": "+49 000 000000",
+    "//whatsapp": "Feld löschen, wenn kein WhatsApp gewünscht ist – Buttons verschwinden automatisch.",
+    "oeffnungszeiten": {
+      "regulaer": [
+        { "tage": ["mo", "di", "mi", "do"], "von": "07:30", "bis": "17:00" },
+        { "tage": ["fr"], "von": "07:30", "bis": "13:00" }
+      ],
+      "sonder": [{ "datum": "2026-12-24", "geschlossen": true }],
+      "hinweis": "Termine vor Ort nach Vereinbarung."
+    },
+    "socialLinks": [],
+    "bewertungen": {
+      "//": "Demo: beispiel=true kennzeichnet Beispielbewertungen. LIVE: nur echte Bewertungen, beispiel=false und pruefHinweis nach § 5b UWG ausfüllen.",
+      "quelle": "Google",
+      "schnitt": 4.8,
+      "anzahl": 50,
+      "beispiel": true,
+      "eintraege": [
+        { "name": "TODO M.", "ort": "TODO", "datum": "2026-01-01", "sterne": 5, "text": "TODO Bewertungstext" }
+      ]
+    }
+  },
+
+  "branding": {
+    "//": "Ohne logo entsteht automatisch eine Wortmarke. Farben: npm run colors -- variants/<slug>/assets/logo.png schlägt Werte vor.",
+    "farben": { "primaer": "#2B3036", "akzent": "#E2A400" },
+    "stilPreset": "modern-praezise",
+    "//stilPreset": "modern-praezise | manufaktur-warm | kraftvoll-bold – Entscheidungshilfe im README.",
+    "animationsIntensitaet": "standard",
+    "bildstil": { "grain": true, "toenung": 0.1 }
+  },
+
+  "gewerk": "allgemein",
+  "//gewerk": "elektro | shk | dachdecker | zimmerei | maler | tischler | fliesen | metallbau | galabau | bau | allgemein. Liefert Leistungen, Fragen, FAQ und Texte.",
+  "gewerkBezeichnung": "TODO z. B. Schreinerei (optional)",
+  "meisterbetrieb": true,
+  "meisterName": "TODO Name",
+  "handwerkskammer": { "name": "TODO Handwerkskammer", "adresse": "TODO Anschrift der Kammer" },
+  "handwerksrolleNr": "TODO",
+  "innung": "TODO (optional)",
+  "zertifikate": [],
+  "mitgliedschaften": [],
+
+  "notdienst": {
+    "//": "Nur aktivieren, wenn der Betrieb wirklich einen Notdienst anbietet.",
+    "aktiv": false
+  },
+
+  "einsatzgebiet": {
+    "zentrum": { "name": "TODO Ort", "lat": 48.0, "lng": 8.0 },
+    "radiusKm": 25,
+    "orte": [
+      { "name": "TODO Ort", "lat": 48.0, "lng": 8.0, "plz": ["00000"] }
+    ],
+    "plz": [],
+    "plzAufAnfrage": []
+  },
+
+  "//leistungen": "Weglassen = alle Leistungen des Gewerk-Presets. Eintrag mit gleichem slug überschreibt nur angegebene Felder, z. B. Bilder.",
+  "leistungen": [],
+
+  "referenzen": [],
+  "team": [],
+  "stellen": [],
+  "partnerLogos": [],
+  "historie": [],
+
+  "sektionen": [
+    { "//": "Reihenfolge = Reihenfolge auf der Startseite. aktiv:false blendet aus.", "typ": "hero", "layout": "split" },
+    { "typ": "leistungen", "layout": "bento", "id": "leistungen" },
+    { "typ": "usps", "layout": "zahlen", "ton": "dunkel" },
+    { "typ": "ablauf", "layout": "gepinnt" },
+    { "typ": "referenzen", "layout": "raster", "aktiv": false },
+    { "typ": "bewertungen", "layout": "karussell", "ton": "flaeche" },
+    { "typ": "einsatzgebiet", "layout": "karte" },
+    { "typ": "karriere", "layout": "kompakt", "ton": "dunkel" },
+    { "typ": "faq", "layout": "akkordeon" },
+    { "typ": "cta", "layout": "kontakt", "ton": "flaeche" }
+  ],
+
+  "rechtliches": {
+    "berufsbezeichnung": "TODO z. B. Elektrotechnikermeister",
+    "verleihungsstaat": "Deutschland",
+    "vertretungsberechtigt": ["TODO Name (Geschäftsführer)"],
+    "registergericht": "TODO Amtsgericht",
+    "registernummer": "TODO HRB",
+    "ustId": "TODO DE…",
+    "verantwortlichInhalt": { "name": "TODO", "adresse": "TODO" }
+  },
+
+  "integrationen": {
+    "//": "formularEndpoint leer = Demo-Modus (nichts wird gesendet). Live: z. B. https://formspree.io/f/xxxx",
+    "formularEndpoint": "",
+    "karte": { "aktiv": false },
+    "analytics": { "aktiv": false }
+  },
+
+  "demo": {
+    "banner": { "aktiv": true },
+    "agentur": { "name": "TODO Agentur", "email": "todo@example.com" },
+    "pitchSeite": true
+  }
+}

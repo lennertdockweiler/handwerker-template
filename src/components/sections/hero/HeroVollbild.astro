@@ -1,0 +1,169 @@
+---
+/** Hero a) Vollbild-Bild/-Video mit Headline-Reveal und dezentem Parallax */
+import { site } from '@/lib/config';
+import { heroData, type HeroSektion } from './heroData';
+import Img from '@/components/ui/Img.astro';
+import Icon from '@/components/ui/Icon.astro';
+import Masskette from '@/components/ui/Masskette.astro';
+import TrustBar from '../TrustBar.astro';
+import { resolveVideo } from '@/lib/video';
+import { ui } from '@/data/ui';
+import { fill } from '@/lib/text';
+
+interface Props {
+  s: HeroSektion;
+}
+const { s } = Astro.props;
+const d = heroData(s);
+const c = site.config;
+const praezise = c.branding.stilPreset === 'modern-praezise';
+const bild = s.video?.poster ?? s.bild ?? site.leistungen[0]?.bilder[0];
+const video = s.video ? resolveVideo(s.video) : undefined;
+---
+
+<section class="hero tone-dunkel" data-hero="vollbild" aria-labelledby="hero-title">
+  <div class="hero__bg" data-parallax="0.12" data-anim="hero-media">
+    <Img bild={bild} ratio="auto" sizes="100vw" widths={[640, 960, 1280, 1680, 2200]} priority class="hero__media" motiv={site.leistungen[0]?.motiv} />
+    {
+      video && (
+        <video class="hero__video" muted playsinline loop preload="none" data-hero-video data-src={video.src} data-src-mobil={video.mobil} aria-hidden="true" />
+      )
+    }
+    <div class="hero__shade"></div>
+    {praezise && <div class="hero__grid tech-grid" aria-hidden="true"></div>}
+  </div>
+
+  <div class="container-x hero__content">
+    {praezise && <p class="hero__coords label tabular" aria-hidden="true">{d.coords}</p>}
+    <h1 id="hero-title" class="hero__h1">
+      <span class="hero__kicker label">{d.kicker}</span>
+      <span class="h-display hero__headline" data-anim="hero-text" style="--d:0">{d.headline}</span>
+    </h1>
+    <p class="hero__sub" data-anim="hero-text" style="--d:1">{d.subline}</p>
+    <div class="hero__ctas" data-anim="hero-text" style="--d:2">
+      <a href={d.primary.href} class="btn btn--lg btn--signal" data-magnetic>{d.primary.text}</a>
+      <a href={d.secondary.href} class="btn btn--lg btn--ghost">
+        <Icon name="phone" />
+        {d.secondary.text}
+      </a>
+    </div>
+    <Masskette class="hero__mk" links={String(c.betrieb.gruendungsjahr)} mitte={fill(ui.mass.jahre, { n: site.vars.jahre })} rechts={String(site.jahr)} />
+  </div>
+</section>
+<TrustBar />
+
+<style>
+  .hero {
+    position: relative;
+    min-height: max(36rem, 100svh);
+    display: grid;
+    align-items: end;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .hero__bg {
+    position: absolute;
+    inset: -6% 0 0;
+    z-index: -1;
+  }
+  .hero__bg :global(.hero__media) {
+    position: absolute;
+    inset: 0;
+    border-radius: 0;
+  }
+  .hero__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 800ms var(--ease-out);
+  }
+  .hero__video.is-playing {
+    opacity: 1;
+  }
+  .hero__shade {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    background:
+      linear-gradient(180deg, rgb(0 0 0 / 0.55) 0%, rgb(0 0 0 / 0.05) 30%, rgb(0 0 0 / 0.15) 50%, color-mix(in oklab, var(--c-dark) 92%, transparent) 100%),
+      linear-gradient(90deg, color-mix(in oklab, var(--c-dark) 55%, transparent) 0%, transparent 70%);
+  }
+  .hero__grid {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    --s-ink: #fff;
+    mask-image: linear-gradient(180deg, transparent 10%, #000 60%);
+  }
+  .hero__content {
+    position: relative;
+    padding-top: calc(var(--header-h) + var(--space-3xl));
+    padding-bottom: var(--space-2xl);
+    display: grid;
+    gap: var(--space-l);
+    color: #fff;
+  }
+  .hero__coords {
+    display: none;
+    position: absolute;
+    top: calc(var(--header-h) + var(--space-xl));
+    right: var(--gutter);
+    color: rgb(255 255 255 / 0.75);
+  }
+  .hero__h1 {
+    display: grid;
+    gap: var(--space-s);
+    font-size: inherit;
+    line-height: inherit;
+  }
+  .hero__kicker {
+    color: var(--c-accent-on-dark);
+  }
+  .hero__headline {
+    display: block;
+    color: #fff;
+    max-width: 13ch;
+  }
+  .hero__sub {
+    max-width: 46ch;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: rgb(255 255 255 / 0.86);
+  }
+  .hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+  }
+  .hero__ctas .btn--ghost {
+    --btn-ink: #fff;
+    --btn-bd: rgb(255 255 255 / 0.45);
+    --btn-hover: rgb(255 255 255 / 0.12);
+  }
+  .hero__mk {
+    margin-top: var(--space-l);
+    --s-ink-soft: rgb(255 255 255 / 0.92);
+    --s-bg: transparent;
+  }
+  .hero__mk :global(.mk__mid) {
+    background: color-mix(in oklab, var(--c-dark) 92%, transparent);
+  }
+  @media (max-width: 30rem) {
+    .hero__ctas .btn {
+      flex: 1 1 100%;
+    }
+  }
+  @media (min-width: 48rem) {
+    .hero__headline {
+      hyphens: manual;
+    }
+  }
+  @media (min-width: 64rem) {
+    .hero__coords {
+      display: block;
+    }
+  }
+</style>

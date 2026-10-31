@@ -1,0 +1,163 @@
+---
+/** Leistungen c) Tabs nach Kundengruppe (Privat / Gewerbe) – ARIA-Tabs, ohne JS beide Gruppen sichtbar */
+import { site, sb, t, type Sektion } from '@/lib/config';
+import { ui } from '@/data/ui';
+import Section from '@/components/ui/Section.astro';
+import SectionHead from '@/components/ui/SectionHead.astro';
+import Icon from '@/components/ui/Icon.astro';
+import Img from '@/components/ui/Img.astro';
+
+interface Props {
+  s: Extract<Sektion, { typ: 'leistungen' }>;
+}
+const { s } = Astro.props;
+const gruppen = [
+  { key: 'privat', label: ui.leistung.fuerPrivat, list: site.leistungen.filter((l) => l.kundengruppen.includes('privat')) },
+  { key: 'gewerbe', label: ui.leistung.fuerGewerbe, list: site.leistungen.filter((l) => l.kundengruppen.includes('gewerbe')) },
+].filter((g) => g.list.length);
+const uid = s.id ?? 'lt';
+---
+
+<Section ton={s.ton} id={s.id}>
+  <div class="container-x">
+    <SectionHead titel={s.ueberschrift ? t(s.ueberschrift) : sb('leistungenTitel')} intro={s.intro ? t(s.intro) : sb('leistungenIntro')} />
+    <div class="lt" data-tabs>
+      <div class="lt__tabs" role="tablist" aria-label={ui.leistung.tabsLabel} data-tablist data-needs-js>
+        {
+          gruppen.map((g, i) => (
+            <button
+              type="button"
+              role="tab"
+              class="lt__tab"
+              id={`${uid}-tab-${g.key}`}
+              aria-controls={`${uid}-panel-${g.key}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              tabindex={i === 0 ? 0 : -1}
+            >
+              {g.label}
+              <span class="lt__count tabular">{g.list.length}</span>
+            </button>
+          ))
+        }
+      </div>
+      {
+        gruppen.map((g) => (
+          <div class="lt__panel" role="tabpanel" id={`${uid}-panel-${g.key}`} aria-labelledby={`${uid}-tab-${g.key}`} tabindex="0">
+            <h3 class="lt__ph h4" data-tab-heading>
+              {g.label}
+            </h3>
+            <ul class="lt__grid">
+              {g.list.map((l, i) => (
+                <li class:list={['lt__card', { 'lt__card--feature': i === 0 }]}>
+                  <a href={site.links.leistung(l.slug)} class="lt__link">
+                    {i === 0 && <Img bild={l.bilder[0]} motiv={l.motiv} ratio="16/9" sizes="(min-width: 1024px) 40vw, 100vw" decorative />}
+                    <Icon name={l.icon} size={30} class="lt__icon" />
+                    <span class="h4">{l.titel}</span>
+                    <span class="lt__text">{l.kurztext}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</Section>
+
+<style>
+  .lt__tabs {
+    display: inline-flex;
+    gap: 0.25rem;
+    padding: 0.3rem;
+    margin-bottom: var(--space-xl);
+    border-radius: var(--r-btn);
+    background: var(--s-card);
+    border: 1px solid var(--s-line);
+  }
+  .lt__tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 3rem;
+    padding: 0.6rem 1.2rem;
+    border: 0;
+    border-radius: var(--r-btn);
+    background: transparent;
+    font-weight: 650;
+    cursor: pointer;
+    transition:
+      background-color var(--dur) var(--ease-out),
+      color var(--dur) var(--ease-out);
+  }
+  .lt__tab[aria-selected='true'] {
+    background: var(--s-ink);
+    color: var(--s-bg);
+  }
+  .lt__count {
+    font-size: 0.8em;
+    opacity: 0.7;
+  }
+  .lt__panel + .lt__panel {
+    margin-top: var(--space-2xl);
+  }
+  :global([data-tabs].is-enhanced) .lt__panel + .lt__panel {
+    margin-top: 0;
+  }
+  .lt__ph {
+    margin-bottom: var(--space-m);
+  }
+  .lt__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-s);
+  }
+  @media (min-width: 40rem) {
+    .lt__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .lt__card--feature {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 64rem) {
+    .lt__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .lt__card--feature {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+  }
+  .lt__link {
+    display: grid;
+    align-content: start;
+    gap: 0.6rem;
+    height: 100%;
+    padding: var(--space-l);
+    border-radius: var(--r-l);
+    background: var(--s-card);
+    border: 1px solid var(--s-line);
+    text-decoration: none;
+    transition:
+      transform 420ms var(--ease-out),
+      border-color var(--dur) var(--ease-out);
+  }
+  .lt__link:hover {
+    transform: translateY(-4px);
+    border-color: var(--s-ink);
+  }
+  .lt__card--feature :global(.media) {
+    margin: calc(var(--space-l) * -1) calc(var(--space-l) * -1) var(--space-s);
+    border-radius: var(--r-l) var(--r-l) 0 0;
+  }
+  .lt__icon {
+    color: var(--s-accent);
+  }
+  .lt__text {
+    color: var(--s-ink-soft);
+    font-size: var(--step--1);
+  }
+</style>

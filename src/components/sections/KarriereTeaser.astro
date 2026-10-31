@@ -1,0 +1,135 @@
+---
+/** Karriere-Teaser: emotional, Du-Ansprache, Benefits, Link zur Schnellbewerbung */
+import { site, sb, tDu, type Sektion } from '@/lib/config';
+import { ui } from '@/data/ui';
+import Section from '@/components/ui/Section.astro';
+import Img from '@/components/ui/Img.astro';
+import Icon from '@/components/ui/Icon.astro';
+
+interface Props {
+  s: Extract<Sektion, { typ: 'karriere' }>;
+}
+const { s } = Astro.props;
+if (!site.seiten.karriere) return;
+const stellen = site.config.stellen;
+const emotional = s.layout === 'emotional';
+const benefits = site.benefits.slice(0, emotional ? 4 : 3);
+const bild = s.bild ?? site.config.team[0]?.foto;
+---
+
+<Section ton={s.ton ?? 'dunkel'} id={s.id} class:list={['kt', `kt--${s.layout}`]}>
+  <div class="container-x kt__grid">
+    {
+      emotional && (
+        <div class="kt__media">
+          <Img bild={bild} ratio="4/5" ratioMobil="1/1" sizes="(min-width: 1024px) 40vw, 100vw" data-anim="image-reveal" />
+        </div>
+      )
+    }
+    <div class="kt__body">
+      <h2 class="h1 kt__title" data-anim="lines">{s.ueberschrift ? tDu(s.ueberschrift) : sb('karriereTitel')}</h2>
+      <p class="lead kt__text" data-anim="reveal-up">{s.intro ? tDu(s.intro) : sb('karriereText')}</p>
+      <ul class="kt__benefits" data-anim-stagger>
+        {
+          benefits.map((b) => (
+            <li>
+              <Icon name={b.icon} size={26} class="kt__icon" />
+              <span>
+                <strong>{b.titel}</strong>
+                <span class="kt__btext">{b.text}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="kt__ctas" data-anim="reveal-up">
+        <a href={site.links.bewerbung} class="btn btn--lg" data-magnetic>{ui.cta.jetztBewerben}</a>
+        {
+          stellen.length > 0 && (
+            <a href={site.links.karriere} class="btn btn--lg btn--ghost">
+              {ui.cta.stellenAnsehen}
+              <span class="kt__count tabular">{stellen.length}</span>
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</Section>
+
+<style>
+  .kt__grid {
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+  @media (min-width: 64rem) {
+    .kt--emotional .kt__grid {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: var(--space-3xl);
+    }
+  }
+  .kt__body {
+    display: grid;
+    gap: var(--space-l);
+  }
+  .kt__title {
+    max-width: 12ch;
+  }
+  .kt--kompakt .kt__title {
+    max-width: 20ch;
+  }
+  .kt__benefits {
+    list-style: none;
+    margin: var(--space-s) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-l);
+  }
+  @media (min-width: 40rem) {
+    .kt__benefits {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .kt--kompakt .kt__benefits {
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  }
+  .kt__benefits li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.85rem;
+    align-items: start;
+  }
+  .kt__icon {
+    color: var(--s-accent);
+    margin-top: 0.1rem;
+  }
+  .kt__btext {
+    display: block;
+    margin-top: 0.2rem;
+    color: var(--s-ink-soft);
+    font-size: var(--step--1);
+  }
+  .kt__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    margin-top: var(--space-s);
+  }
+  .kt__count {
+    display: inline-grid;
+    place-items: center;
+    min-width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 999px;
+    background: var(--c-accent-raw);
+    color: var(--c-on-accent);
+    font-size: 0.8rem;
+  }
+  @media (max-width: 30rem) {
+    .kt__ctas .btn {
+      flex: 1 1 100%;
+      white-space: normal;
+    }
+  }
+</style>

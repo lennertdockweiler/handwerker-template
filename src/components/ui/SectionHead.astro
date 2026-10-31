@@ -1,0 +1,24 @@
+---
+interface Props {
+  titel: string;
+  intro?: string | undefined;
+  as?: 'h1' | 'h2' | 'h3';
+  size?: 'h1' | 'h2' | 'h3';
+  split?: boolean;
+  class?: string;
+  id?: string | undefined;
+}
+const { titel, intro, as: Tag = 'h2', size = 'h2', split = false, class: cls = '', id } = Astro.props;
+---
+
+<header class:list={['section-head', { 'section-head--split': split }, cls]}>
+  <Tag class={size} id={id} data-anim="reveal-up">{titel}</Tag>
+  {
+    (intro || Astro.slots.has('default')) && (
+      <div data-anim="reveal-up">
+        {intro && <p class="lead">{intro}</p>}
+        <slot />
+      </div>
+    )
+  }
+</header>

@@ -1,0 +1,198 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/ui/PageHero.astro';
+import Section from '@/components/ui/Section.astro';
+import Img from '@/components/ui/Img.astro';
+import Icon from '@/components/ui/Icon.astro';
+import Timeline from '@/components/page/Timeline.astro';
+import Usps from '@/components/sections/Usps.astro';
+import Cta from '@/components/sections/Cta.astro';
+import { site, sb, t, type Sektion } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { fill, typo } from '@/lib/text';
+import { pageTitle, pageDescription, breadcrumbs } from '@/lib/seo';
+
+if (!site.seiten.ueberUns) return Astro.redirect('/');
+const c = site.config;
+const crumbs = [{ name: ui.nav.start, path: '/' }, { name: ui.nav.ueberUns, path: '/ueber-uns/' }];
+const usps = { typ: 'usps', layout: 'zahlen', aktiv: true, ton: 'dunkel', ueberschrift: sb('werteTitel') } as Extract<Sektion, { typ: 'usps' }>;
+const cta = { typ: 'cta', layout: 'kontakt', aktiv: true } as Extract<Sektion, { typ: 'cta' }>;
+const heroBild = c.team[0]?.foto ?? site.leistungen[0]?.bilder[0];
+---
+
+<BaseLayout
+  title={pageTitle(fill(ui.seo.ueberUns, site.vars), 'ueber-uns')}
+  description={pageDescription(sb('ueberUnsIntro'), 'ueber-uns')}
+  path="/ueber-uns/"
+  ogKey="ueber-uns"
+  jsonLd={[breadcrumbs(crumbs)]}
+>
+  <PageHero titel={sb('ueberUnsTitel')} intro={sb('ueberUnsIntro')} crumbs={crumbs} bild={heroBild} kicker={c.betrieb.name} />
+
+  {
+    c.historie.length > 0 && (
+      <Section>
+        <div class="container-x uu__tl">
+          <Timeline titel={sb('historieTitel')} />
+        </div>
+      </Section>
+    )
+  }
+
+  <Usps s={usps} />
+
+  {
+    c.team.length > 0 && (
+      <Section ton="flaeche">
+        <div class="container-x">
+          <h2 class="h2 uu__h" data-anim="reveal-up">{sb('teamTitel')}</h2>
+          <ul class="team" data-anim-stagger>
+            {c.team.map((m, i) => (
+              <li class:list={['team__m', { 'team__m--off': i % 2 === 1 }]}>
+                <Img bild={m.foto} ratio="4/5" sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw" />
+                <h3 class="h4">{m.name}</h3>
+                <p class="muted">{t(m.rolle)}</p>
+                {m.zitat && <blockquote class="team__q">{typo(`„${t(m.zitat)}“`)}</blockquote>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Section>
+    )
+  }
+
+  {
+    (c.zertifikate.length > 0 || c.mitgliedschaften.length > 0 || c.meisterbetrieb) && (
+      <Section>
+        <div class="container-x uu__zert">
+          <div>
+            <h2 class="h2 uu__h">{ui.zertifikate.titel}</h2>
+            <ul class="zl" data-anim-stagger>
+              {c.meisterbetrieb && (
+                <li>
+                  <Icon name="award" size={28} />
+                  <span>
+                    <strong>{ui.trust.meisterbetrieb}</strong>
+                    <span class="muted">{site.berufsbezeichnung}{c.meisterName && ` · ${c.meisterName}`}</span>
+                  </span>
+                </li>
+              )}
+              {c.zertifikate.map((z) => (
+                <li>
+                  <Icon name="badge-check" size={28} />
+                  <span>
+                    <strong>{z.name}</strong>
+                    {z.jahr && <span class="muted tabular">{fill(ui.trust.seit, { gruendungsjahr: z.jahr })}</span>}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          {c.mitgliedschaften.length > 0 && (
+            <div>
+              <h2 class="h3 uu__h">{ui.zertifikate.mitgliedschaften}</h2>
+              <ul class="ml">
+                {c.mitgliedschaften.map((m) => <li>{m}</li>)}
+              </ul>
+            </div>
+          )}
+        </div>
+      </Section>
+    )
+  }
+  <Cta s={cta} />
+</BaseLayout>
+
+<style>
+  .uu__tl {
+    max-width: 64rem;
+  }
+  .uu__h {
+    margin-bottom: var(--space-xl);
+  }
+  .team {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2xl) var(--space-l);
+  }
+  @media (min-width: 40rem) {
+    .team {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64rem) {
+    .team {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .team__m--off {
+      margin-top: var(--space-3xl);
+    }
+  }
+  .team__m {
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+  }
+  .team__m :global(.media) {
+    margin-bottom: var(--space-s);
+  }
+  .team__q {
+    margin: var(--space-xs) 0 0;
+    padding-left: var(--space-m);
+    border-left: 2px solid var(--c-accent-raw);
+    color: var(--s-ink-soft);
+    font-size: var(--step--1);
+  }
+  .uu__zert {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+  @media (min-width: 64rem) {
+    .uu__zert {
+      grid-template-columns: 1.4fr 1fr;
+      gap: var(--space-3xl);
+    }
+  }
+  .zl {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-s);
+  }
+  @media (min-width: 40rem) {
+    .zl {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .zl li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-m);
+    align-items: start;
+    padding: var(--space-l);
+    border-radius: var(--r-m);
+    border: 1px solid var(--s-line);
+    background: var(--s-card);
+  }
+  .zl li > span {
+    display: grid;
+    gap: 0.2rem;
+  }
+  .zl :global(.icon) {
+    color: var(--s-accent);
+  }
+  .ml {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--s-line);
+  }
+  .ml li {
+    padding: var(--space-m) 0;
+    border-bottom: 1px solid var(--s-line);
+    font-weight: 550;
+  }
+</style>

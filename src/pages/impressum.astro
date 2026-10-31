@@ -1,0 +1,101 @@
+---
+/** Impressum nach § 5 DDG – vollständig aus der Config, inkl. Pflichtangaben für zulassungspflichtiges Handwerk */
+import LegalPage from '@/components/page/LegalPage.astro';
+import { site } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { telAnzeige, fill } from '@/lib/text';
+
+const c = site.config;
+const b = c.betrieb;
+const r = c.rechtliches;
+const R = ui.rechtliches;
+const credits = import.meta.glob('@variant/CREDITS.md', { eager: true, query: '?raw', import: 'default' });
+const md = String(Object.values(credits)[0] ?? '');
+// Fotograf:innen aus der Tabelle in CREDITS.md (Spalte 2)
+const fotografen = [...new Set(md.split('\n').filter((l) => l.startsWith('| `')).map((l) => l.split('|')[2]?.trim()).filter(Boolean))];
+const hatCredits = fotografen.length > 0;
+---
+
+<LegalPage titel={R.impressumTitel} path="/impressum/" og="impressum" description={`${R.impressumTitel} – ${b.name}, ${b.adresse.ort}`}>
+  {c.meta.noindex && c.demo.banner.aktiv && <p class="legal__warn">{R.demoHinweis} {R.pruefHinweis}</p>}
+  <section>
+    <h2>{R.angabenGemaess}</h2>
+    <address>{b.name}<br />{b.adresse.strasse}<br />{b.adresse.plz} {b.adresse.ort}</address>
+  </section>
+  <section>
+    <h2>{R.vertreten}</h2>
+    <p>{r.vertretungsberechtigt.join(', ')}</p>
+  </section>
+  <section>
+    <h2>{R.kontakt}</h2>
+    <dl>
+      <dt>{ui.kontakt.telefon}</dt><dd class="tabular">{telAnzeige(b.telefon)}</dd>
+      {b.fax && <><dt>{ui.kontakt.fax}</dt><dd>{b.fax}</dd></>}
+      <dt>{ui.kontakt.email}</dt><dd>{b.email}</dd>
+    </dl>
+  </section>
+  {
+    (r.registergericht || r.registernummer) && (
+      <section>
+        <h2>{R.register}</h2>
+        <dl>
+          {r.registergericht && <><dt>{R.registergericht}</dt><dd>{r.registergericht}</dd></>}
+          {r.registernummer && <><dt>{R.registernummer}</dt><dd>{r.registernummer}</dd></>}
+        </dl>
+      </section>
+    )
+  }
+  {
+    (r.ustId || r.wirtschaftsId) && (
+      <section>
+        <dl>
+          {r.ustId && <><dt>{R.ustId}</dt><dd>{r.ustId}</dd></>}
+          {r.wirtschaftsId && <><dt>{R.wirtschaftsId}</dt><dd>{r.wirtschaftsId}</dd></>}
+        </dl>
+      </section>
+    )
+  }
+  <section>
+    <h2>{R.berufsrecht}</h2>
+    <dl>
+      <dt>{R.berufsbezeichnung}</dt>
+      <dd>{r.berufsbezeichnung}, {R.verliehenIn} {r.verleihungsstaat}</dd>
+      {c.handwerkskammer && <><dt>{R.kammer}</dt><dd>{c.handwerkskammer.name}, {c.handwerkskammer.adresse}</dd></>}
+      {c.handwerksrolleNr && <><dt>{R.handwerksrolle}</dt><dd>{R.handwerksrolleNr}: {c.handwerksrolleNr}</dd></>}
+      <dt>{R.regelungen}</dt>
+      <dd>{R.regelungenText} <a href="https://www.gesetze-im-internet.de/hwo/" class="link-u link-u--static" rel="noopener" target="_blank">gesetze-im-internet.de/hwo<span class="sr-only">{ui.barrierefrei.neuesFenster}</span></a></dd>
+      {c.innung && <><dt>{R.innung}</dt><dd>{c.innung}</dd></>}
+    </dl>
+  </section>
+  {
+    r.berufshaftpflicht && (
+      <section>
+        <h2>{R.haftpflicht}</h2>
+        <dl>
+          <dt>{R.versicherer}</dt><dd>{r.berufshaftpflicht.versicherer}, {r.berufshaftpflicht.adresse}</dd>
+          <dt>{R.geltungsraum}</dt><dd>{r.berufshaftpflicht.geltungsraum}</dd>
+        </dl>
+      </section>
+    )
+  }
+  {
+    r.verantwortlichInhalt && (
+      <section>
+        <h2>{R.verantwortlich}</h2>
+        <p>{r.verantwortlichInhalt.name}, {r.verantwortlichInhalt.adresse}</p>
+      </section>
+    )
+  }
+  <section>
+    <h2>{R.streit}</h2>
+    <p>{r.verbraucherschlichtung ? R.streitJa : R.streitNein}</p>
+  </section>
+  {
+    hatCredits && (
+      <section>
+        <h2>{R.bildnachweise}</h2>
+        <p>{fill(R.bildnachweiseText, { namen: fotografen.join(', ') })}</p>
+      </section>
+    )
+  }
+</LegalPage>

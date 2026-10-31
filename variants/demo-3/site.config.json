@@ -1,0 +1,196 @@
+{
+  "$schema": "../_schema.json",
+  "//": "Bonus-Variante: zeigt Preset „Kraftvoll Bold“, Du-Anrede, Typo-Hero und Leistungs-Tabs. Texte überwiegend aus dem SHK-Preset – so sieht eine schnelle 30-Minuten-Variante aus.",
+  "meta": { "slug": "demo-3", "anrede": "du", "noindex": true },
+  "betrieb": {
+    "name": "Wärmewerk Yilmaz GmbH",
+    "kurzname": "Wärmewerk",
+    "inhaber": "Emre Yilmaz",
+    "slogan": "Wärmepumpen, Bäder und Notdienst – jung, schnell, Meisterbetrieb.",
+    "gruendungsjahr": 2016,
+    "mitarbeiter": 9,
+    "azubis": 2,
+    "projekte": 1400,
+    "reaktionszeit": "45 Min.",
+    "adresse": { "strasse": "Wärmeweg 21", "plz": "68159", "ort": "Mannheim", "region": "in der Metropolregion Rhein-Neckar" },
+    "geo": { "lat": 49.4875, "lng": 8.466 },
+    "telefon": "+49 621 000000",
+    "email": "hallo.waermewerk@example.com",
+    "whatsapp": "+49 621 000001",
+    "oeffnungszeiten": {
+      "regulaer": [{ "tage": ["mo", "di", "mi", "do", "fr"], "von": "07:00", "bis": "17:30" }],
+      "sonder": []
+    },
+    "bewertungen": {
+      "quelle": "Google",
+      "schnitt": 4.9,
+      "anzahl": 88,
+      "beispiel": true,
+      "eintraege": [
+        { "name": "Lena B.", "ort": "Mannheim-Neckarstadt", "datum": "2026-09-30", "sterne": 5, "text": "Heizung am Samstagabend ausgefallen, um halb zehn war jemand da. Freundlich, schnell, fair abgerechnet." },
+        { "name": "Familie Kaya", "ort": "Viernheim", "datum": "2026-08-14", "sterne": 5, "text": "Wärmepumpe im Altbau von 1965 – alle haben abgeraten, Wärmewerk hat gerechnet. Läuft seit einem Winter super sparsam." },
+        { "name": "Jens P.", "ort": "Schwetzingen", "datum": "2026-06-08", "sterne": 5, "text": "Bad in zwei Wochen komplett neu. Ein Ansprechpartner für alles, tägliche Updates per WhatsApp." },
+        { "name": "Hausverwaltung Quadrate (fiktiv)", "ort": "Mannheim", "datum": "2026-04-20", "sterne": 5, "text": "Zuverlässiger Partner für unsere Objekte. Wartungstermine werden selbstständig geplant." },
+        { "name": "Svenja M.", "ort": "Ladenburg", "datum": "2026-02-12", "sterne": 4, "text": "Klimaanlage im Dachgeschoss – leise und effizient. Termin hat sich einmal verschoben, wurde aber früh angekündigt." },
+        { "name": "Ali R.", "ort": "Brühl", "datum": "2025-12-03", "sterne": 5, "text": "Barrierefreies Bad für meine Mutter inklusive Antrag bei der Pflegekasse. Danke!" }
+      ]
+    }
+  },
+  "branding": {
+    "farben": { "primaer": "#1E5BFF", "akzent": "#E63A2E", "neutralTon": "#16181D" },
+    "stilPreset": "kraftvoll-bold",
+    "animationsIntensitaet": "ausdrucksstark"
+  },
+  "gewerk": "shk",
+  "meisterbetrieb": true,
+  "meisterName": "Emre Yilmaz",
+  "handwerkskammer": { "name": "Handwerkskammer Mannheim Rhein-Neckar-Odenwald", "adresse": "B 1, 1–2, 68159 Mannheim" },
+  "handwerksrolleNr": "000000 (fiktiv)",
+  "zertifikate": [{ "name": "Zertifizierter Kältefachbetrieb", "jahr": 2019 }, { "name": "Wärmepumpen-Fachbetrieb", "jahr": 2021 }],
+  "notdienst": { "aktiv": true, "telefon": "+49 621 000002", "hinweis": "Notdienstpauschale im Stadtgebiet: 79 € inkl. MwSt. zzgl. Material und Arbeitszeit – vorab am Telefon." },
+  "einsatzgebiet": {
+    "zentrum": { "name": "Mannheim", "lat": 49.4875, "lng": 8.466 },
+    "radiusKm": 25,
+    "orte": [
+      { "name": "Mannheim", "lat": 49.4875, "lng": 8.466, "plz": ["68159", "68161", "68163", "68165", "68167", "68169", "68199", "68219", "68229", "68239", "68259", "68305", "68307", "68309"] },
+      { "name": "Viernheim", "lat": 49.540, "lng": 8.578, "plz": ["68519"] },
+      { "name": "Ladenburg", "lat": 49.473, "lng": 8.608, "plz": ["68526"] },
+      { "name": "Schwetzingen", "lat": 49.383, "lng": 8.572, "plz": ["68723"] },
+      { "name": "Brühl", "lat": 49.402, "lng": 8.533, "plz": ["68782"] },
+      { "name": "Lampertheim", "lat": 49.597, "lng": 8.473, "plz": ["68623"] },
+      { "name": "Ludwigshafen", "lat": 49.477, "lng": 8.445, "plz": ["67059", "67061", "67063"] },
+      { "name": "Weinheim", "lat": 49.548, "lng": 8.668, "plz": ["69469"], "status": "anfrage" },
+      { "name": "Heidelberg", "lat": 49.399, "lng": 8.672, "plz": ["69115", "69117", "69120"], "status": "anfrage" }
+    ],
+    "plzAufAnfrage": ["671", "674", "691"]
+  },
+  "leistungen": [
+    { "slug": "waermepumpe", "bilder": [{ "datei": "assets/leistungen/waermepumpe.jpg", "alt": "Außeneinheit einer Wärmepumpe neben einer Klinkerfassade" }] },
+    { "slug": "badsanierung", "bilder": [{ "datei": "assets/leistungen/badsanierung.jpg", "alt": "Modernes Bad mit Natursteinfliesen, rundem Spiegel und Holzwaschtisch" }] },
+    { "slug": "heizungstausch", "bilder": [{ "datei": "assets/leistungen/heizungstausch.jpg", "alt": "Heizungsrohre mit Ventilen und Manometer im Heizungsraum" }] },
+    { "slug": "sanitaer", "bilder": [{ "datei": "assets/leistungen/sanitaer.jpg", "alt": "Installateur repariert einen Siphon unter dem Waschbecken" }] },
+    { "slug": "klima", "bilder": [{ "datei": "assets/leistungen/klima.jpg", "alt": "Klimagerät-Außeneinheit an einer weißen Hauswand" }] },
+    { "slug": "barrierefreies-bad", "bilder": [{ "datei": "assets/leistungen/barrierefreies-bad.jpg", "alt": "Helles Bad mit bodengleicher Dusche und freistehender Wanne" }] },
+    { "slug": "notdienst", "bilder": [{ "datei": "assets/leistungen/notdienst.jpg", "alt": "Monteur arbeitet unter einem Waschtisch an Rohrleitungen" }] }
+  ],
+  "referenzen": [
+    {
+      "slug": "bad-neckarstadt",
+      "titel": "Vom Rohbau zum Spa-Bad in zwei Wochen",
+      "ort": "Mannheim-Neckarstadt",
+      "jahr": 2026,
+      "kategorie": "Bad",
+      "leistungSlug": "badsanierung",
+      "vorher": { "datei": "assets/referenzen/bad-vorher.jpg", "alt": "Entkernter Raum mit Bauschutt und Stützen" },
+      "nachher": { "datei": "assets/referenzen/bad-nachher.jpg", "alt": "Fertiges Bad mit Marmoroptik, Pflanze und rundem Spiegel" },
+      "bilder": [{ "datei": "assets/referenzen/bad-nachher.jpg", "alt": "Fertiges Bad mit Marmoroptik, Pflanze und rundem Spiegel" }],
+      "beschreibung": "Komplett entkernt, neu geplant: bodengleiche Dusche, Vorwandinstallation, großformatige Fliesen. Fliesenleger und Elektriker haben wir koordiniert – die Familie hatte einen Ansprechpartner und nach 14 Arbeitstagen ein neues Bad.",
+      "fakten": [{ "label": "Fläche", "wert": "9 m²" }, { "label": "Bauzeit", "wert": "14 Arbeitstage" }]
+    },
+    {
+      "slug": "waermepumpe-neubau-viernheim",
+      "titel": "Wärmepumpe für einen Neubau",
+      "ort": "Viernheim",
+      "jahr": 2026,
+      "kategorie": "Wärmepumpe",
+      "leistungSlug": "waermepumpe",
+      "bilder": [{ "datei": "assets/referenzen/wp-neubau.jpg", "alt": "Weiße Wärmepumpe vor einem modernen Einfamilienhaus" }],
+      "beschreibung": "Luft-Wasser-Wärmepumpe mit Fußbodenheizung und Warmwasserspeicher. Jahresarbeitszahl im ersten Jahr: 4,6.",
+      "fakten": [{ "label": "JAZ", "wert": "4,6" }, { "label": "Wohnfläche", "wert": "165 m²" }]
+    },
+    {
+      "slug": "waermepumpe-bestand-ladenburg",
+      "titel": "Wärmepumpe im Bestand von 1965",
+      "ort": "Ladenburg",
+      "jahr": 2025,
+      "kategorie": "Wärmepumpe",
+      "leistungSlug": "waermepumpe",
+      "bilder": [{ "datei": "assets/referenzen/wp-bestand.jpg", "alt": "Wärmepumpe vor einem Haus mit rosafarbener Fassade" }],
+      "beschreibung": "Heizlast Raum für Raum berechnet, drei Heizkörper getauscht, hydraulischer Abgleich – seitdem heizt das Haus mit 45 °C Vorlauf.",
+      "fakten": [{ "label": "Baujahr", "wert": "1965" }, { "label": "Vorlauf", "wert": "45 °C" }]
+    },
+    {
+      "slug": "familienbad-schwetzingen",
+      "titel": "Familienbad mit Doppelwaschtisch",
+      "ort": "Schwetzingen",
+      "jahr": 2025,
+      "kategorie": "Bad",
+      "leistungSlug": "badsanierung",
+      "bilder": [{ "datei": "assets/referenzen/bad-familie.jpg", "alt": "Bad mit Doppelwaschtisch, Glasdusche und grauen Fliesen" }],
+      "beschreibung": "Doppelwaschtisch, Walk-in-Dusche und viel Stauraum für eine fünfköpfige Familie."
+    },
+    {
+      "slug": "heizungstausch-lampertheim",
+      "titel": "Heizungstausch mit hydraulischem Abgleich",
+      "ort": "Lampertheim",
+      "jahr": 2024,
+      "kategorie": "Heizung",
+      "leistungSlug": "heizungstausch",
+      "bilder": [{ "datei": "assets/referenzen/heizung.jpg", "alt": "Roter Absperrhahn mit Manometer an einer Heizungsleitung" }],
+      "beschreibung": "Alter Ölkessel raus, Hybridlösung rein. 23 % weniger Energieverbrauch im ersten Jahr."
+    }
+  ],
+  "team": [
+    { "name": "Emre Yilmaz", "rolle": "Installateur- und Heizungsbauermeister, Gründer", "foto": { "datei": "assets/team/emre-yilmaz.jpg", "alt": "Emre Yilmaz mit rotem Helm, lachend" } },
+    { "name": "Jan Becker", "rolle": "Kundendienst & Notdienst", "foto": { "datei": "assets/team/jan-becker.jpg", "alt": "Jan Becker in blauer Arbeitskleidung am Fenster" } },
+    { "name": "Leon Schmitt", "rolle": "Azubi Anlagenmechaniker, 2. Lehrjahr", "foto": { "datei": "assets/team/leon-schmitt.jpg", "alt": "Leon Schmitt mit Kappe und Maske an einer Kappsäge" } }
+  ],
+  "stellen": [
+    {
+      "slug": "anlagenmechaniker-shk",
+      "titel": "Anlagenmechaniker SHK (m/w/d)",
+      "art": "Vollzeit",
+      "intro": "Wärmepumpen statt Ölkessel, Bäder mit Wow-Effekt und ein Team, das zusammen Mittag isst. Klingt gut? Dann komm zu uns.",
+      "aufgaben": ["Installation von Wärmepumpen, Heizungen und Bädern", "Kundendienst und Wartung", "Teilnahme am Notdienst (gut bezahlt)"],
+      "profil": ["Ausbildung als Anlagenmechaniker:in SHK", "Führerschein Klasse B", "Teamgeist"],
+      "benefits": ["E-Bike-Leasing", "Eigener Servicewagen", "Notdienstzulage"],
+      "startdatum": "ab sofort",
+      "gehaltsspanne": { "von": 3200, "bis": 4100, "einheit": "MONTH" },
+      "veroeffentlicht": "2026-10-12"
+    },
+    {
+      "slug": "ausbildung-anlagenmechaniker",
+      "titel": "Ausbildung Anlagenmechaniker SHK (m/w/d)",
+      "art": "Ausbildung",
+      "intro": "Du willst einen Beruf mit Zukunft? Ohne Anlagenmechaniker keine Energiewende.",
+      "aufgaben": ["Du lernst Heizung, Sanitär und Wärmepumpe von Grund auf", "Du bist ab Tag 1 auf der Baustelle dabei"],
+      "profil": ["Haupt- oder Realschulabschluss", "Handwerkliches Geschick"],
+      "benefits": ["Tablet für die Berufsschule", "Prüfungsprämie"],
+      "startdatum": "01.09.2027",
+      "gehaltsspanne": { "von": 1000, "bis": 1300, "einheit": "MONTH" },
+      "veroeffentlicht": "2026-09-01"
+    }
+  ],
+  "partnerLogos": [{ "name": "Thermion" }, { "name": "Aquaform" }, { "name": "Kältewerk Süd" }, { "name": "Ventura" }, { "name": "Heizkraft" }],
+  "historie": [
+    { "jahr": 2016, "ereignis": "Gründung mit zwei Leuten und einem Transporter" },
+    { "jahr": 2019, "ereignis": "Zertifizierung als Kältefachbetrieb" },
+    { "jahr": 2022, "ereignis": "100. Wärmepumpe installiert" },
+    { "jahr": 2025, "ereignis": "Neue Halle im Hafengebiet" }
+  ],
+  "sektionen": [
+    { "typ": "hero", "layout": "typo" },
+    { "typ": "leistungen", "layout": "tabs", "id": "leistungen" },
+    { "typ": "usps", "layout": "zahlen", "ton": "dunkel" },
+    { "typ": "referenzen", "layout": "slider-galerie", "highlight": "bad-neckarstadt", "id": "referenzen" },
+    { "typ": "ablauf", "layout": "gepinnt", "ton": "flaeche" },
+    { "typ": "bewertungen", "layout": "laufband" },
+    { "typ": "karriere", "layout": "emotional", "ton": "marke", "bild": { "datei": "assets/karriere.jpg", "alt": "Monteur im Overall bei der Arbeit in einem Bad" } },
+    { "typ": "einsatzgebiet", "layout": "karte", "id": "einsatzgebiet" },
+    { "typ": "partner", "layout": "raster" },
+    { "typ": "faq", "layout": "akkordeon" },
+    { "typ": "cta", "layout": "kontakt", "ton": "dunkel" }
+  ],
+  "rechtliches": {
+    "berufsbezeichnung": "Installateur- und Heizungsbauermeister",
+    "vertretungsberechtigt": ["Emre Yilmaz (Geschäftsführer)"],
+    "registergericht": "Amtsgericht Mannheim",
+    "registernummer": "HRB 000000 (fiktiv)",
+    "ustId": "DE000000000"
+  },
+  "demo": {
+    "banner": { "aktiv": true },
+    "agentur": { "name": "Studio Werkform", "telefon": "+49 761 000099", "email": "hallo@example.com" },
+    "pitchSeite": true
+  }
+}

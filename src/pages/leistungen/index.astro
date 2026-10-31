@@ -1,0 +1,31 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/ui/PageHero.astro';
+import LeistungenListe from '@/components/sections/leistungen/LeistungenListe.astro';
+import Ablauf from '@/components/sections/Ablauf.astro';
+import Cta from '@/components/sections/Cta.astro';
+import { site, sb, type Sektion } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { pageTitle, pageDescription, breadcrumbs } from '@/lib/seo';
+import { fill } from '@/lib/text';
+
+if (!site.seiten.leistungen) return Astro.redirect('/');
+const crumbs = [{ name: ui.nav.start, path: '/' }, { name: ui.nav.leistungen, path: '/leistungen/' }];
+const titel = sb('leistungenSeiteTitel');
+const liste = { typ: 'leistungen', layout: 'liste', aktiv: true, ueberschrift: fill(ui.seo.gewerkOrt, site.vars) } as Extract<Sektion, { typ: 'leistungen' }>;
+const ablauf = { typ: 'ablauf', layout: 'liste', aktiv: true, ton: 'flaeche' } as Extract<Sektion, { typ: 'ablauf' }>;
+const cta = { typ: 'cta', layout: 'kontakt', aktiv: true } as Extract<Sektion, { typ: 'cta' }>;
+---
+
+<BaseLayout
+  title={pageTitle(fill(ui.seo.leistungen, { ...site.vars, titel }), 'leistungen')}
+  description={pageDescription(`${sb('leistungenSeiteIntro')} ${site.leistungen.map((l) => l.titel).slice(0, 4).join(', ')}.`, 'leistungen')}
+  path="/leistungen/"
+  ogKey="leistungen"
+  jsonLd={[breadcrumbs(crumbs)]}
+>
+  <PageHero titel={titel} intro={sb('leistungenSeiteIntro')} crumbs={crumbs} kicker={site.gewerkName} />
+  <LeistungenListe s={liste} />
+  <Ablauf s={ablauf} />
+  <Cta s={cta} />
+</BaseLayout>

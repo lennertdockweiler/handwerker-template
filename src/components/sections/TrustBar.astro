@@ -1,0 +1,99 @@
+---
+/** Vertrauensleiste direkt unter dem Hero: Sterne, Meisterbetrieb, Gründungsjahr, Einsatzgebiet */
+import { site } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { fill } from '@/lib/text';
+import Icon from '@/components/ui/Icon.astro';
+import Stars from '@/components/ui/Stars.astro';
+
+interface Props {
+  ton?: 'hell' | 'dunkel' | 'flaeche' | 'marke';
+}
+const { ton = 'hell' } = Astro.props;
+const c = site.config;
+const bw = c.betrieb.bewertungen;
+const v = { ...site.vars, schnitt: String(bw?.schnitt ?? '').replace('.', ','), anzahl: bw?.anzahl ?? 0 };
+---
+
+<div class:list={['tb', `tone-${ton}`]}>
+  <ul class="container-x tb__list" data-anim-stagger>
+    {
+      bw && (
+        <li class="tb__item">
+          <Stars wert={bw.schnitt} size={15} />
+          <span>
+            <strong class="tabular">{fill(ui.trust.bewertungen, v)}</strong>
+            <span class="tb__src">
+              {bw.quelle}
+              {bw.beispiel && <> · {ui.trust.beispiel}</>}
+            </span>
+          </span>
+        </li>
+      )
+    }
+    {
+      c.meisterbetrieb && (
+        <li class="tb__item">
+          <Icon name="badge-check" size={20} />
+          <strong>{ui.trust.meisterbetrieb}</strong>
+        </li>
+      )
+    }
+    <li class="tb__item">
+      <Icon name="calendar" size={20} />
+      <strong class="tabular">{fill(ui.trust.seit, v)}</strong>
+    </li>
+    <li class="tb__item">
+      <Icon name="map-pin" size={20} />
+      <strong class="tabular">{fill(ui.trust.einsatzgebiet, v)}</strong>
+    </li>
+  </ul>
+</div>
+
+<style>
+  .tb {
+    border-bottom: 1px solid var(--s-line);
+  }
+  .tb__list {
+    list-style: none;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+  .tb__item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1rem 0.25rem;
+    font-size: var(--step--1);
+    line-height: 1.3;
+    min-width: 0;
+  }
+  .tb__item:first-child {
+    grid-column: 1 / -1;
+    border-bottom: 1px solid var(--s-line);
+  }
+  .tb__item :global(.icon) {
+    color: var(--s-accent);
+  }
+  .tb__src {
+    display: block;
+    color: var(--s-ink-soft);
+    font-size: 0.85em;
+  }
+  @media (min-width: 48rem) {
+    .tb__list {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-l);
+    }
+    .tb__item:first-child {
+      border-bottom: 0;
+    }
+    .tb__item + .tb__item {
+      padding-left: var(--space-l);
+      border-left: 1px solid var(--s-line);
+    }
+  }
+</style>

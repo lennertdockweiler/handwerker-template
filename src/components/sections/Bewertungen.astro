@@ -1,0 +1,228 @@
+---
+/**
+ * Bewertungen: Gesamtnote prominent + Laufband ODER Karussell.
+ * Pflichthinweis § 5b Abs. 3 UWG; Beispielbewertungen werden gekennzeichnet.
+ */
+import { site, sb, t, type Sektion } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { fill, datum, typo } from '@/lib/text';
+import Section from '@/components/ui/Section.astro';
+import Stars from '@/components/ui/Stars.astro';
+import Icon from '@/components/ui/Icon.astro';
+
+interface Props {
+  s: Extract<Sektion, { typ: 'bewertungen' }>;
+}
+const { s } = Astro.props;
+const bw = site.config.betrieb.bewertungen;
+if (!bw || !bw.eintraege.length) return;
+const schnitt = String(bw.schnitt).replace('.', ',');
+const hinweis = bw.pruefHinweis ?? fill(ui.bewertungen.pruefHinweisStandard, { quelle: bw.quelle });
+const half = Math.ceil(bw.eintraege.length / 2);
+const reihen = [bw.eintraege.slice(0, half), bw.eintraege.slice(half)].filter((r) => r.length);
+const karussell = s.layout === 'karussell';
+---
+
+<Section ton={s.ton} id={s.id} class:list={['rv', `rv--${s.layout}`]}>
+  <div class="container-x rv__head">
+    <h2 class="h2 rv__title" data-anim="reveal-up">{s.ueberschrift ? t(s.ueberschrift) : sb('bewertungenTitel')}</h2>
+    <div class="rv__score" data-anim="reveal-up">
+      <p class="rv__num tabular">{schnitt}<span class="rv__of">/5</span></p>
+      <div>
+        <Stars wert={bw.schnitt} size={20} />
+        <p class="rv__basis">{fill(ui.bewertungen.basierendAuf, { anzahl: bw.anzahl, quelle: bw.quelle })}</p>
+        {bw.profilUrl && <a href={bw.profilUrl} class="link-u link-u--static" target="_blank" rel="noopener">{fill(ui.bewertungen.alleAnsehen, { quelle: bw.quelle })}<span class="sr-only">{ui.barrierefrei.neuesFenster}</span></a>}
+      </div>
+    </div>
+  </div>
+
+  {
+    karussell ? (
+      <div class="container-x">
+        <div class="rv__car" data-carousel>
+          <ul class="rv__car-track" data-carousel-track tabindex="0" aria-label={sb('bewertungenTitel')}>
+            {bw.eintraege.map((e) => (
+              <li class="rv__card rv__card--wide">
+                <Stars wert={e.sterne} size={16} />
+                <blockquote class="rv__quote">{typo(`„${e.text}“`)}</blockquote>
+                <p class="rv__who">
+                  <strong>{e.name}</strong>
+                  {e.ort && <span> · {e.ort}</span>}
+                  <span class="rv__date tabular"> · {datum(e.datum)}</span>
+                </p>
+              </li>
+            ))}
+          </ul>
+          <div class="rv__nav">
+            <button type="button" class="rv__btn" data-carousel-prev aria-label={ui.bewertungen.vorherige}><Icon name="chevron-left" /></button>
+            <button type="button" class="rv__btn" data-carousel-next aria-label={ui.bewertungen.naechste}><Icon name="chevron-right" /></button>
+          </div>
+        </div>
+      </div>
+    ) : (
+      <div class="rv__rows">
+        {reihen.map((r, i) => (
+          <div class="marquee rv__mq" style={`--marquee-dur:${50 + i * 12}s;--dir:${i ? 'reverse' : 'normal'}`}>
+            {[0, 1].map((n) => (
+              <ul class="marquee__track" aria-hidden={n === 1 ? 'true' : undefined}>
+                {r.map((e) => (
+                  <li class="rv__card">
+                    <Stars wert={e.sterne} size={15} />
+                    <blockquote class="rv__quote">{typo(`„${e.text}“`)}</blockquote>
+                    <p class="rv__who">
+                      <strong>{e.name}</strong>
+                      {e.ort && <span> · {e.ort}</span>}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            ))}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  <div class="container-x">
+    <p class="rv__legal">
+      {bw.beispiel && <strong>{ui.bewertungen.beispielHinweis} </strong>}
+      {typo(hinweis)}
+    </p>
+  </div>
+</Section>
+
+<style>
+  .rv__head {
+    display: grid;
+    gap: var(--space-l);
+    margin-bottom: var(--space-2xl);
+  }
+  @media (min-width: 64rem) {
+    .rv__head {
+      grid-template-columns: 1fr auto;
+      align-items: end;
+    }
+  }
+  .rv__title {
+    max-width: 16ch;
+  }
+  .rv__score {
+    display: flex;
+    align-items: center;
+    gap: var(--space-l);
+  }
+  .rv__num {
+    font-family: var(--font-head);
+    font-weight: var(--head-weight);
+    letter-spacing: var(--head-tracking);
+    font-size: calc(var(--step-6) * 0.9);
+    line-height: 0.85;
+  }
+  .rv__of {
+    font-size: 0.35em;
+    color: var(--s-ink-soft);
+    margin-left: 0.15em;
+  }
+  .rv__basis {
+    margin-top: 0.35rem;
+    font-size: var(--step--1);
+    color: var(--s-ink-soft);
+  }
+  .rv__rows {
+    display: grid;
+    gap: var(--space-m);
+  }
+  .rv__mq {
+    --marquee-gap: var(--space-m);
+  }
+  .rv__mq .marquee__track {
+    list-style: none;
+    margin: 0;
+    animation-direction: var(--dir);
+  }
+  .rv__card {
+    display: grid;
+    align-content: start;
+    gap: var(--space-s);
+    width: min(80vw, 24rem);
+    padding: var(--space-l);
+    border-radius: var(--r-l);
+    background: var(--s-card);
+    border: 1px solid var(--s-line);
+  }
+  .rv__quote {
+    margin: 0;
+    font-size: var(--step-0);
+    line-height: 1.5;
+  }
+  .rv__who {
+    font-size: var(--step--1);
+    color: var(--s-ink-soft);
+  }
+  .rv__who strong {
+    color: var(--s-ink);
+  }
+  .rv__legal {
+    margin-top: var(--space-xl);
+    max-width: 90ch;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--s-ink-soft);
+  }
+
+  /* Karussell */
+  .rv__car-track {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 var(--space-xs);
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(88%, 38rem);
+    gap: var(--space-m);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  .rv__car-track::-webkit-scrollbar {
+    display: none;
+  }
+  .rv__card--wide {
+    width: auto;
+    scroll-snap-align: start;
+    padding: var(--space-xl);
+  }
+  .rv__card--wide .rv__quote {
+    font-family: var(--font-head);
+    font-weight: var(--head-weight);
+    font-size: var(--step-2);
+    line-height: 1.25;
+    letter-spacing: calc(var(--head-tracking) / 2);
+  }
+  .rv__nav {
+    display: flex;
+    gap: var(--space-xs);
+    margin-top: var(--space-m);
+  }
+  .rv__btn {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: var(--r-btn);
+    border: 1.5px solid var(--s-line);
+    background: var(--s-card);
+    cursor: pointer;
+    transition:
+      background-color var(--dur) var(--ease-out),
+      opacity var(--dur);
+  }
+  .rv__btn:hover {
+    background: var(--s-ink);
+    color: var(--s-bg);
+  }
+  .rv__btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+</style>

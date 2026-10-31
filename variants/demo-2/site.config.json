@@ -1,0 +1,310 @@
+{
+  "$schema": "../_schema.json",
+  "meta": { "slug": "demo-2", "anrede": "sie", "noindex": true },
+  "betrieb": {
+    "name": "Holzwerk Kaiser, Schreinerei & Innenausbau",
+    "kurzname": "Holzwerk Kaiser",
+    "inhaber": "Anna Kaiser",
+    "slogan": "Möbel und Innenausbau aus der eigenen Werkstatt – seit 1972 in Rosenheim.",
+    "gruendungsjahr": 1972,
+    "mitarbeiter": 8,
+    "azubis": 1,
+    "projekte": 2300,
+    "adresse": { "strasse": "Hobelweg 3", "plz": "83026", "ort": "Rosenheim", "region": "im Rosenheimer Land" },
+    "geo": { "lat": 47.8441, "lng": 12.1063 },
+    "telefon": "+49 8031 000000",
+    "email": "werkstatt.kaiser@example.com",
+    "whatsapp": "+49 8031 000001",
+    "oeffnungszeiten": {
+      "regulaer": [
+        { "tage": ["mo", "di", "mi", "do"], "von": "07:30", "bis": "17:00" },
+        { "tage": ["fr"], "von": "07:30", "bis": "12:30" }
+      ],
+      "sonder": [
+        { "datum": "2026-12-24", "geschlossen": true },
+        { "datum": "2026-12-31", "geschlossen": true }
+      ],
+      "hinweis": "Werkstattbesuche und Beratung gern auch am Samstagvormittag nach Vereinbarung."
+    },
+    "socialLinks": [{ "netzwerk": "instagram", "url": "https://www.instagram.com/" }],
+    "bewertungen": {
+      "quelle": "Google",
+      "schnitt": 5,
+      "anzahl": 64,
+      "beispiel": true,
+      "eintraege": [
+        { "name": "Christine und Markus H.", "ort": "Stephanskirchen", "datum": "2026-09-02", "sterne": 5, "leistung": "Küche", "text": "Unsere Eichenküche ist jeden Tag eine Freude. Frau Kaiser hat sich zwei Abende Zeit genommen, um mit uns jeden Schrank durchzudenken – und am Ende passte alles auf den Millimeter, obwohl keine Wand gerade ist." },
+        { "name": "Familie Obermaier", "ort": "Kolbermoor", "datum": "2026-07-19", "sterne": 5, "leistung": "Treppe", "text": "Die neue Faltwerktreppe ist das Herz unseres Hauses geworden. Montage in zwei Tagen, kein Staub, alles besenrein. Wir würden sofort wieder hier bestellen." },
+        { "name": "Dr. Katharina S.", "ort": "Bad Aibling", "datum": "2026-05-04", "sterne": 5, "leistung": "Praxis", "text": "Empfangstresen und Akustikwand für unsere Praxis – montiert an einem verlängerten Wochenende, damit wir am Montag normal öffnen konnten. Die Patienten fragen ständig, wer das gebaut hat." },
+        { "name": "Peter L.", "ort": "Rosenheim", "datum": "2026-03-11", "sterne": 5, "leistung": "Altbau", "text": "Statt die alten Kassettentüren wegzuwerfen, hat die Werkstatt sie aufgearbeitet und nachgedämmt. Ehrliche Beratung, faire Preise, echtes Handwerk." },
+        { "name": "Sabine W.", "ort": "Prien am Chiemsee", "datum": "2026-01-28", "sterne": 5, "leistung": "Einbauschrank", "text": "Unter unserer Dachschräge stand vorher nur Gerümpel – jetzt ist dort der schönste Schrank im Haus. Die Muster zum Anfassen haben uns die Entscheidung leicht gemacht." },
+        { "name": "Georg und Resi M.", "ort": "Raubling", "datum": "2025-11-15", "sterne": 5, "leistung": "Möbel", "text": "Esstisch aus Nussbaum für die ganze Familie. Termin wurde exakt eingehalten, und der Tisch ist so schön geworden, dass wir ihn kaum benutzen wollen." }
+      ]
+    }
+  },
+  "branding": {
+    "farben": { "primaer": "#4A3427", "akzent": "#5D6B3A", "neutralTon": "#B8956A" },
+    "stilPreset": "manufaktur-warm",
+    "animationsIntensitaet": "standard",
+    "bildstil": { "grain": true, "toenung": 0.08 }
+  },
+  "gewerk": "tischler",
+  "gewerkBezeichnung": "Schreinerei",
+  "meisterbetrieb": true,
+  "meisterName": "Anna Kaiser",
+  "handwerkskammer": { "name": "Handwerkskammer für München und Oberbayern", "adresse": "Max-Joseph-Straße 4, 80333 München" },
+  "handwerksrolleNr": "000000 (fiktiv)",
+  "innung": "Schreinerinnung Rosenheim (fiktiv)",
+  "zertifikate": [
+    { "name": "Fachbetrieb für Holz- und Altbausanierung", "jahr": 2011 },
+    { "name": "Montage nach RAL-Richtlinien", "jahr": 2016 },
+    { "name": "Holz von hier – zertifizierte Lieferkette (fiktiv)", "jahr": 2021 }
+  ],
+  "mitgliedschaften": ["Schreinerinnung Rosenheim (fiktiv)", "Netzwerk Altbau Oberbayern (fiktiv)"],
+  "notdienst": { "aktiv": false },
+  "einsatzgebiet": {
+    "zentrum": { "name": "Rosenheim", "lat": 47.8441, "lng": 12.1063 },
+    "radiusKm": 35,
+    "orte": [
+      { "name": "Rosenheim", "lat": 47.856, "lng": 12.128, "plz": ["83022", "83024", "83026"] },
+      { "name": "Kolbermoor", "lat": 47.849, "lng": 12.067, "plz": ["83059"] },
+      { "name": "Bad Aibling", "lat": 47.864, "lng": 11.983, "plz": ["83043"] },
+      { "name": "Stephanskirchen", "lat": 47.853, "lng": 12.185, "plz": ["83071"] },
+      { "name": "Raubling", "lat": 47.788, "lng": 12.110, "plz": ["83064"] },
+      { "name": "Großkarolinenfeld", "lat": 47.889, "lng": 12.083, "plz": ["83109"] },
+      { "name": "Rohrdorf", "lat": 47.797, "lng": 12.169, "plz": ["83101"] },
+      { "name": "Bad Endorf", "lat": 47.905, "lng": 12.296, "plz": ["83093"] },
+      { "name": "Prien am Chiemsee", "lat": 47.857, "lng": 12.345, "plz": ["83209"] },
+      { "name": "Brannenburg", "lat": 47.738, "lng": 12.094, "plz": ["83098"] },
+      { "name": "Wasserburg am Inn", "lat": 48.060, "lng": 12.233, "plz": ["83512"], "status": "anfrage" },
+      { "name": "Aschau im Chiemgau", "lat": 47.776, "lng": 12.323, "plz": ["83229"], "status": "anfrage" }
+    ],
+    "plz": ["8302", "8304", "8305", "8306", "8307", "8308", "8310", "8311", "8312"],
+    "plzAufAnfrage": ["832", "835", "834"]
+  },
+  "leistungen": [
+    { "slug": "moebel-nach-mass", "bilder": [{ "datei": "assets/leistungen/moebel.jpg", "alt": "Schlichte Holzbank mit Polster unter einem Fenster, minimalistischer Raum" }] },
+    { "slug": "kuechen", "bilder": [
+      { "datei": "assets/leistungen/kuechen.jpg", "alt": "Küche mit Holzfronten, schwarzer Arbeitsplatte und Kochinsel" },
+      { "datei": "assets/leistungen/kuechen-2.jpg", "alt": "Geöffnete Holzschublade mit maßgefertigter Inneneinteilung" }
+    ] },
+    { "slug": "innentueren", "bilder": [
+      { "datei": "assets/leistungen/innentueren.jpg", "alt": "Raumhohe Holztür mit dezentem Spotlicht im Flur" },
+      { "datei": "assets/leistungen/innentueren-2.jpg", "alt": "Hand öffnet eine furnierte Innentür" }
+    ] },
+    { "slug": "treppen", "bilder": [{ "datei": "assets/leistungen/treppen.jpg", "alt": "Holztreppe mit weißen Wangen und Glasgeländer im Tageslicht" }] },
+    { "slug": "einbauschraenke", "bilder": [{ "datei": "assets/leistungen/einbauschraenke.jpg", "alt": "Wand aus maßgefertigten Holzschränken mit vielen Schubladen" }] },
+    { "slug": "innenausbau", "bilder": [{ "datei": "assets/leistungen/innenausbau.jpg", "alt": "Wandverkleidung aus Birkenholz mit integriertem Sofa und Fensterband" }] },
+    { "slug": "altbausanierung", "bilder": [{ "datei": "assets/leistungen/altbausanierung.jpg", "alt": "Altes Holztreppenhaus mit gedrechselten Geländerstäben während der Sanierung" }] },
+    { "slug": "fenster-haustueren", "bilder": [{ "datei": "assets/leistungen/fenster.jpg", "alt": "Holzfenster mit Sitznische und Blick ins Grüne" }] }
+  ],
+  "referenzen": [
+    {
+      "slug": "eichenkueche-stephanskirchen",
+      "titel": "Eichenküche mit Kochinsel",
+      "ort": "Stephanskirchen",
+      "jahr": 2026,
+      "kategorie": "Küchen",
+      "leistungSlug": "kuechen",
+      "bilder": [
+        { "datei": "assets/referenzen/kueche-eiche.jpg", "alt": "Küche mit geölten Eichenfronten und Edelstahlgeräten" },
+        { "datei": "assets/referenzen/kueche-auszug.jpg", "alt": "Schublade mit Besteckeinteilung aus Eiche" }
+      ],
+      "beschreibung": "Eine Küche für eine vierköpfige Familie, die viel und gern kocht: geölte Eichenfronten, grifflos, eine Kochinsel mit Sitzplatz und Schubladen statt Unterschränken – damit niemand mehr auf Knien nach Töpfen suchen muss. Die Arbeitshöhe haben wir auf die beiden Hauptköche abgestimmt: 96 statt 90 Zentimeter.",
+      "fakten": [
+        { "label": "Holz", "wert": "Eiche, geölt" },
+        { "label": "Länge", "wert": "6,4 m + Insel" },
+        { "label": "Montage", "wert": "3 Tage" }
+      ],
+      "kundenstimme": { "text": "Jeden Morgen freuen wir uns aufs Frühstück. Kein Witz.", "name": "Christine H." }
+    },
+    {
+      "slug": "treppenhaus-altbau-rosenheim",
+      "titel": "Treppenhaus im Gründerzeithaus aufgearbeitet",
+      "ort": "Rosenheim-Innenstadt",
+      "jahr": 2025,
+      "kategorie": "Altbau",
+      "leistungSlug": "altbausanierung",
+      "vorher": { "datei": "assets/referenzen/treppenhaus-vorher.jpg", "alt": "Abgenutztes Holztreppenhaus mit beschädigten Stufen vor der Sanierung" },
+      "nachher": { "datei": "assets/referenzen/treppenhaus-nachher.jpg", "alt": "Aufgearbeitetes Holztreppenhaus mit warm geölten Stufen und Handlauf" },
+      "bilder": [{ "datei": "assets/referenzen/treppenhaus-nachher.jpg", "alt": "Aufgearbeitetes Holztreppenhaus mit warm geölten Stufen und Handlauf" }],
+      "beschreibung": "Vier Geschosse, 112 Stufen, gedrechselte Geländerstäbe von 1904. Wir haben jede Stufe abgeschliffen, ausgebrochene Kanten mit passendem Altholz ergänzt, lose Stäbe neu verleimt und alles mit Hartwachsöl geschützt. Die Mieter konnten das Haus während der gesamten Arbeiten nutzen.",
+      "fakten": [
+        { "label": "Baujahr", "wert": "1904" },
+        { "label": "Stufen", "wert": "112" },
+        { "label": "Bauzeit", "wert": "4 Wochen" }
+      ],
+      "kundenstimme": { "text": "Das Treppenhaus sieht aus wie vor hundert Jahren – nur besser.", "name": "Hausverwaltung Innstadt (fiktiv)" }
+    },
+    {
+      "slug": "faltwerktreppe-kolbermoor",
+      "titel": "Faltwerktreppe mit Stahlgeländer",
+      "ort": "Kolbermoor",
+      "jahr": 2026,
+      "kategorie": "Treppen",
+      "leistungSlug": "treppen",
+      "bilder": [
+        { "datei": "assets/referenzen/treppe-faltwerk.jpg", "alt": "Holzstufen einer Treppe vor weißer Wand" },
+        { "datei": "assets/referenzen/treppe-gelaender.jpg", "alt": "Helle Treppe mit schlankem Geländer in einem offenen Wohnraum" }
+      ],
+      "beschreibung": "Eine Treppe, die wie gefaltet aus der Wand kommt: durchgehende Eichenbohlen, verdeckte Befestigung, dazu ein schlankes Flachstahlgeländer von unserem Partner-Metallbauer. Gefertigt in der Werkstatt, montiert in zwei Tagen.",
+      "fakten": [
+        { "label": "Holz", "wert": "Eiche, Hartwachsöl" },
+        { "label": "Stufen", "wert": "15" }
+      ]
+    },
+    {
+      "slug": "sitznische-dachgeschoss",
+      "titel": "Sitznische im ausgebauten Dachgeschoss",
+      "ort": "Prien am Chiemsee",
+      "jahr": 2025,
+      "kategorie": "Innenausbau",
+      "leistungSlug": "fenster-haustueren",
+      "vorher": { "datei": "assets/referenzen/nische-vorher.jpg", "alt": "Unfertiger Raum mit freigelegtem Mauerwerk und altem Heizkörper unter dem Fenster" },
+      "nachher": { "datei": "assets/referenzen/nische-nachher.jpg", "alt": "Fertige Sitznische aus Holz mit Kissen vor einem Sprossenfenster" },
+      "bilder": [{ "datei": "assets/referenzen/nische-nachher.jpg", "alt": "Fertige Sitznische aus Holz mit Kissen vor einem Sprossenfenster" }],
+      "beschreibung": "Aus einem Fenster mit Heizkörper wurde ein Lieblingsplatz: neues Holzfenster mit Dreifachverglasung, eine Sitzbank mit Stauraum und eine Heizkörperverkleidung, die die Wärme in den Raum lässt. Die Kissen hat die Raumausstatterin aus dem Ort genäht.",
+      "fakten": [
+        { "label": "Holz", "wert": "Lärche, gebeizt" },
+        { "label": "Bauzeit", "wert": "1 Woche" }
+      ]
+    },
+    {
+      "slug": "praxis-empfang-bad-aibling",
+      "titel": "Empfang und Wartebereich für eine Praxis",
+      "ort": "Bad Aibling",
+      "jahr": 2026,
+      "kategorie": "Innenausbau",
+      "leistungSlug": "innenausbau",
+      "bilder": [{ "datei": "assets/referenzen/praxis.jpg", "alt": "Heller Raum mit Holzmöbeln, Regalwand und rundem Tisch" }],
+      "beschreibung": "Empfangstresen, Wandverkleidung mit Akustiklamellen und Wartebänke – alles aus geölter Esche, gefertigt in der eigenen Werkstatt und an einem verlängerten Wochenende montiert, damit die Praxis keinen Tag schließen musste.",
+      "fakten": [
+        { "label": "Fläche", "wert": "68 m²" },
+        { "label": "Montage", "wert": "3 Tage, Wochenende" }
+      ],
+      "kundenstimme": { "text": "Die Patienten fragen ständig, wer das gebaut hat.", "name": "Dr. Katharina S." }
+    },
+    {
+      "slug": "apothekerschrank-rosenheim",
+      "titel": "Schrankwand nach dem Vorbild eines Apothekerschranks",
+      "ort": "Rosenheim",
+      "jahr": 2025,
+      "kategorie": "Möbel",
+      "leistungSlug": "einbauschraenke",
+      "bilder": [
+        { "datei": "assets/referenzen/apothekerschrank.jpg", "alt": "Holzschrankwand mit zahlreichen kleinen Schubladen" },
+        { "datei": "assets/referenzen/schrank-detail.jpg", "alt": "Rattanstuhl und Holzmöbel in einem lichtdurchfluteten Raum" }
+      ],
+      "beschreibung": "Ein Sammler wollte für seine Werkzeug- und Mineraliensammlung einen Schrank, der so viel Ordnung schafft wie ein alter Apothekerschrank. Es wurden 48 Schubladen aus Kirschbaum mit Schwalbenschwanzverbindungen – jede beschriftbar, jede leichtgängig.",
+      "fakten": [
+        { "label": "Schubladen", "wert": "48" },
+        { "label": "Holz", "wert": "Kirschbaum" }
+      ]
+    },
+    {
+      "slug": "esszimmer-raubling",
+      "titel": "Esstisch und Bank für die große Familie",
+      "ort": "Raubling",
+      "jahr": 2024,
+      "kategorie": "Möbel",
+      "leistungSlug": "moebel-nach-mass",
+      "bilder": [{ "datei": "assets/referenzen/esszimmer.jpg", "alt": "Esstisch mit gelben Stühlen in einem hellen Raum" }],
+      "beschreibung": "2,80 Meter Nussbaum, eine Platte aus drei Bohlen desselben Stamms, Kufengestell mit Keilzapfen – zerlegbar, damit der Tisch auch beim nächsten Umzug durch die Tür passt.",
+      "fakten": [
+        { "label": "Länge", "wert": "2,80 m" },
+        { "label": "Holz", "wert": "Nussbaum" }
+      ]
+    }
+  ],
+  "team": [
+    { "name": "Anna Kaiser", "rolle": "Schreinermeisterin, Inhaberin", "foto": { "datei": "assets/team/anna-kaiser.jpg", "alt": "Anna Kaiser arbeitet konzentriert an einer Werkbank", "fokus": "60% 40%" }, "zitat": "Ein gutes Möbel erzählt, wie es gemacht wurde." },
+    { "name": "Josef Kaiser", "rolle": "Schreinermeister, Seniorchef", "foto": { "datei": "assets/team/josef-kaiser.jpg", "alt": "Josef Kaiser mit verschränkten Armen in der Werkstatt", "fokus": "50% 35%" }, "zitat": "Holz verzeiht viel – aber keine Eile." },
+    { "name": "Max Huber", "rolle": "Schreinergeselle", "foto": { "datei": "assets/team/max-huber.jpg", "alt": "Max Huber arbeitet mit einer Druckluftpistole an einem Möbelstück", "fokus": "45% 40%" }, "zitat": "Am liebsten baue ich Treppen. Da sieht man am Ende jeden Schritt." }
+  ],
+  "stellen": [
+    {
+      "slug": "schreiner-moebelbau",
+      "titel": "Schreiner (m/w/d) für Möbelbau und Montage",
+      "art": "Vollzeit",
+      "intro": "Du willst Möbel bauen, die bleiben? In unserer Werkstatt fertigst du Küchen, Treppen und Einzelstücke von der Zeichnung bis zur Montage – mit moderner CNC und viel Handarbeit.",
+      "aufgaben": ["Fertigung von Möbeln, Küchen und Innenausbauten in unserer Werkstatt", "Montage bei Kunden im Rosenheimer Land", "Oberflächenbehandlung mit Öl, Wachs und Lack", "Mitarbeit an Entwürfen und Detaillösungen"],
+      "profil": ["Abgeschlossene Ausbildung als Schreiner:in / Tischler:in", "Freude an sauberer Handarbeit", "Führerschein Klasse B"],
+      "benefits": ["4-Tage-Woche im Sommer möglich", "Werkstattnutzung für eigene Projekte", "Bezahlte Weiterbildung bis zum Meister"],
+      "startdatum": "ab sofort",
+      "arbeitszeit": "39 Std./Woche, Fr. ab 12:30 Uhr frei",
+      "gehaltsspanne": { "von": 3100, "bis": 3800, "einheit": "MONTH" },
+      "veroeffentlicht": "2026-10-05"
+    },
+    {
+      "slug": "ausbildung-schreiner-2027",
+      "titel": "Ausbildung zum Schreiner (m/w/d) 2027",
+      "art": "Ausbildung",
+      "intro": "Du arbeitest gern mit den Händen und willst am Ende des Tages sehen, was du geschafft hast? Bei uns lernst du das Schreinerhandwerk von Grund auf – in einem kleinen Team, das sich Zeit für dich nimmt.",
+      "aufgaben": ["Du lernst Holzarten, Verbindungen und Maschinen kennen", "Du baust ab dem ersten Jahr an echten Kundenaufträgen mit", "Dein Gesellenstück entwirfst du selbst"],
+      "profil": ["Mittlerer Schulabschluss oder Quali", "Räumliches Vorstellungsvermögen", "Lust auf Handwerk"],
+      "benefits": ["Eigener Werkzeugkasten", "Fahrtkostenzuschuss", "Übernahme nach der Ausbildung"],
+      "startdatum": "01.09.2027",
+      "gehaltsspanne": { "von": 960, "bis": 1240, "einheit": "MONTH" },
+      "veroeffentlicht": "2026-09-20"
+    }
+  ],
+  "historie": [
+    { "jahr": 1972, "ereignis": "Georg Kaiser eröffnet die Werkstatt", "text": "In einer umgebauten Scheune am Stadtrand, mit einer Hobelbank und einer Kreissäge." },
+    { "jahr": 1989, "ereignis": "Neue Werkstatt am Hobelweg", "text": "Platz für Maschinen, Holzlager und einen eigenen Lackierraum." },
+    { "jahr": 1998, "ereignis": "Josef Kaiser übernimmt", "text": "Die zweite Generation spezialisiert sich auf Treppen und Altbausanierung." },
+    { "jahr": 2008, "ereignis": "Erste CNC-Maschine", "text": "Präzision für Serienteile – damit mehr Zeit für Handarbeit bleibt." },
+    { "jahr": 2015, "ereignis": "Anna Kaiser übernimmt", "text": "Mit Meisterbrief und frischen Ideen für Küchen und Innenausbau." },
+    { "jahr": 2023, "ereignis": "Kleine Ausstellung", "text": "Hölzer, Oberflächen und Beschläge zum Anfassen – nach Vereinbarung auch samstags." }
+  ],
+  "lokaleSeiten": [
+    {
+      "leistungSlug": "kuechen",
+      "ort": "Prien am Chiemsee",
+      "titel": "Küchen vom Schreiner in Prien am Chiemsee",
+      "text": "Viele Häuser rund um den Chiemsee sind alte Bauernhäuser oder Ferienhäuser mit niedrigen Decken, Holzbalken und Wänden, die nicht im Lot sind. Genau dort spielt eine Schreinerküche ihre Stärken aus: Wir messen jede Wand einzeln auf und bauen Korpusse, die Unebenheiten aufnehmen, statt sie mit Blenden zu verstecken. Für Ferienwohnungen planen wir robuste Oberflächen und Beschläge, die viele Gäste aushalten. Und weil wir aus Rosenheim in einer guten halben Stunde in Prien sind, kommen wir zum Nachjustieren auch dann, wenn es nur um eine Schranktür geht.",
+      "besonderheiten": ["Erfahrung mit Bauernhäusern und Ferienwohnungen", "Aufmaß direkt vor Ort am Chiemsee", "Rund 35 Minuten Anfahrt aus Rosenheim"]
+    }
+  ],
+  "sektionen": [
+    {
+      "typ": "hero",
+      "layout": "split",
+      "bilder": [
+        { "datei": "assets/hero-1.jpg", "alt": "Sonnendurchflutete Schreinerwerkstatt mit Hobelbank und Werkzeug", "fokus": "50% 50%" },
+        { "datei": "assets/hero-2.jpg", "alt": "Hand zeichnet mit Bleistift eine Linie auf ein Holzbrett" },
+        { "datei": "assets/hero-3.jpg", "alt": "Sideboard mit geschwungenen Holzlamellen und Plattenspieler" }
+      ]
+    },
+    {
+      "typ": "text-bild",
+      "layout": "rechts",
+      "ueberschrift": "Jedes Stück beginnt mit einem Bleistiftstrich.",
+      "text": "Bei uns gibt es keinen Katalog. Jedes Möbel wird für einen Raum und für Menschen gebaut, die wir vorher kennengelernt haben. Wir messen selbst auf, zeichnen selbst und fertigen in unserer Werkstatt am Hobelweg – drei Generationen Erfahrung, kombiniert mit einer modernen CNC für alles, was millimetergenau sein muss.\n\nDas Ergebnis sind Möbel, die nicht nur passen, sondern bleiben: Massivholz aus der Region, Oberflächen mit Öl und Wachs, Verbindungen, die man noch in fünfzig Jahren nachziehen kann.",
+      "bild": { "datei": "assets/werkstatt.jpg", "alt": "Hände schnitzen mit Stecheisen an einem Holzstück, Späne auf der Werkbank" },
+      "cta": { "text": "Unsere Geschichte", "ziel": "/ueber-uns/" }
+    },
+    { "typ": "leistungen", "layout": "liste", "id": "leistungen", "ton": "flaeche" },
+    { "typ": "referenzen", "layout": "raster", "highlight": "treppenhaus-altbau-rosenheim", "id": "referenzen" },
+    { "typ": "usps", "layout": "split", "ton": "dunkel", "bild": { "datei": "assets/usps.jpg", "alt": "Werkzeugwand mit Hobeln und Stecheisen in der Werkstatt" } },
+    { "typ": "ablauf", "layout": "liste" },
+    { "typ": "bewertungen", "layout": "karussell", "ton": "flaeche" },
+    { "typ": "karriere", "layout": "kompakt", "ton": "dunkel" },
+    { "typ": "faq", "layout": "zweispaltig", "id": "faq" },
+    { "typ": "einsatzgebiet", "layout": "kompakt", "ton": "flaeche" },
+    { "typ": "cta", "layout": "banner" }
+  ],
+  "rechtliches": {
+    "berufsbezeichnung": "Schreinermeisterin",
+    "verleihungsstaat": "Deutschland",
+    "vertretungsberechtigt": ["Anna Kaiser (Inhaberin)"],
+    "ustId": "DE000000000",
+    "verantwortlichInhalt": { "name": "Anna Kaiser", "adresse": "Hobelweg 3, 83026 Rosenheim" },
+    "verbraucherschlichtung": false
+  },
+  "integrationen": { "formularEndpoint": "", "karte": { "aktiv": false }, "analytics": { "aktiv": false } },
+  "demo": {
+    "banner": { "aktiv": true },
+    "agentur": { "name": "Studio Werkform", "telefon": "+49 761 000099", "email": "hallo@example.com", "website": "https://example.com" },
+    "pitchSeite": true
+  }
+}

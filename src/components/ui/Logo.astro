@@ -1,0 +1,163 @@
+---
+/**
+ * Logo: nutzt branding.logo, sonst eine typografische Wortmarke je Stil-Preset.
+ * Präzise: Signalquadrat + breite Versalien + schmale Unterzeile
+ * Manufaktur: Jahresring-Zeichen + Serifen-Name
+ * Bold: kompakter, fetter Name mit Akzentpunkt
+ */
+import { Image } from 'astro:assets';
+import { site } from '@/lib/config';
+import { getImage } from '@/lib/images';
+
+interface Props {
+  /** auf dunklem Grund (nutzt logo.dateiHell, falls vorhanden) */
+  dark?: boolean;
+  class?: string;
+  size?: 'sm' | 'md' | 'lg';
+}
+const { dark = false, class: cls = '', size = 'md' } = Astro.props;
+const { branding, betrieb } = site.config;
+const preset = branding.stilPreset;
+const logoFile = branding.logo ? getImage(dark && branding.logo.dateiHell ? branding.logo.dateiHell : branding.logo.datei) : undefined;
+const unterzeile = site.gewerkName;
+---
+
+{
+  logoFile ? (
+    <Image src={logoFile} alt={branding.logo!.alt} class:list={['logo-img', `logo--${size}`, cls]} height={96} loading="eager" />
+  ) : (
+    <span class:list={['wm', `wm--${preset}`, `logo--${size}`, cls]}>
+      {preset === 'modern-praezise' && (
+        <>
+          <span class="wm__sq" aria-hidden="true" />
+          <span class="wm__txt">
+            <span class="wm__name">{betrieb.kurzname}</span>
+            <span class="wm__sub">{unterzeile}</span>
+          </span>
+        </>
+      )}
+      {preset === 'manufaktur-warm' && (
+        <>
+          <svg class="wm__ring" viewBox="0 0 40 40" aria-hidden="true">
+            <circle cx="20" cy="20" r="18.5" />
+            <circle cx="21" cy="19.5" r="13" />
+            <circle cx="21.6" cy="19" r="8" />
+            <circle cx="22" cy="18.8" r="3.4" />
+          </svg>
+          <span class="wm__txt">
+            <span class="wm__name">{betrieb.kurzname}</span>
+            <span class="wm__sub">
+              {unterzeile} · {betrieb.gruendungsjahr}
+            </span>
+          </span>
+        </>
+      )}
+      {preset === 'kraftvoll-bold' && (
+        <span class="wm__txt">
+          <span class="wm__name">
+            {betrieb.kurzname}
+            <span class="wm__dot">.</span>
+          </span>
+        </span>
+      )}
+    </span>
+  )
+}
+
+<style>
+  .logo-img {
+    width: auto;
+    height: 2.4rem;
+  }
+  .logo--sm.logo-img {
+    height: 2rem;
+  }
+  .logo--lg.logo-img {
+    height: 3.4rem;
+  }
+  .wm {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    color: currentColor;
+    line-height: 1;
+    white-space: nowrap;
+    font-size: 1rem;
+  }
+  .logo--sm {
+    font-size: 0.88rem;
+  }
+  .logo--lg {
+    /* fluid: breite Wortmarken (z. B. Archivo 125 %) passen auch auf 360 px */
+    font-size: clamp(1.05rem, 0.5rem + 3.6vw, 1.5rem);
+  }
+  .wm__txt {
+    display: grid;
+    gap: 0.28em;
+  }
+  .wm__name {
+    font-family: var(--font-head);
+  }
+  .wm__sub {
+    font-size: 0.62em;
+    opacity: 0.78;
+  }
+
+  /* Präzise */
+  .wm--modern-praezise .wm__sq {
+    width: 0.78em;
+    height: 0.78em;
+    background: var(--c-accent-raw);
+    flex: none;
+    align-self: flex-start;
+    margin-top: 0.1em;
+  }
+  .wm--modern-praezise .wm__name {
+    font-stretch: 125%;
+    font-weight: 820;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    font-size: 1.12em;
+  }
+  .wm--modern-praezise .wm__sub {
+    font-family: var(--font-head);
+    font-stretch: 75%;
+    font-weight: 560;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+
+  /* Manufaktur */
+  .wm--manufaktur-warm .wm__ring {
+    width: 2.1em;
+    height: 2.1em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.3;
+    flex: none;
+  }
+  .wm--manufaktur-warm .wm__ring circle:last-child {
+    fill: var(--c-accent-raw);
+    stroke: none;
+  }
+  .wm--manufaktur-warm .wm__name {
+    font-weight: 520;
+    font-size: 1.32em;
+    letter-spacing: -0.015em;
+  }
+  .wm--manufaktur-warm .wm__sub {
+    font-family: var(--font-text);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  /* Bold */
+  .wm--kraftvoll-bold .wm__name {
+    font-weight: 800;
+    font-size: 1.45em;
+    letter-spacing: -0.05em;
+  }
+  .wm--kraftvoll-bold .wm__dot {
+    color: var(--c-accent-raw);
+  }
+</style>

@@ -1,0 +1,156 @@
+---
+/** Hero b) Split-Layout mit animierter Bildcollage (3 Bilder, versetzt, sanft schwebend) */
+import { site } from '@/lib/config';
+import { heroData, type HeroSektion } from './heroData';
+import Img from '@/components/ui/Img.astro';
+import Icon from '@/components/ui/Icon.astro';
+import TrustBar from '../TrustBar.astro';
+
+interface Props {
+  s: HeroSektion;
+}
+const { s } = Astro.props;
+const d = heroData(s);
+const fallback = site.leistungen.flatMap((l) => l.bilder);
+const bilder = [0, 1, 2].map((i) => s.bilder?.[i] ?? fallback[i] ?? { alt: site.leistungen[i]?.titel ?? '', motiv: site.leistungen[i]?.motiv });
+const ton = s.ton ?? 'hell';
+const manufaktur = site.config.branding.stilPreset === 'manufaktur-warm';
+---
+
+<section class:list={['hs', `tone-${ton}`, { paper: manufaktur }]} data-hero="split" aria-labelledby="hero-title">
+  <div class="container-x hs__grid">
+    <div class="hs__text">
+      <h1 id="hero-title" class="hs__h1">
+        <span class="hs__kicker label">{d.kicker}</span>
+        <span class="h-display hs__headline" data-anim="hero-text" style="--d:0">{d.headline}</span>
+      </h1>
+      <p class="hs__sub lead" data-anim="hero-text" style="--d:1">{d.subline}</p>
+      <div class="hs__ctas" data-anim="hero-text" style="--d:2">
+        <a href={d.primary.href} class="btn btn--lg" data-magnetic>{d.primary.text}</a>
+        <a href={d.secondary.href} class="btn btn--lg btn--ghost"><Icon name="phone" />{d.secondary.text}</a>
+      </div>
+    </div>
+
+    <div class="hs__collage">
+      {
+        manufaktur && (
+          <svg class="hs__rings" viewBox="0 0 400 400" aria-hidden="true">
+            {[190, 160, 133, 108, 86, 66, 48, 32, 18].map((r, i) => (
+              <circle cx={200 + i * 1.6} cy={200 - i * 1.1} r={r} />
+            ))}
+          </svg>
+        )
+      }
+      <div class="hs__float hs__float--1" data-anim="hero-media">
+        <Img bild={bilder[0]} ratio="4/5" priority sizes="(min-width: 1024px) 34vw, 70vw" widths={[480, 720, 960, 1200]} class="hs__img" />
+      </div>
+      <div class="hs__float hs__float--2">
+        <Img bild={bilder[1]} ratio="1/1" sizes="(min-width: 1024px) 20vw, 42vw" widths={[320, 480, 640]} class="hs__img" data-anim="image-reveal" />
+      </div>
+      <div class="hs__float hs__float--3">
+        <Img bild={bilder[2]} ratio="3/4" sizes="(min-width: 1024px) 16vw, 34vw" widths={[320, 480, 640]} class="hs__img" data-anim="image-reveal" />
+      </div>
+    </div>
+  </div>
+</section>
+<TrustBar ton={ton === 'dunkel' ? 'dunkel' : 'hell'} />
+
+<style>
+  .hs {
+    padding-top: calc(var(--header-h) + var(--nd-h, 0px) + var(--space-2xl));
+    padding-bottom: var(--space-3xl);
+    overflow: hidden;
+  }
+  .hs__grid {
+    display: grid;
+    gap: var(--space-3xl);
+    align-items: center;
+  }
+  @media (min-width: 64rem) {
+    .hs__grid {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      gap: var(--space-2xl);
+      min-height: calc(100svh - var(--header-h) - 10rem);
+    }
+  }
+  .hs__h1 {
+    display: grid;
+    gap: var(--space-m);
+    font-size: inherit;
+  }
+  .hs__kicker {
+    color: var(--s-accent);
+  }
+  .hs__headline {
+    max-width: 12ch;
+  }
+  .hs__sub {
+    margin-top: var(--space-l);
+  }
+  .hs__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    margin-top: var(--space-xl);
+  }
+  @media (max-width: 30rem) {
+    .hs__ctas .btn {
+      flex: 1 1 100%;
+    }
+  }
+  .hs__collage {
+    position: relative;
+    aspect-ratio: 1 / 1.05;
+    width: min(100%, 38rem);
+    justify-self: center;
+  }
+  .hs__rings {
+    position: absolute;
+    inset: -8%;
+    width: 116%;
+    height: 116%;
+    fill: none;
+    stroke: var(--s-line);
+    stroke-width: 1;
+    opacity: 0.9;
+  }
+  .hs__float {
+    position: absolute;
+    animation: hs-float 9s var(--ease-in-out) infinite alternate;
+  }
+  .hs__float :global(.hs__img) {
+    box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.35);
+  }
+  .hs__float--1 {
+    right: 0;
+    top: 0;
+    width: 64%;
+    animation-duration: 11s;
+  }
+  .hs__float--2 {
+    left: 0;
+    bottom: 4%;
+    width: 46%;
+    animation-delay: -3s;
+  }
+  .hs__float--3 {
+    left: 10%;
+    top: 2%;
+    width: 30%;
+    animation-duration: 13s;
+    animation-delay: -6s;
+  }
+  @keyframes hs-float {
+    from {
+      translate: 0 -6px;
+    }
+    to {
+      translate: 0 10px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hs__float {
+      animation: none;
+    }
+  }
+</style>

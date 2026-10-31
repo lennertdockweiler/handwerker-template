@@ -1,0 +1,60 @@
+---
+import { site } from '@/lib/config';
+import Img from './Img.astro';
+
+type Referenz = (typeof site.config.referenzen)[number];
+interface Props {
+  r: Referenz;
+  ratio?: string;
+  sizes?: string;
+  as?: 'h2' | 'h3';
+  class?: string;
+  /** LCP-Kandidat oberhalb des Falzes → eager + fetchpriority=high */
+  priority?: boolean;
+}
+const { r, ratio = '4/3', sizes = '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 90vw', as: H = 'h3', class: cls = '', priority = false } = Astro.props;
+const leistung = site.leistungen.find((l) => l.slug === r.leistungSlug);
+---
+
+<article class:list={['rc', cls]}>
+  <a href={site.links.referenz(r.slug)} class="rc__link">
+    <Img bild={r.nachher ?? r.bilder[0]} ratio={ratio} sizes={sizes} class="rc__media" transitionName={`referenz-${r.slug}`} decorative priority={priority} />
+    <div class="rc__body">
+      <p class="rc__meta label tabular">{r.kategorie} · {r.ort} · {r.jahr}</p>
+      <H class="h4 rc__title">{r.titel}</H>
+      {leistung && <p class="rc__leistung">{leistung.titel}</p>}
+    </div>
+  </a>
+</article>
+
+<style>
+  .rc__link {
+    display: grid;
+    gap: var(--space-s);
+    text-decoration: none;
+  }
+  .rc__link :global(.rc__media img) {
+    transition: transform 900ms var(--ease-out);
+  }
+  .rc__link:hover :global(.rc__media img) {
+    transform: scale(1.045);
+  }
+  .rc__body {
+    display: grid;
+    gap: 0.35rem;
+  }
+  .rc__meta {
+    color: var(--s-ink-soft);
+  }
+  .rc__title {
+    max-width: 30ch;
+    transition: color var(--dur) var(--ease-out);
+  }
+  .rc__link:hover .rc__title {
+    color: var(--s-accent);
+  }
+  .rc__leistung {
+    font-size: var(--step--1);
+    color: var(--s-ink-soft);
+  }
+</style>

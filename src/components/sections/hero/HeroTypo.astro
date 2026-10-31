@@ -1,0 +1,135 @@
+---
+/** Hero c) Typo-Hero: riesiges Statement, darunter ein Laufband mit Leistungen */
+import { site } from '@/lib/config';
+import { heroData, type HeroSektion } from './heroData';
+import Icon from '@/components/ui/Icon.astro';
+import TrustBar from '../TrustBar.astro';
+
+interface Props {
+  s: HeroSektion;
+}
+const { s } = Astro.props;
+const d = heroData(s);
+const ton = s.ton ?? (site.config.branding.stilPreset === 'kraftvoll-bold' ? 'marke' : 'hell');
+const items = site.leistungen.map((l) => l.titel);
+---
+
+<section class:list={['ht', `tone-${ton}`]} data-hero="typo" aria-labelledby="hero-title">
+  <div class="container-x ht__in">
+    <h1 id="hero-title" class="ht__h1">
+      <span class="ht__kicker label">{d.kicker}</span>
+      <span class="ht__statement" data-anim="hero-text" style="--d:0">{d.statement}</span>
+    </h1>
+    <div class="ht__row">
+      <p class="ht__sub" data-anim="hero-text" style="--d:1">{d.subline}</p>
+      <div class="ht__ctas" data-anim="hero-text" style="--d:2">
+        <a href={d.primary.href} class="btn btn--lg ht__primary" data-magnetic>{d.primary.text}</a>
+        <a href={d.secondary.href} class="btn btn--lg btn--ghost"><Icon name="phone" />{d.secondary.text}</a>
+      </div>
+    </div>
+  </div>
+  <div class="marquee ht__marquee" style={`--marquee-dur:${Math.max(24, items.length * 5)}s`}>
+    {
+      [0, 1].map((n) => (
+        <ul class="marquee__track" aria-hidden={n === 1 ? 'true' : undefined}>
+          {items.map((t) => (
+            <li class="ht__item">{t}</li>
+          ))}
+        </ul>
+      ))
+    }
+  </div>
+</section>
+<TrustBar />
+
+<style>
+  .ht {
+    padding-top: calc(var(--header-h) + var(--nd-h, 0px) + var(--space-2xl));
+    overflow: hidden;
+  }
+  .ht__in {
+    display: grid;
+    gap: var(--space-2xl);
+    padding-bottom: var(--space-2xl);
+  }
+  .ht__h1 {
+    display: grid;
+    gap: var(--space-m);
+    font-size: inherit;
+    line-height: inherit;
+    letter-spacing: normal;
+  }
+  .ht__kicker {
+    color: var(--s-ink-soft);
+  }
+  .ht__statement {
+    display: block;
+    font-size: calc(var(--step-7) * 0.92);
+    line-height: 0.86;
+    letter-spacing: var(--head-tracking);
+    max-width: 11ch;
+    hyphens: manual;
+  }
+  .ht__row {
+    display: grid;
+    gap: var(--space-l);
+    align-items: end;
+  }
+  @media (min-width: 64rem) {
+    .ht__row {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--space-3xl);
+    }
+  }
+  .ht__sub {
+    max-width: 44ch;
+    font-size: var(--step-1);
+    line-height: 1.45;
+    color: var(--s-ink-soft);
+  }
+  .ht__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+  }
+  .tone-marke .ht__primary {
+    --btn-bg: var(--c-accent);
+    --btn-bd: var(--c-accent);
+  }
+  .tone-marke .btn--ghost {
+    --btn-ink: var(--c-on-brand);
+    --btn-bd: color-mix(in oklab, var(--c-on-brand) 50%, transparent);
+  }
+  @media (max-width: 30rem) {
+    .ht__ctas .btn {
+      flex: 1 1 100%;
+    }
+  }
+  .ht__marquee {
+    --marquee-gap: 2.5rem;
+    border-top: 2px solid var(--s-line);
+    padding-block: var(--space-m);
+  }
+  .ht__marquee .marquee__track {
+    list-style: none;
+    margin: 0;
+  }
+  .ht__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 2.5rem;
+    white-space: nowrap;
+    font-family: var(--font-head);
+    font-weight: var(--head-weight);
+    letter-spacing: var(--head-tracking);
+    font-size: var(--step-3);
+    line-height: 1.1;
+  }
+  .ht__item::after {
+    content: '';
+    width: 0.32em;
+    height: 0.32em;
+    border-radius: 50%;
+    background: var(--c-accent-raw);
+  }
+</style>

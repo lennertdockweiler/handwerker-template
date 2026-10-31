@@ -1,0 +1,125 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/ui/PageHero.astro';
+import Section from '@/components/ui/Section.astro';
+import Icon from '@/components/ui/Icon.astro';
+import Schnellbewerbung from '@/components/interactive/Schnellbewerbung.astro';
+import { site, tDu } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { euro, fill } from '@/lib/text';
+import { pageTitle, pageDescription, breadcrumbs, jobPosting } from '@/lib/seo';
+
+export function getStaticPaths() {
+  if (!site.seiten.karriere) return [];
+  return site.config.stellen.map((s) => ({ params: { slug: s.slug }, props: { s } }));
+}
+type Stelle = (typeof site.config.stellen)[number];
+interface Props {
+  s: Stelle;
+}
+const { s } = Astro.props;
+const ort = site.config.betrieb.adresse.ort;
+const crumbs = [
+  { name: ui.nav.start, path: '/' },
+  { name: ui.nav.karriere, path: '/karriere/' },
+  { name: s.titel, path: `/karriere/${s.slug}/` },
+];
+const gehalt = s.gehaltsspanne ? fill(ui.karriere.gehaltSpanne, { von: euro(s.gehaltsspanne.von), bis: euro(s.gehaltsspanne.bis), einheit: ui.karriere.einheit[s.gehaltsspanne.einheit] }) : undefined;
+const blocks = [
+  { titel: ui.karriere.aufgaben, items: s.aufgaben, icon: 'wrench' },
+  { titel: ui.karriere.profil, items: s.profil, icon: 'user-check' },
+  { titel: ui.karriere.benefits, items: s.benefits, icon: 'gift' },
+];
+---
+
+<BaseLayout
+  title={pageTitle(fill(ui.seo.stelle, { titel: s.titel, ort }))}
+  description={pageDescription(tDu(s.intro))}
+  path={`/karriere/${s.slug}/`}
+  ogKey={`stelle-${s.slug}`}
+  jsonLd={[breadcrumbs(crumbs), jobPosting(s)]}
+>
+  <PageHero titel={s.titel} intro={tDu(s.intro)} crumbs={crumbs} kicker={`${s.art} · ${ort}`}>
+    <dl class="sf">
+      <div><dt class="label">{ui.karriere.art}</dt><dd>{s.art}</dd></div>
+      <div><dt class="label">{ui.karriere.start}</dt><dd>{s.startdatum}</dd></div>
+      {s.arbeitszeit && <div><dt class="label">{ui.karriere.arbeitszeit}</dt><dd>{s.arbeitszeit}</dd></div>}
+      {gehalt && <div><dt class="label">{ui.karriere.gehalt}</dt><dd class="tabular">{gehalt}</dd></div>}
+    </dl>
+    <a href="#schnellbewerbung" class="btn btn--lg sf__cta">{ui.cta.jetztBewerben}</a>
+  </PageHero>
+
+  <Section>
+    <div class="container-x sd">
+      {
+        blocks.map((b) => (
+          <div class="sd__b" data-anim="reveal-up">
+            <h2 class="h3">{b.titel}</h2>
+            <ul>
+              {b.items.map((x) => (
+                <li><Icon name="check" size={20} />{tDu(x)}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </Section>
+
+  <Section ton="flaeche">
+    <div class="container-x">
+      <Schnellbewerbung stelle={s.slug} />
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .sf {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    gap: var(--space-m);
+    margin: 0;
+    padding-top: var(--space-l);
+    border-top: 1px solid var(--s-line);
+  }
+  .sf dt {
+    color: var(--s-ink-soft);
+  }
+  .sf dd {
+    margin: 0.2rem 0 0;
+    font-weight: 650;
+  }
+  .sf__cta {
+    justify-self: start;
+  }
+  .sd {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+  @media (min-width: 64rem) {
+    .sd {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .sd__b {
+    display: grid;
+    gap: var(--space-m);
+    align-content: start;
+  }
+  .sd__b ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-s);
+  }
+  .sd__b li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.6rem;
+  }
+  .sd__b :global(.icon) {
+    color: var(--c-success);
+    margin-top: 0.2rem;
+  }
+</style>

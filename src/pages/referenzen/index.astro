@@ -1,0 +1,137 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/ui/PageHero.astro';
+import Section from '@/components/ui/Section.astro';
+import ReferenzCard from '@/components/ui/ReferenzCard.astro';
+import Lightbox from '@/components/interactive/Lightbox.astro';
+import Icon from '@/components/ui/Icon.astro';
+import Cta from '@/components/sections/Cta.astro';
+import { site, sb, type Sektion } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { fill } from '@/lib/text';
+import { lightboxItems } from '@/lib/lightbox';
+import { getImage } from '@/lib/images';
+import { pageTitle, pageDescription, breadcrumbs } from '@/lib/seo';
+
+if (!site.seiten.referenzen) return Astro.redirect('/');
+const refs = site.config.referenzen;
+const kategorien = [...new Set(refs.map((r) => r.kategorie))];
+const crumbs = [{ name: ui.nav.start, path: '/' }, { name: ui.nav.referenzen, path: '/referenzen/' }];
+const items = await Promise.all(refs.map(async (r) => ({ r, lb: await lightboxItems([...(r.vorher ? [r.vorher] : []), ...r.bilder, ...(r.nachher && !r.bilder.some((b) => b.datei === r.nachher!.datei) ? [r.nachher] : [])]) })));
+const cta = { typ: 'cta', layout: 'banner', aktiv: true } as Extract<Sektion, { typ: 'cta' }>;
+---
+
+<BaseLayout
+  title={pageTitle(fill(ui.seo.referenzen, site.vars), 'referenzen')}
+  description={pageDescription(`${sb('referenzenSeiteIntro')} ${kategorien.join(', ')}.`, 'referenzen')}
+  path="/referenzen/"
+  ogKey="referenzen"
+  preloadImage={getImage((refs[0]?.nachher ?? refs[0]?.bilder[0])?.datei)}
+  preloadSizes="(min-width: 1024px) 66vw, 100vw"
+  preloadWidths={[480, 720, 960, 1280, 1680]}
+  jsonLd={[breadcrumbs(crumbs)]}
+>
+  <PageHero titel={sb('referenzenSeiteTitel')} intro={sb('referenzenSeiteIntro')} crumbs={crumbs} />
+  <Section>
+    <div class="container-x" data-gallery>
+      <div class="gf" role="group" aria-label={ui.galerie.filterLabel} data-filterbar data-needs-js>
+        <button type="button" class="chip gf__btn" data-filter="*" aria-pressed="true">{ui.galerie.filterAlle}<span class="tabular gf__n">{refs.length}</span></button>
+        {kategorien.map((k) => <button type="button" class="chip gf__btn" data-filter={k} aria-pressed="false">{k}<span class="tabular gf__n">{refs.filter((r) => r.kategorie === k).length}</span></button>)}
+      </div>
+      <p class="sr-only" aria-live="polite" data-gallery-status data-template={ui.galerie.projekte}></p>
+      <ul class="gg">
+        {
+          items.map(({ r, lb }, i) => (
+            <li class:list={['gg__item', { 'gg__item--wide': i % 5 === 0 }]} data-kategorie={r.kategorie} data-lightbox={JSON.stringify(lb)}>
+              <ReferenzCard r={r} priority={i === 0} ratio={i % 5 === 0 ? '16/10' : '4/3'} sizes={i % 5 === 0 ? '(min-width: 1024px) 66vw, 100vw' : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'} as="h2" />
+              {lb.length > 0 && (
+                <button type="button" class="gg__zoom" data-lightbox-index="0" aria-label={fill(ui.galerie.vergroessern, { alt: r.titel })}>
+                  <Icon name="maximize-2" size={18} />
+                  <span class="tabular">{lb.length}</span>
+                </button>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+      <p class="gg__empty muted" data-gallery-empty hidden>{ui.galerie.keineTreffer}</p>
+    </div>
+  </Section>
+  <Cta s={cta} />
+  <Lightbox />
+</BaseLayout>
+
+<style>
+  .gf {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: var(--space-2xl);
+  }
+  .gf__btn[aria-pressed='true'] {
+    background: var(--s-ink);
+    color: var(--s-bg);
+    border-color: var(--s-ink);
+  }
+  .gf__n {
+    font-size: 0.8em;
+    opacity: 0.6;
+  }
+  .gg {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2xl) var(--space-l);
+  }
+  @media (min-width: 40rem) {
+    .gg {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .gg__item--wide {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 64rem) {
+    .gg {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .gg__item--wide {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+  }
+  .gg__item {
+    position: relative;
+  }
+  .gg__item[hidden] {
+    display: none;
+  }
+  .gg__zoom {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0 0.85rem;
+    border: 0;
+    border-radius: 999px;
+    background: rgb(0 0 0 / 0.6);
+    color: #fff;
+    font-weight: 650;
+    font-size: 0.85rem;
+    cursor: zoom-in;
+    backdrop-filter: blur(6px);
+    transition: background-color var(--dur);
+  }
+  .gg__zoom:hover {
+    background: rgb(0 0 0 / 0.8);
+  }
+  .gg__empty {
+    margin-top: var(--space-xl);
+  }
+</style>

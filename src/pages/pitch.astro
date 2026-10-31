@@ -1,0 +1,199 @@
+---
+/** Versteckte Pitch-Seite: nicht verlinkt, noindex, nicht in Sitemap, per demo.pitchSeite an/aus */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Section from '@/components/ui/Section.astro';
+import Icon from '@/components/ui/Icon.astro';
+import PitchSlider from '@/components/interactive/PitchSlider.astro';
+import { site } from '@/lib/config';
+import { pitch as P } from '@/data/pitch';
+import { euro, fill, telHref, zahl } from '@/lib/text';
+
+if (!site.seiten.pitch) return Astro.redirect('/');
+const v = site.vars;
+const a = site.config.demo.agentur;
+const s = P.stellen;
+const z = P.zeit;
+const verlust = s.anzahl.standard * s.umsatz.standard * s.monate.standard;
+const stunden = (z.anfragen.standard * z.minuten.standard * z.wochen) / 60;
+const data = JSON.stringify({ wochen: z.wochen, stunden: z.stunden });
+---
+
+<BaseLayout title={fill(P.titel, v)} description={P.intro} path="/pitch/" ogKey="start" noindex>
+  <Section ton="dunkel" class="pi-hero">
+    <div class="container-x pi-hero__in">
+      <p class="label pi__note">{P.hinweis}</p>
+      <h1 class="h1" data-anim="words">{fill(P.titel, v)}</h1>
+      <p class="lead">{P.intro}</p>
+    </div>
+  </Section>
+
+  <Section>
+    <div class="container-x pi" data-pitch={data}>
+      <form class="pi__calc card" data-pitch-calc="stellen" onsubmit="return false">
+        <h2 class="h3">{s.titel}</h2>
+        <p class="muted">{s.intro}</p>
+        <PitchSlider id="p-anzahl" cfg={s.anzahl} />
+        <PitchSlider id="p-umsatz" cfg={s.umsatz} />
+        <PitchSlider id="p-monate" cfg={s.monate} />
+        <div class="pi__res">
+          <p class="label muted">{s.ergebnis}</p>
+          <p class="pi__big tabular" data-res="verlust" aria-live="polite">{euro(verlust)}</p>
+        </div>
+        <p class="muted pi__fazit">{s.fazit}</p>
+      </form>
+      <form class="pi__calc card" data-pitch-calc="zeit" onsubmit="return false">
+        <h2 class="h3">{z.titel}</h2>
+        <p class="muted">{z.intro}</p>
+        <PitchSlider id="p-anfragen" cfg={z.anfragen} />
+        <PitchSlider id="p-minuten" cfg={z.minuten} />
+        <PitchSlider id="p-satz" cfg={z.satz} />
+        <div class="pi__res pi__res--2">
+          <div>
+            <p class="label muted">{z.proJahr}</p>
+            <p class="pi__big tabular" data-res="stunden" aria-live="polite">{fill(z.stunden, { n: zahl(Math.round(stunden)) })}</p>
+          </div>
+          <div>
+            <p class="label muted">{z.wert}</p>
+            <p class="pi__big tabular" data-res="wert" aria-live="polite">{euro(stunden * z.satz.standard)}</p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </Section>
+
+  <Section ton="flaeche">
+    <div class="container-x">
+      <h2 class="h2 pi__h">{P.nutzenTitel}</h2>
+      <ul class="pn" data-anim-stagger>
+        {
+          P.nutzen.map((n) => (
+            <li>
+              <Icon name={n.icon} size={28} />
+              <h3 class="h4">{n.funktion}</h3>
+              <p class="muted">{fill(n.nutzen, v)}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </Section>
+
+  <Section ton="marke">
+    <div class="container-x pi-cta">
+      <h2 class="h1">{fill(P.ctaTitel, v)}</h2>
+      <p class="lead">{P.ctaText}</p>
+      {
+        a && (
+          <div class="pi-cta__btns">
+            {a.telefon && <a href={telHref(a.telefon)} class="btn btn--lg btn--dark"><Icon name="phone" />{a.telefon}</a>}
+            {a.email && <a href={`mailto:${a.email}`} class="btn btn--lg btn--light"><Icon name="mail" />{a.email}</a>}
+          </div>
+        )
+      }
+      {a && <p class="label">{a.name}</p>}
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .pi-hero {
+    padding-top: calc(var(--header-h) + var(--nd-h, 0px) + var(--space-3xl));
+  }
+  .pi-hero__in {
+    display: grid;
+    gap: var(--space-l);
+    max-width: 60rem;
+  }
+  .pi__note {
+    color: var(--s-accent);
+  }
+  .pi {
+    display: grid;
+    gap: var(--space-l);
+  }
+  @media (min-width: 64rem) {
+    .pi {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+  }
+  .pi__calc {
+    display: grid;
+    gap: var(--space-l);
+    padding: clamp(1.25rem, 4vw, 2.5rem);
+  }
+  .pi__res {
+    padding: var(--space-l);
+    border-radius: var(--r-m);
+    background: var(--s-bg);
+    border: 1px dashed var(--s-line);
+  }
+  .pi__res--2 {
+    display: grid;
+    gap: var(--space-m);
+  }
+  @media (min-width: 40rem) {
+    .pi__res--2 {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .pi__big {
+    font-family: var(--font-head);
+    font-weight: var(--head-weight);
+    letter-spacing: var(--head-tracking);
+    font-size: var(--step-4);
+    line-height: 1.05;
+    color: var(--s-ink);
+  }
+  html[data-preset='modern-praezise'] .pi__big {
+    font-stretch: 100%;
+  }
+  .pi__res--2 .pi__big {
+    font-size: var(--step-3);
+  }
+  .pi__fazit {
+    font-size: var(--step--1);
+  }
+  .pi__h {
+    margin-bottom: var(--space-xl);
+  }
+  .pn {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-l);
+  }
+  @media (min-width: 40rem) {
+    .pn {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64rem) {
+    .pn {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .pn li {
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+    padding: var(--space-l);
+    border-radius: var(--r-m);
+    background: var(--s-card);
+    border: 1px solid var(--s-line);
+  }
+  .pn :global(.icon) {
+    color: var(--s-accent);
+  }
+  .pi-cta {
+    display: grid;
+    gap: var(--space-l);
+    justify-items: start;
+  }
+  .pi-cta__btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+  }
+</style>

@@ -1,0 +1,130 @@
+---
+/** „Kommen wir zu Ihnen?“ – PLZ eingeben, animierte Antwort (ja / auf Anfrage / leider nein) */
+import { site, t } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { fill } from '@/lib/text';
+import Icon from '@/components/ui/Icon.astro';
+
+interface Props {
+  id?: string;
+  class?: string;
+}
+const { id = 'plz', class: cls = '' } = Astro.props;
+const e = site.config.einsatzgebiet;
+const data = JSON.stringify({
+  orte: e.orte.map((o) => ({ name: o.name, plz: o.plz, status: o.status })),
+  plz: e.plz,
+  anfrage: e.plzAufAnfrage,
+  labels: {
+    ja: t(ui.plz.ja),
+    jaOhneOrt: t(ui.plz.jaOhneOrt),
+    anfrage: t(ui.plz.anfrage),
+    nein: t(ui.plz.nein),
+    ungueltig: t(ui.plz.ungueltig),
+  },
+  anfrageLink: site.links.anfrage(),
+});
+---
+
+<form class:list={['pc', cls]} data-plz-check={data} novalidate>
+  <label for={`${id}-input`} class="field-label">{ui.plz.label}</label>
+  <div class="pc__row">
+    <input
+      id={`${id}-input`}
+      class="input pc__input tabular"
+      type="text"
+      inputmode="numeric"
+      autocomplete="postal-code"
+      maxlength="5"
+      pattern="[0-9]{5}"
+      placeholder={fill(ui.plz.placeholder, { plz: site.config.betrieb.adresse.plz })}
+      aria-describedby={`${id}-out`}
+      required
+    />
+    <button class="btn pc__btn" type="submit">{ui.plz.pruefen}</button>
+  </div>
+  <div class="pc__out" id={`${id}-out`} aria-live="polite" data-plz-out>
+    <span class="pc__icon" aria-hidden="true">
+      <Icon name="circle-check" class="pc__i pc__i--ja" />
+      <Icon name="circle-question-mark" class="pc__i pc__i--anfrage" />
+      <Icon name="circle-x" class="pc__i pc__i--nein" />
+    </span>
+    <span class="pc__msg" data-plz-msg></span>
+    <a class="link-u link-u--static pc__cta" href={site.links.anfrage()} data-plz-cta hidden>{ui.plz.weiter}</a>
+  </div>
+</form>
+
+<style>
+  .pc {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .pc__row {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .pc__input {
+    flex: 1;
+    min-width: 0;
+    font-size: max(16px, var(--step-1));
+    letter-spacing: 0.08em;
+  }
+  .pc__btn {
+    flex: none;
+  }
+  .pc__out {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 0.25rem 0.75rem;
+    min-height: 3.25rem;
+    padding-top: 0.5rem;
+  }
+  .pc__out:not([data-state]) .pc__icon {
+    display: none;
+  }
+  .pc__icon {
+    display: grid;
+  }
+  .pc__icon :global(.pc__i) {
+    grid-area: 1 / 1;
+    width: 1.75rem;
+    height: 1.75rem;
+    opacity: 0;
+    transform: scale(0.4) rotate(-20deg);
+    transition:
+      opacity 300ms var(--ease-out),
+      transform 500ms var(--ease-out);
+  }
+  .pc__out[data-state='ja'] :global(.pc__i--ja),
+  .pc__out[data-state='anfrage'] :global(.pc__i--anfrage),
+  .pc__out[data-state='nein'] :global(.pc__i--nein),
+  .pc__out[data-state='ungueltig'] :global(.pc__i--nein) {
+    opacity: 1;
+    transform: none;
+  }
+  .pc__out[data-state='ja'] {
+    color: var(--c-success);
+  }
+  .tone-dunkel .pc__out[data-state='ja'] {
+    color: #4ade80;
+  }
+  .pc__out[data-state='anfrage'] {
+    color: var(--s-accent);
+  }
+  .pc__out[data-state='nein'],
+  .pc__out[data-state='ungueltig'] {
+    color: var(--s-ink-soft);
+  }
+  .pc__msg {
+    font-weight: 600;
+    color: var(--s-ink);
+    padding-top: 0.15rem;
+  }
+  .pc__cta {
+    grid-column: 2;
+    justify-self: start;
+    font-weight: 650;
+    color: var(--s-ink);
+  }
+</style>

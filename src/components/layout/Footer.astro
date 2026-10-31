@@ -1,0 +1,205 @@
+---
+import { site } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { fill, telHref, telAnzeige, typo } from '@/lib/text';
+import Logo from '@/components/ui/Logo.astro';
+import Icon from '@/components/ui/Icon.astro';
+import OpeningHours from '@/components/ui/OpeningHours.astro';
+import { withBase } from '@/lib/paths';
+import LiveStatus from '@/components/ui/LiveStatus.astro';
+
+const c = site.config;
+const b = c.betrieb;
+const leistungen = site.leistungen.slice(0, 8);
+---
+
+<footer class="ft tone-dunkel paper">
+  <div class="container-x ft__in">
+    <div class="ft__brand">
+      <a href={withBase('/')} class="ft__logo"><Logo dark size="lg" /></a>
+      <p class="ft__slogan">{typo(b.slogan)}</p>
+      <LiveStatus />
+      {
+        b.socialLinks.length > 0 && (
+          <ul class="ft__social">
+            {b.socialLinks.map((s) => (
+              <li>
+                <a href={s.url} rel="noopener" target="_blank" aria-label={`${s.netzwerk} ${ui.barrierefrei.neuesFenster}`}>
+                  <Icon name={s.netzwerk} size={20} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+
+    <div class="ft__col">
+      <h2 class="ft__h label">{ui.footer.kontakt}</h2>
+      <address class="ft__addr">
+        <span>{b.name}</span>
+        <span>{b.adresse.strasse}</span>
+        <span>{b.adresse.plz} {b.adresse.ort}</span>
+      </address>
+      <ul class="ft__contact">
+        <li><a href={telHref(b.telefon)} class="link-u tabular"><Icon name="phone" size={18} />{telAnzeige(b.telefon)}</a></li>
+        <li><a href={`mailto:${b.email}`} class="link-u"><Icon name="mail" size={18} />{b.email}</a></li>
+        {b.whatsapp && <li><a href={`https://wa.me/${b.whatsapp.replace(/\D/g, '')}`} class="link-u" rel="noopener" target="_blank"><Icon name="whatsapp" size={18} />{ui.kontakt.whatsapp}<span class="sr-only">{ui.barrierefrei.neuesFenster}</span></a></li>}
+      </ul>
+      {
+        site.notdienst.aktiv && (
+          <a href={telHref(site.notdienst.telefon!)} class="ft__nd tabular">
+            <span class="live-dot" aria-hidden="true" />
+            {ui.nav.notdienst}: {telAnzeige(site.notdienst.telefon!)}
+          </a>
+        )
+      }
+    </div>
+
+    <div class="ft__col">
+      <h2 class="ft__h label">{ui.oeffnungszeiten}</h2>
+      <OpeningHours />
+    </div>
+
+    <nav class="ft__col" aria-label={ui.footer.seiten}>
+      <h2 class="ft__h label">{ui.nav.leistungen}</h2>
+      <ul class="ft__links">
+        {leistungen.map((l) => <li><a href={site.links.leistung(l.slug)} class="link-u">{l.titel}</a></li>)}
+      </ul>
+    </nav>
+  </div>
+
+  <div class="container-x ft__bottom">
+    <p>{fill(ui.footer.copyright, { jahr: site.jahr, name: b.name })}</p>
+    <nav aria-label={ui.footer.rechtliches}>
+      <ul class="ft__legal">
+        <li><a href={site.links.impressum} class="link-u">{ui.footer.impressum}</a></li>
+        <li><a href={site.links.datenschutz} class="link-u">{ui.footer.datenschutz}</a></li>
+        {c.rechtliches.agbUrl && <li><a href={c.rechtliches.agbUrl} class="link-u">{ui.footer.agb}</a></li>}
+        {site.seiten.karriere && <li><a href={site.links.karriere} class="link-u">{ui.nav.karriere}</a></li>}
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .ft {
+    padding-top: var(--space-3xl);
+    padding-bottom: calc(var(--space-xl) + var(--sticky-bar-h));
+  }
+  .ft__in {
+    display: grid;
+    gap: var(--space-2xl) var(--space-xl);
+    grid-template-columns: minmax(0, 1fr);
+  }
+  @media (min-width: 40rem) {
+    .ft__in {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 64rem) {
+    .ft__in {
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    }
+  }
+  .ft__brand {
+    display: grid;
+    gap: var(--space-m);
+    align-content: start;
+  }
+  .ft__logo {
+    text-decoration: none;
+    justify-self: start;
+  }
+  .ft__slogan {
+    max-width: 30ch;
+    color: var(--s-ink-soft);
+  }
+  .ft__h {
+    margin-bottom: var(--space-s);
+    color: var(--s-ink-soft);
+  }
+  .ft__addr {
+    font-style: normal;
+    display: grid;
+    margin-bottom: var(--space-s);
+  }
+  .ft__contact,
+  .ft__links,
+  .ft__legal,
+  .ft__social {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .ft__contact {
+    display: grid;
+    gap: 0.25rem;
+  }
+  .ft__contact a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    word-break: break-word;
+  }
+  .ft__links {
+    display: grid;
+    gap: 0.1rem;
+  }
+  .ft__links a {
+    display: inline-flex;
+    min-height: 40px;
+    align-items: center;
+  }
+  .ft__nd {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: var(--space-s);
+    padding: 0.5rem 0.85rem;
+    min-height: 44px;
+    border-radius: var(--r-btn);
+    background: var(--c-accent);
+    color: var(--c-on-accent);
+    text-decoration: none;
+    font-weight: 650;
+  }
+  .ft__social {
+    display: flex;
+    gap: 0.25rem;
+  }
+  .ft__social a {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--s-line);
+    transition: background-color var(--dur) var(--ease-out);
+  }
+  .ft__social a:hover {
+    background: var(--s-card);
+  }
+  .ft__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-s) var(--space-l);
+    margin-top: var(--space-3xl);
+    padding-top: var(--space-l);
+    border-top: 1px solid var(--s-line);
+    font-size: var(--step--1);
+    color: var(--s-ink-soft);
+  }
+  .ft__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+  }
+  .ft__legal a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+  }
+</style>

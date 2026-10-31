@@ -1,0 +1,154 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/ui/PageHero.astro';
+import Section from '@/components/ui/Section.astro';
+import Img from '@/components/ui/Img.astro';
+import Icon from '@/components/ui/Icon.astro';
+import StelleCard from '@/components/page/StelleCard.astro';
+import Schnellbewerbung from '@/components/interactive/Schnellbewerbung.astro';
+import { site, sb, type Bild } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { fill } from '@/lib/text';
+import { pageTitle, pageDescription, breadcrumbs, jobPosting } from '@/lib/seo';
+
+if (!site.seiten.karriere) return Astro.redirect('/');
+const c = site.config;
+const crumbs = [{ name: ui.nav.start, path: '/' }, { name: ui.nav.karriere, path: '/karriere/' }];
+const karriereSek = c.sektionen.find((s) => s.typ === 'karriere');
+const einblicke = [
+  ...(karriereSek && 'bild' in karriereSek && karriereSek.bild ? [karriereSek.bild] : []),
+  ...c.team.map((m) => m.foto),
+  ...site.leistungen.flatMap((l) => l.bilder).slice(0, 2),
+].filter((b): b is Bild => !!b?.datei).slice(0, 5);
+---
+
+<BaseLayout
+  title={pageTitle(fill(ui.seo.karriere, site.vars), 'karriere')}
+  description={pageDescription(sb('karriereSeiteIntro'), 'karriere')}
+  path="/karriere/"
+  ogKey="karriere"
+  jsonLd={[breadcrumbs(crumbs), ...c.stellen.map(jobPosting)]}
+>
+  <PageHero titel={sb('karriereTitel')} intro={sb('karriereText')} crumbs={crumbs} kicker={sb('karriereSeiteTitel')}>
+    <a href="#schnellbewerbung" class="btn btn--lg kh__cta">{ui.cta.jetztBewerben}</a>
+  </PageHero>
+
+  <Section>
+    <div class="container-x">
+      <h2 class="h2 kk__h" data-anim="reveal-up">{ui.karriere.offeneStellen} <span class="kk__n tabular">{c.stellen.length}</span></h2>
+      {
+        c.stellen.length ? (
+          <ul class="kk__list" data-anim-stagger>
+            {c.stellen.map((s) => <li><StelleCard s={s} /></li>)}
+          </ul>
+        ) : (
+          <p class="lead">{ui.karriere.keineStellen}</p>
+        )
+      }
+    </div>
+  </Section>
+
+  <Section ton="dunkel">
+    <div class="container-x">
+      <h2 class="h2 kk__h" data-anim="reveal-up">{ui.karriere.benefits}</h2>
+      <ul class="kb" data-anim-stagger>
+        {
+          site.benefits.map((b) => (
+            <li>
+              <Icon name={b.icon} size={30} />
+              <h3 class="h4">{b.titel}</h3>
+              <p>{b.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </Section>
+
+  {
+    einblicke.length > 1 && (
+      <Section>
+        <div class="container-x">
+          <h2 class="h2 kk__h">{ui.karriere.einblicke}</h2>
+        </div>
+        <div class="ke" tabindex="0" role="region" aria-label={ui.karriere.einblicke}>
+          {einblicke.map((b, i) => (
+            <Img bild={b} ratio={i % 2 ? '3/4' : '4/3'} sizes="(min-width: 1024px) 30vw, 80vw" class="ke__img" />
+          ))}
+        </div>
+      </Section>
+    )
+  }
+
+  <Section ton="flaeche">
+    <div class="container-x">
+      <Schnellbewerbung />
+    </div>
+  </Section>
+</BaseLayout>
+
+<style>
+  .kh__cta {
+    justify-self: start;
+  }
+  .kk__h {
+    margin-bottom: var(--space-xl);
+  }
+  .kk__n {
+    color: var(--s-accent);
+  }
+  .kk__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-m);
+  }
+  @media (min-width: 64rem) {
+    .kk__list {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .kb {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2xl) var(--space-l);
+  }
+  @media (min-width: 40rem) {
+    .kb {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64rem) {
+    .kb {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .kb li {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+  }
+  .kb :global(.icon) {
+    color: var(--s-accent);
+  }
+  .kb p {
+    color: var(--s-ink-soft);
+  }
+  .ke {
+    display: flex;
+    gap: var(--space-m);
+    overflow-x: auto;
+    padding-inline: var(--gutter);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    align-items: center;
+  }
+  .ke :global(.ke__img) {
+    flex: none;
+    width: min(80vw, 28rem);
+    scroll-snap-align: center;
+  }
+</style>

@@ -1,0 +1,156 @@
+---
+/**
+ * Ablauf in 4 Schritten.
+ *  gepinnt: Desktop – Sektion wird gepinnt, eine Fortschrittslinie „zeichnet“ sich,
+ *           Schritte werden nacheinander aktiv. Mobil – vertikale Linie ohne Pin.
+ *  liste:   ruhige Schrittfolge ohne Pin.
+ * Ohne JS / Reduced Motion: alle Schritte aktiv, kein Pin.
+ */
+import { sb, t, site, type Sektion } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { fill } from '@/lib/text';
+import Section from '@/components/ui/Section.astro';
+import SectionHead from '@/components/ui/SectionHead.astro';
+
+interface Props {
+  s: Extract<Sektion, { typ: 'ablauf' }>;
+  schritte?: { titel: string; text: string }[];
+}
+const { s } = Astro.props;
+const schritte = Astro.props.schritte ?? site.ablauf;
+const pinned = s.layout === 'gepinnt';
+---
+
+<Section ton={s.ton} id={s.id} class:list={['ab', `ab--${s.layout}`]} data-process={pinned ? 'pin' : 'list'}>
+  <div class="container-x ab__in" data-process-inner>
+    <SectionHead titel={s.ueberschrift ? t(s.ueberschrift) : sb('ablaufTitel')} intro={s.intro ? t(s.intro) : sb('ablaufIntro')} split />
+    <div class="ab__track">
+      <div class="ab__rail" aria-hidden="true"><span class="ab__fill" data-process-fill></span></div>
+      <ol class="ab__steps">
+        {
+          schritte.map((st, i) => (
+            <li class="ab__step is-active" data-process-step>
+              <span class="ab__node" aria-hidden="true" />
+              <span class="ab__n label tabular">{fill(ui.ablauf.schritt, { n: i + 1 })}</span>
+              <h3 class="h3 ab__t">{st.titel}</h3>
+              <p class="ab__x">{st.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</Section>
+
+<style>
+  .ab {
+    overflow: hidden;
+  }
+  .ab__track {
+    position: relative;
+  }
+  .ab__steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2xl);
+    counter-reset: step;
+  }
+  .ab__step {
+    position: relative;
+    display: grid;
+    gap: 0.6rem;
+    padding-left: 2.75rem;
+    transition: opacity 500ms var(--ease-out);
+  }
+  .ab__t {
+    max-width: 18ch;
+  }
+  .ab__x {
+    color: var(--s-ink-soft);
+    max-width: 40ch;
+  }
+  .ab__n {
+    color: var(--s-accent);
+  }
+  .ab__rail {
+    position: absolute;
+    left: 0.6rem;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 2px;
+    background: var(--s-line);
+  }
+  .ab__fill {
+    position: absolute;
+    inset: 0;
+    background: var(--c-accent-raw);
+    transform-origin: 50% 0;
+  }
+  .ab__node {
+    position: absolute;
+    left: 0.15rem;
+    top: 0.25rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: var(--s-bg);
+    border: 2px solid var(--s-line);
+    transition:
+      background-color 400ms var(--ease-out),
+      border-color 400ms var(--ease-out),
+      transform 400ms var(--ease-out);
+  }
+  html[data-preset='modern-praezise'] .ab__node {
+    border-radius: 0;
+  }
+  .ab__step.is-active .ab__node {
+    background: var(--c-accent-raw);
+    border-color: var(--c-accent-raw);
+    transform: scale(1.15);
+  }
+  /* Inaktiv: über Farbe statt Transparenz – bleibt AA-lesbar */
+  .ab__t {
+    transition: color 400ms var(--ease-out);
+  }
+  :global(html.js) .ab__step:not(.is-active) .ab__t {
+    color: var(--s-ink-soft);
+  }
+  :global(html.js) .ab__step:not(.is-active) .ab__n {
+    color: var(--s-ink-soft);
+  }
+
+  @media (min-width: 64rem) {
+    .ab__steps {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-l);
+      padding-top: 2.75rem;
+    }
+    .ab__step {
+      padding-left: 0;
+      padding-right: var(--space-m);
+    }
+    .ab__rail {
+      left: 0;
+      right: 0;
+      top: 0.45rem;
+      bottom: auto;
+      width: auto;
+      height: 2px;
+    }
+    .ab__fill {
+      transform-origin: 0 50%;
+    }
+    .ab__node {
+      left: 0;
+      top: -2.75rem;
+    }
+    .ab--gepinnt .ab__in {
+      min-height: calc(100svh - var(--header-h));
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+</style>

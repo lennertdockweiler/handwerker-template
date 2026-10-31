@@ -1,0 +1,163 @@
+---
+/** Warum wir: Kennzahlen mit Count-up (Layouts: zahlen | split) + Werte */
+import { site, sb, t, type Sektion } from '@/lib/config';
+import { zahl } from '@/lib/text';
+import Section from '@/components/ui/Section.astro';
+import SectionHead from '@/components/ui/SectionHead.astro';
+import Img from '@/components/ui/Img.astro';
+
+interface Props {
+  s: Extract<Sektion, { typ: 'usps' }>;
+}
+const { s } = Astro.props;
+const titel = s.ueberschrift ? t(s.ueberschrift) : sb('uspsTitel');
+const intro = s.intro ? t(s.intro) : sb('uspsIntro');
+const split = s.layout === 'split';
+const werte = site.werte;
+const dec = (n: number) => (Number.isInteger(n) ? 0 : 1);
+---
+
+<Section ton={s.ton} id={s.id} class:list={['usps', `usps--${s.layout}`]}>
+  <div class="container-x usps__grid">
+    {
+      split && (
+        <div class="usps__media">
+          <Img bild={s.bild ?? site.leistungen[0]?.bilder[1]} ratio="4/5" ratioMobil="4/3" sizes="(min-width: 1024px) 40vw, 100vw" data-anim="image-reveal" />
+        </div>
+      )
+    }
+    <div class="usps__main">
+      <SectionHead titel={titel} intro={intro} split={!split} />
+      <dl class="usps__nums">
+        {
+          site.kennzahlen.map((k) => (
+            <div class="usps__num" data-anim="reveal-up">
+              <dt class="usps__label">{k.label}</dt>
+              <dd class="usps__value tabular">
+                {k.praefix && <span class="usps__fix">{k.praefix}</span>}
+                <span data-count={k.wert} data-decimals={dec(k.wert)}>
+                  {zahl(k.wert)}
+                </span>
+                {k.suffix && <span class="usps__fix">{k.suffix}</span>}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+      <ul class="usps__werte" data-anim-stagger>
+        {
+          werte.map((w) => (
+            <li>
+              <h3 class="h4">{w.titel}</h3>
+              <p>{w.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</Section>
+
+<style>
+  .usps__grid {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+  @media (min-width: 64rem) {
+    .usps--split .usps__grid {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      align-items: start;
+      gap: var(--space-3xl);
+    }
+    .usps--split .usps__media {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+  }
+  .usps__nums {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+    border-top: 1px solid var(--s-line);
+  }
+  @media (min-width: 64rem) {
+    .usps--zahlen .usps__nums {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .usps__num {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: var(--space-xs);
+    padding: var(--space-l) var(--space-m) var(--space-l) 0;
+    border-bottom: 1px solid var(--s-line);
+  }
+  .usps__num:nth-child(odd) {
+    padding-right: var(--space-m);
+  }
+  .usps__value {
+    margin: 0;
+    font-family: var(--font-head);
+    font-weight: var(--head-weight);
+    font-stretch: var(--head-stretch);
+    letter-spacing: var(--head-tracking);
+    font-size: calc(var(--step-5) * var(--head-scale));
+    line-height: 0.95;
+    white-space: nowrap;
+  }
+  html[data-preset='modern-praezise'] .usps__value {
+    font-stretch: 100%;
+  }
+  .usps__fix {
+    color: var(--s-accent);
+    font-size: 0.55em;
+    margin-left: 0.08em;
+  }
+  .usps__label {
+    color: var(--s-ink-soft);
+    font-size: var(--step--1);
+    font-weight: 550;
+  }
+  /* Präzise: Maßstriche an den Kennzahlen */
+  html[data-preset='modern-praezise'] .usps__num {
+    position: relative;
+  }
+  html[data-preset='modern-praezise'] .usps__num::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -4px;
+    width: 1px;
+    height: 9px;
+    background: var(--s-ink-soft);
+  }
+  .usps__werte {
+    list-style: none;
+    margin: var(--space-2xl) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-xl) var(--space-l);
+  }
+  @media (min-width: 40rem) {
+    .usps__werte {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64rem) {
+    .usps--zahlen .usps__werte {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .usps__werte li {
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+  }
+  .usps__werte p {
+    color: var(--s-ink-soft);
+    font-size: var(--step--1);
+  }
+  html[data-preset='kraftvoll-bold'] .usps__value {
+    font-size: calc(var(--step-6) * 0.9);
+  }
+</style>

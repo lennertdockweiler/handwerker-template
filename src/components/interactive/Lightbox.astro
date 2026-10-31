@@ -1,0 +1,117 @@
+---
+/**
+ * Lightbox als natives <dialog> (Fokusfalle + Escape durch den Browser).
+ * Auslöser: [data-lightbox='[{src,srcset,alt,w,h}]'] [data-lightbox-index]
+ * Bedienung: Buttons, Pfeiltasten, Swipe, Escape.
+ */
+import { ui } from '@/data/ui';
+import Icon from '@/components/ui/Icon.astro';
+
+const labels = JSON.stringify({ bildVon: ui.galerie.bildVon });
+---
+
+<dialog class="lb" data-lightbox-dialog data-labels={labels} aria-label={ui.galerie.vergroessern.replace(': {alt}', '')}>
+  <div class="lb__stage" data-lb-stage>
+    <img class="lb__img" alt="" data-lb-img />
+  </div>
+  <p class="lb__cap" data-lb-cap aria-live="polite"></p>
+  <button type="button" class="lb__btn lb__close" data-lb-close aria-label={ui.galerie.schliessen}><Icon name="x" /></button>
+  <button type="button" class="lb__btn lb__prev" data-lb-prev aria-label={ui.galerie.vorheriges}><Icon name="chevron-left" /></button>
+  <button type="button" class="lb__btn lb__next" data-lb-next aria-label={ui.galerie.naechstes}><Icon name="chevron-right" /></button>
+</dialog>
+
+<style>
+  .lb {
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: rgb(10 10 10 / 0.94);
+    color: #fff;
+    overscroll-behavior: contain;
+  }
+  .lb::backdrop {
+    background: transparent;
+  }
+  .lb[open] {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    animation: lb-in 320ms var(--ease-out);
+  }
+  @keyframes lb-in {
+    from {
+      opacity: 0;
+    }
+  }
+  .lb__stage {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 0;
+    padding: 4rem 0.75rem 0.5rem;
+    touch-action: pan-y pinch-zoom;
+  }
+  .lb__img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+    user-select: none;
+    -webkit-user-drag: none;
+    transition:
+      transform 360ms var(--ease-out),
+      opacity 240ms var(--ease-out);
+  }
+  .lb__cap {
+    padding: 0.75rem var(--gutter) max(1.25rem, env(safe-area-inset-bottom));
+    text-align: center;
+    font-size: var(--step--1);
+    color: rgb(255 255 255 / 0.8);
+  }
+  .lb__btn {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: 1px solid rgb(255 255 255 / 0.25);
+    background: rgb(255 255 255 / 0.08);
+    color: #fff;
+    cursor: pointer;
+    transition: background-color var(--dur);
+  }
+  .lb__btn:hover {
+    background: rgb(255 255 255 / 0.2);
+  }
+  .lb__btn:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+  }
+  .lb__close {
+    top: max(0.75rem, env(safe-area-inset-top));
+    right: 0.75rem;
+  }
+  .lb__prev,
+  .lb__next {
+    top: 50%;
+    margin-top: -1.5rem;
+  }
+  .lb__prev {
+    left: 0.75rem;
+  }
+  .lb__next {
+    right: 0.75rem;
+  }
+  @media (max-width: 47.99rem) {
+    .lb__prev,
+    .lb__next {
+      top: auto;
+      bottom: max(0.75rem, env(safe-area-inset-bottom));
+      margin-top: 0;
+    }
+  }
+</style>

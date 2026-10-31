@@ -1,0 +1,270 @@
+---
+/**
+ * Einsatzgebiet: stilisierte SVG-Regionskarte (aus Geokoordinaten projiziert,
+ * keine externen Kartendienste) mit animierten Ortsmarkern + PLZ-Checker.
+ * Layout kompakt: Ortsliste + PLZ-Checker.
+ */
+import { site, sb, t, type Sektion } from '@/lib/config';
+import { ui } from '@/data/ui';
+import { fill } from '@/lib/text';
+import Section from '@/components/ui/Section.astro';
+import SectionHead from '@/components/ui/SectionHead.astro';
+import PlzCheck from '@/components/interactive/PlzCheck.astro';
+
+interface Props {
+  s: Extract<Sektion, { typ: 'einsatzgebiet' }>;
+}
+const { s } = Astro.props;
+const e = site.config.einsatzgebiet;
+const preset = site.config.branding.stilPreset;
+const R = e.radiusKm;
+const KM_LAT = 111.32;
+const kmLng = KM_LAT * Math.cos((e.zentrum.lat * Math.PI) / 180);
+const proj = (lat: number, lng: number) => ({ x: (lng - e.zentrum.lng) * kmLng, y: -(lat - e.zentrum.lat) * KM_LAT });
+const orte = e.orte.map((o, i) => ({ ...o, ...proj(o.lat, o.lng), i }));
+const maxD = Math.max(R, ...orte.map((o) => Math.hypot(o.x, o.y)));
+const V = maxD * 1.22;
+const ringe = [R / 3, (2 * R) / 3, R].map((r) => Math.round(r));
+const kompakt = s.layout === 'kompakt';
+const titel = s.ueberschrift ? t(s.ueberschrift) : sb('einsatzTitel');
+const intro = s.intro ? t(s.intro) : sb('einsatzIntro');
+const fs = V / 22;
+---
+
+<Section ton={s.ton} id={s.id} class:list={['eg', `eg--${s.layout}`]}>
+  <div class="container-x eg__grid">
+    <div class="eg__text">
+      <SectionHead titel={titel} intro={intro} />
+      <PlzCheck id={`plz-${s.id ?? 'eg'}`} />
+      <ul class="eg__orte" aria-label={ui.karte.legende}>
+        {
+          e.orte.map((o) => (
+            <li class:list={['eg__ort', { 'is-anfrage': o.status === 'anfrage' }]}>
+              {o.name}
+              {o.status === 'anfrage' && <span class="eg__ort-hint"> · {ui.karte.aufAnfrage}</span>}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    {
+      !kompakt && (
+        <figure class="eg__map" data-inview>
+          <svg viewBox={`${-V} ${-V} ${V * 2} ${V * 2}`} role="img" aria-label={`${ui.karte.legende}: ${e.orte.map((o) => o.name).join(', ')}`}>
+            {preset === 'modern-praezise' && (
+              <g class="eg__grid-lines" aria-hidden="true">
+                {Array.from({ length: 13 }, (_, i) => -V + (i * V) / 6).map((p) => (
+                  <>
+                    <line x1={p} y1={-V} x2={p} y2={V} />
+                    <line x1={-V} y1={p} x2={V} y2={p} />
+                  </>
+                ))}
+              </g>
+            )}
+            <g class="eg__rings" aria-hidden="true">
+              {ringe.map((r, i) => (
+                <circle r={r} style={`--i:${i}`} class:list={{ 'is-outer': i === ringe.length - 1 }} />
+              ))}
+              {preset === 'modern-praezise' &&
+                ringe.map((r) => (
+                  <text x={r * 0.71 + fs * 0.3} y={-r * 0.71 - fs * 0.3} font-size={fs * 0.8} class="eg__km">
+                    {fill(ui.mass.km, { n: r })}
+                  </text>
+                ))}
+            </g>
+            <g class="eg__center" aria-hidden="true">
+              <circle r={fs * 0.9} class="eg__pulse" />
+              <circle r={fs * 0.45} class="eg__core" />
+              <text y={fs * 2.1} text-anchor="middle" font-size={fs * 1.05} class="eg__label eg__label--center">
+                {site.config.betrieb.kurzname}
+              </text>
+            </g>
+            <g class="eg__markers">
+              {orte.map((o) => (
+                <g class:list={['eg__m', { 'is-anfrage': o.status === 'anfrage' }]} transform={`translate(${o.x.toFixed(2)} ${o.y.toFixed(2)})`} data-map-ort={o.name} style={`--i:${o.i}`}>
+                  <g class="eg__m-in">
+                    <circle r={fs * 0.32} class="eg__dot" />
+                    <text x={fs * 0.6} y={fs * 0.32} font-size={fs * 0.82} class="eg__label">
+                      {o.name}
+                    </text>
+                  </g>
+                </g>
+              ))}
+            </g>
+          </svg>
+          <figcaption class="eg__cap label tabular">
+            {fill(ui.mass.radius, { n: R })} · {e.zentrum.name}
+          </figcaption>
+        </figure>
+      )
+    }
+  </div>
+</Section>
+
+<style>
+  .eg__grid {
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+  @media (min-width: 64rem) {
+    .eg--karte .eg__grid {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: var(--space-3xl);
+    }
+  }
+  .eg__text :global(.section-head) {
+    margin-bottom: var(--space-xl);
+  }
+  .eg__orte {
+    list-style: none;
+    margin: var(--space-l) 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .eg__ort {
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--r-btn);
+    border: 1px solid var(--s-line);
+    font-size: var(--step--1);
+  }
+  .eg__ort.is-anfrage {
+    border-style: dashed;
+    color: var(--s-ink-soft);
+  }
+  .eg--karte .eg__orte {
+    display: none;
+  }
+  @media (max-width: 63.99rem) {
+    .eg--karte .eg__orte {
+      display: none;
+    }
+  }
+  .eg__map {
+    margin: 0;
+    position: relative;
+  }
+  .eg__map svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .eg__grid-lines line {
+    stroke: var(--s-line);
+    stroke-width: 0.15;
+  }
+  .eg__rings circle {
+    fill: none;
+    stroke: var(--s-ink-soft);
+    stroke-width: 0.18;
+    stroke-dasharray: 0.8 0.8;
+    opacity: 0.6;
+  }
+  .eg__rings circle.is-outer {
+    stroke: var(--s-accent);
+    stroke-width: 0.35;
+    stroke-dasharray: none;
+    opacity: 1;
+    fill: color-mix(in oklab, var(--c-accent-raw) 7%, transparent);
+  }
+  html[data-preset='manufaktur-warm'] .eg__rings circle {
+    stroke-dasharray: none;
+    stroke-width: 0.25;
+  }
+  html[data-preset='kraftvoll-bold'] .eg__rings circle.is-outer {
+    fill: color-mix(in oklab, var(--c-brand) 12%, transparent);
+    stroke-width: 0.6;
+  }
+  .eg__km {
+    fill: var(--s-ink-soft);
+    font-family: var(--font-head);
+    font-stretch: 78%;
+  }
+  .eg__core {
+    fill: var(--c-accent-raw);
+    stroke: var(--s-ink);
+    stroke-width: 0.25;
+  }
+  .eg__pulse {
+    fill: var(--c-accent-raw);
+    opacity: 0.35;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: eg-pulse 2.4s var(--ease-out) infinite;
+  }
+  @keyframes eg-pulse {
+    from {
+      transform: scale(0.6);
+      opacity: 0.5;
+    }
+    to {
+      transform: scale(3);
+      opacity: 0;
+    }
+  }
+  .eg__dot {
+    fill: var(--s-ink);
+    transition: transform 300ms var(--ease-out);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .eg__m.is-anfrage .eg__dot {
+    fill: var(--s-bg);
+    stroke: var(--s-ink-soft);
+    stroke-width: 0.25;
+  }
+  .eg__m.is-hit .eg__dot {
+    fill: var(--c-accent-raw);
+    stroke: var(--s-ink);
+    stroke-width: 0.25;
+    transform: scale(1.8);
+  }
+  .eg__label {
+    fill: var(--s-ink);
+    font-family: var(--font-text);
+    font-weight: 600;
+    paint-order: stroke;
+    stroke: var(--s-bg);
+    stroke-width: 0.5;
+    stroke-linejoin: round;
+  }
+  .eg__m.is-anfrage .eg__label {
+    fill: var(--s-ink-soft);
+    font-weight: 500;
+  }
+  .eg__label--center {
+    font-family: var(--font-head);
+    font-weight: 700;
+  }
+  .eg__m-in {
+    transform-box: fill-box;
+    transform-origin: 0 0;
+  }
+  :global(html.js:not(.anim-failed)) .eg__map:not(.is-in) .eg__m-in {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  .eg__map.is-in .eg__m-in {
+    transition:
+      opacity 500ms var(--ease-out),
+      transform 700ms var(--ease-out);
+    transition-delay: calc(200ms + var(--i) * 70ms);
+  }
+  .eg__cap {
+    margin-top: var(--space-s);
+    color: var(--s-ink-soft);
+    text-align: center;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .eg__pulse {
+      animation: none;
+    }
+    :global(html.js:not(.anim-failed)) .eg__map:not(.is-in) .eg__m-in {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
