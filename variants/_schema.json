@@ -73,6 +73,7 @@
           "description": "Kurzer Claim"
         },
         "gruendungsjahr": {
+          "description": "Gründungsjahr. Leer lassen, wenn unbekannt – dann entfallen alle „Seit …“-Angaben (Vertrauensleiste, Wortmarke, Zähler, Texte).",
           "type": "integer",
           "minimum": 1800,
           "maximum": 2100
@@ -367,7 +368,6 @@
         "kurzname",
         "inhaber",
         "slogan",
-        "gruendungsjahr",
         "adresse",
         "geo",
         "telefon",

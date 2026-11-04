@@ -336,6 +336,7 @@ export const ui = {
     referenzen: 'Referenzen: {gewerk} aus {ort} und Umgebung',
     referenz: '{titel} – {ort}',
     ueberUns: 'Über {kurzname}: {gewerk} seit {gruendungsjahr}',
+    ueberUnsOhneJahr: 'Über {kurzname}: {gewerk} in {ort}',
     karriere: 'Jobs bei {kurzname} in {ort}',
     stelle: '{titel} in {ort}',
     notdienst: 'Notdienst {gewerk} {ort}: {zeiten}',

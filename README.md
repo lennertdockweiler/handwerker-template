@@ -100,7 +100,7 @@ Unbekannte Schlüssel (z. B. `"//": "Kommentar"`) werden ignoriert – praktisch
 | Feld | Beispiel |
 |---|---|
 | `name`, `kurzname`, `rechtsform`, `inhaber`, `slogan` | `"Brandt & Söhne Elektrotechnik GmbH"`, `"Brandt & Söhne"` … |
-| `gruendungsjahr`, `mitarbeiter`, `azubis`, `projekte`, `reaktionszeit` | `1987`, `14`, `2`, `4800`, `"60 Min."` → speisen die Zähler |
+| `gruendungsjahr`, `mitarbeiter`, `azubis`, `projekte`, `reaktionszeit` | `1987`, `14`, `2`, `4800`, `"60 Min."` → speisen die Zähler. Alle optional: ohne Gründungsjahr entfallen „Seit …“ in Vertrauensleiste, Wortmarke, Hero und Texten |
 | `adresse` | `{ "strasse", "plz", "ort", "region": "im Breisgau" }` |
 | `geo` | `{ "lat": 48.01, "lng": 7.81 }` |
 | `telefon`, `email`, `whatsapp`, `fax` | `"+49 761 000000"` (WhatsApp weglassen = Buttons weg) |

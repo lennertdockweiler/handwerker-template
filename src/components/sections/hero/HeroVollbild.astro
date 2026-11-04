@@ -47,7 +47,9 @@ const video = s.video ? resolveVideo(s.video) : undefined;
         {d.secondary.text}
       </a>
     </div>
-    <Masskette class="hero__mk" links={String(c.betrieb.gruendungsjahr)} mitte={fill(ui.mass.jahre, { n: site.vars.jahre })} rechts={String(site.jahr)} />
+    {c.betrieb.gruendungsjahr && (
+      <Masskette class="hero__mk" links={String(c.betrieb.gruendungsjahr)} mitte={fill(ui.mass.jahre, { n: site.vars.jahre })} rechts={String(site.jahr)} />
+    )}
   </div>
 </section>
 <TrustBar />

@@ -34,8 +34,8 @@ const vars: Vars = {
   kurzname: c.betrieb.kurzname,
   ort: c.betrieb.adresse.ort,
   region: c.betrieb.adresse.region ?? 'Umgebung',
-  gruendungsjahr: c.betrieb.gruendungsjahr,
-  jahre: jahr - c.betrieb.gruendungsjahr,
+  gruendungsjahr: c.betrieb.gruendungsjahr ?? '',
+  jahre: c.betrieb.gruendungsjahr ? jahr - c.betrieb.gruendungsjahr : '',
   gewerk: c.gewerkBezeichnung ?? preset.bezeichnung,
   mitarbeiter: c.betrieb.mitarbeiter ?? '',
   radius: c.einsatzgebiet.radiusKm,
@@ -49,7 +49,26 @@ export const t = (raw: string, extra?: Vars) => tx(raw, mode, { ...vars, ...extr
 /** Text immer in Du-Ansprache (Karriere) */
 export const tDu = (raw: string, extra?: Vars) => tx(raw, 'du', { ...vars, ...extra });
 
-const sprachbausteine: Sprachbausteine = { ...basisTexte, ...preset.texte, ...(c.texte as Partial<Sprachbausteine>) };
+/**
+ * Fehlende Angaben (Gründungsjahr, Mitarbeiterzahl) dürfen keine Lücken wie „Seit .“
+ * oder „mit  Leuten“ erzeugen: betroffene Formulierungen werden neutral umgestellt.
+ */
+function ohneFehlendeAngaben(s: string): string {
+  let r = s;
+  if (!c.betrieb.gruendungsjahr) {
+    r = r
+      .replace(/Seit \{gruendungsjahr\} (\p{L}+) wir\b/gu, (_m, verb: string) => `Wir ${verb}`)
+      .replace(/\s*Seit \{gruendungsjahr\}\.?/g, '')
+      .replace(/\s+seit \{gruendungsjahr\}/g, '')
+      .replace(/\{jahre\}\s+Jahre?\s*/g, '');
+  }
+  if (!c.betrieb.mitarbeiter) r = r.replace(/mit \{mitarbeiter\} Leuten/g, 'mit Leuten');
+  return r.trim();
+}
+
+const sprachbausteine = Object.fromEntries(
+  Object.entries({ ...basisTexte, ...preset.texte, ...(c.texte as Partial<Sprachbausteine>) }).map(([k, v]) => [k, ohneFehlendeAngaben(String(v))]),
+) as unknown as Sprachbausteine;
 /** Sprachbaustein (Preset → überschrieben durch config.texte) */
 export const sb = (key: keyof Sprachbausteine, extra?: Vars) =>
   key.startsWith('karriere') ? tDu(sprachbausteine[key], extra) : t(sprachbausteine[key], extra);
@@ -190,9 +209,8 @@ const nav = [
 
 function kennzahlen() {
   if (c.kennzahlen?.length) return c.kennzahlen.map((k) => ({ ...k, label: t(k.label) }));
-  const list: { wert: number; praefix?: string; suffix?: string; label: string }[] = [
-    { wert: jahr - c.betrieb.gruendungsjahr, label: ui.usps.jahre },
-  ];
+  const list: { wert: number; praefix?: string; suffix?: string; label: string }[] = [];
+  if (c.betrieb.gruendungsjahr) list.push({ wert: jahr - c.betrieb.gruendungsjahr, label: ui.usps.jahre });
   if (c.betrieb.projekte) list.push({ wert: c.betrieb.projekte, suffix: '+', label: ui.usps.projekte });
   if (c.betrieb.mitarbeiter) list.push({ wert: c.betrieb.mitarbeiter, label: ui.usps.mitarbeiter });
   if (c.betrieb.reaktionszeit) {

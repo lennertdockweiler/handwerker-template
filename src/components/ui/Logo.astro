@@ -47,7 +47,8 @@ const unterzeile = site.gewerkName;
           <span class="wm__txt">
             <span class="wm__name">{betrieb.kurzname}</span>
             <span class="wm__sub">
-              {unterzeile} · {betrieb.gruendungsjahr}
+              {unterzeile}
+              {betrieb.gruendungsjahr && <> · {betrieb.gruendungsjahr}</>}
             </span>
           </span>
         </>

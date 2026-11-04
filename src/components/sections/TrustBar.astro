@@ -39,10 +39,14 @@ const v = { ...site.vars, schnitt: String(bw?.schnitt ?? '').replace('.', ','), 
         </li>
       )
     }
-    <li class="tb__item">
-      <Icon name="calendar" size={20} />
-      <strong class="tabular">{fill(ui.trust.seit, v)}</strong>
-    </li>
+    {
+      c.betrieb.gruendungsjahr && (
+        <li class="tb__item">
+          <Icon name="calendar" size={20} />
+          <strong class="tabular">{fill(ui.trust.seit, v)}</strong>
+        </li>
+      )
+    }
     <li class="tb__item">
       <Icon name="map-pin" size={20} />
       <strong class="tabular">{fill(ui.trust.einsatzgebiet, v)}</strong>

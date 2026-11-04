@@ -52,7 +52,7 @@ export function localBusiness() {
     logo: absUrl('/og/start.png'),
     telephone: b.telefon,
     email: b.email,
-    foundingDate: String(b.gruendungsjahr),
+    ...(b.gruendungsjahr ? { foundingDate: String(b.gruendungsjahr) } : {}),
     address: {
       '@type': 'PostalAddress',
       streetAddress: b.adresse.strasse,

@@ -256,7 +256,13 @@ export const siteConfigSchema = z
       rechtsform: z.string().max(30).optional(),
       inhaber: txt(80, 'Inhaber / Geschäftsführer'),
       slogan: txt(90, 'Kurzer Claim'),
-      gruendungsjahr: z.number().int().min(1800).max(2100),
+      gruendungsjahr: z
+        .number()
+        .int()
+        .min(1800)
+        .max(2100)
+        .optional()
+        .meta({ description: 'Gründungsjahr. Leer lassen, wenn unbekannt – dann entfallen alle „Seit …“-Angaben (Vertrauensleiste, Wortmarke, Zähler, Texte).' }),
       mitarbeiter: z.number().int().positive().optional(),
       azubis: z.number().int().nonnegative().optional(),
       projekte: z.number().int().positive().optional().meta({ description: 'Abgeschlossene Projekte (für Zähler)' }),

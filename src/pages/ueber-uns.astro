@@ -21,7 +21,7 @@ const heroBild = c.team[0]?.foto ?? site.leistungen[0]?.bilder[0];
 ---
 
 <BaseLayout
-  title={pageTitle(fill(ui.seo.ueberUns, site.vars), 'ueber-uns')}
+  title={pageTitle(fill(c.betrieb.gruendungsjahr ? ui.seo.ueberUns : ui.seo.ueberUnsOhneJahr, site.vars), 'ueber-uns')}
   description={pageDescription(sb('ueberUnsIntro'), 'ueber-uns')}
   path="/ueber-uns/"
   ogKey="ueber-uns"
